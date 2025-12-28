@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Innovtelier Case Management System - Modern legal case management for growing law firms">
+    <title>Case Management System - Innovtelier</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Product page specific styles */
+        .product-hero {
+            background: linear-gradient(135deg, #002855 0%, #001a3d 100%);
+            color: white;
+            padding: 8rem 0 6rem;
+            position: relative;
+        }
+
+        .product-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .product-hero p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 700px;
+            font-weight: 300;
+        }
+
+        .product-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-product-primary {
+            background: #B8860B;
+            color: #002855;
+            padding: 1rem 2.5rem;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-product-primary:hover {
+            background: #9a6f0a;
+            transform: translateY(-1px);
+        }
+
+        .btn-product-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-product-secondary:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                    <h1>Innovtelier</h1>
+                </div>
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="index.html#services" class="nav-link">Services</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="index.html#about" class="nav-link">About</a>
+                    <a href="auth.html" class="btn-primary" style="padding: 0.5rem 1.5rem;"
+                        aria-label="Login or register">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <!-- Product Hero -->
+        <section class="product-hero">
+            <div class="container">
+                <h1>Modern Legal Case Management<br>for Growing Law Firms</h1>
+                <p>Streamline your practice with powerful case tracking, client management, and analytics. Save time,
+                    increase billable hours, and deliver exceptional client service.</p>
+
+                <div class="product-ctas">
+                    <a href="auth.html" class="btn-product-primary">
+                        <i class="fas fa-rocket" aria-hidden="true"></i> Start Free Trial
+                    </a>
+                    <a href="#features" class="btn-product-secondary">
+                        <i class="fas fa-info-circle" aria-hidden="true"></i> Learn More
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pain Points Section -->
+        <section id="challenges" class="pain-points-section" style="padding: 6rem 0; background: #ffffff;">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2
+                        style="font-size: 2.75rem; font-weight: 300; color: #002855; margin-bottom: 1rem; letter-spacing: -0.5px;">
+                        Challenges Law Firms Face</h2>
+                    <p style="font-size: 1.125rem; color: #4A4A4A; max-width: 700px; margin: 0 auto; font-weight: 300;">
+                        Managing a law practice shouldn't be this difficult. These are the pain points we solve.</p>
+                </div>
+
+                <div class="pain-points-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #ef4444; background: #fef2f2;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">📋</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">Lost
+                            Information</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Manual tracking leads to lost
+                            case details, missed deadlines, and frustrated clients wondering about their case status.
+                        </p>
+                    </div>
+
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #f59e0b; background: #fffbeb;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">⏱️</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">
+                            Billing Inefficiency</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Tracking billable hours manually
+                            results in lost revenue, delayed invoicing, and difficulty proving value to clients.</p>
+                    </div>
+
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #8b5cf6; background: #faf5ff;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">💬</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">Poor
+                            Communication</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Clients feel uninformed about
+                            their case status, leading to constant phone calls and emails asking for updates.</p>
+                    </div>
+
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #06b6d4; background: #ecfeff;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">📁</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">
+                            Document Chaos</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Files scattered across email,
+                            cloud drives, and physical desks make it impossible to find what you need when you need it.
+                        </p>
+                    </div>
+
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #10b981; background: #f0fdf4;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">📊</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">No
+                            Insights</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Unable to identify trends,
+                            optimize workflows, or make data-driven decisions about your practice's growth.</p>
+                    </div>
+
+                    <div class="pain-point-card"
+                        style="padding: 2rem; border-left: 3px solid #6b7280; background: #f9fafb;">
+                        <div class="pain-icon" style="font-size: 2.5rem; margin-bottom: 1rem;">⚙️</div>
+                        <h3 style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem;">
+                            Administrative Burden</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Too much time spent on paperwork
+                            and administrative tasks, not enough time serving clients and growing your practice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="features-section" style="padding: 6rem 0; background: #F5F5F5;">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2
+                        style="font-size: 2.75rem; font-weight: 300; color: #002855; margin-bottom: 1rem; letter-spacing: -0.5px;">
+                        Everything You Need to Run Your Practice</h2>
+                    <p style="font-size: 1.125rem; color: #4A4A4A; max-width: 700px; margin: 0 auto; font-weight: 300;">
+                        Comprehensive tools designed specifically for legal professionals</p>
+                </div>
+
+                <div class="features-grid"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 3rem 2rem;">
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-folder-open" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Case Management</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Track cases from intake to
+                            resolution with powerful organization tools, status tracking, and automated workflows.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-users" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Client Portal</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Seamless client communication
+                            with intake forms, document sharing, and real-time case updates.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-clock" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Time Tracking</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Capture billable hours
+                            effortlessly with integrated time tracking and productivity analytics.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-file-alt" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Document Management</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Secure file storage, version
+                            control, and easy document sharing with clients and team members.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-chart-line" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Reporting & Analytics</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Data-driven insights with
+                            comprehensive reports on case performance, revenue, and productivity.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"
+                            style="width: 50px; height: 50px; background: transparent; border: 2px solid #002855; border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #002855; margin-bottom: 1.5rem;">
+                            <i class="fas fa-heart" aria-hidden="true"></i>
+                        </div>
+                        <h3
+                            style="font-size: 1.25rem; font-weight: 600; color: #002855; margin-bottom: 0.75rem; letter-spacing: -0.3px;">
+                            Family Law Tools</h3>
+                        <p style="color: #4A4A4A; line-height: 1.7; font-weight: 300;">Specialized tracking for family
+                            law cases including county, judge assignments, children, and domestic violence indicators.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section" style="padding: 6rem 0; background: #002855; color: white; text-align: center;">
+            <div class="container">
+                <h2 style="font-size: 2.75rem; font-weight: 300; margin-bottom: 1rem; letter-spacing: -0.5px;">Ready to
+                    Transform Your Practice?</h2>
+                <p style="font-size: 1.125rem; margin-bottom: 2.5rem; opacity: 0.9; font-weight: 300;">Join legal
+                    professionals who are saving time and delivering better client service</p>
+                <div class="product-ctas" style="justify-content: center;">
+                    <a href="auth.html" class="btn-product-primary">
+                        <i class="fas fa-rocket" aria-hidden="true"></i> Start Free Trial
+                    </a>
+                    <a href="index.html#contact" class="btn-product-secondary">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> Contact Sales
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" style="background: #002855; color: rgba(255, 255, 255, 0.8); padding: 3rem 0 1.5rem;">
+        <div class="container">
+            <div class="footer-content"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Innovtelier</h4>
+                    <p style="font-size: 0.875rem; line-height: 1.6; font-weight: 300;">Professional support services
+                        and legal technology solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Product</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="#features"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Features</a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><a href="auth.html"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Login</a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><a href="paralegal-dashboard.html"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Dashboard</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Services</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Legal
+                                Support</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Non-Profit
+                                Support</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Organization
+                                & Productivity</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Company</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#about"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">About</a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><a href="index.html#contact"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; padding-top: 1.5rem;">
+                <p style="font-size: 0.8125rem; opacity: 0.6; font-weight: 300;">&copy; 2024 Innovtelier. All rights
+                    reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

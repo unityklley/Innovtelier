@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Innovtelier provides professional support services to attorneys, nonprofits, and small businesses">
+    <title>Innovtelier - Where Support Meets Innovation</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Home page specific styles */
+        .hero {
+            background: linear-gradient(135deg, #002855 0%, #001a3d 100%);
+            color: white;
+            padding: 8rem 0 6rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            background: #B8860B;
+            color: #002855;
+            padding: 1rem 2.5rem;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-hero-primary:hover {
+            background: #9a6f0a;
+            transform: translateY(-1px);
+        }
+
+        .btn-hero-secondary {
+            background: transparent;
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-hero-secondary:hover {
+            border-color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+
+        .section-white {
+            background: #ffffff;
+        }
+
+        .section-gray {
+            background: #F5F5F5;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.75rem;
+            font-weight: 300;
+            color: #002855;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: #4A4A4A;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2.5rem;
+            border-left: 4px solid #B8860B;
+            transition: all 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #002855;
+            margin-bottom: 1rem;
+        }
+
+        .service-card p {
+            color: #4A4A4A;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .service-link {
+            color: #002855;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.5px;
+        }
+
+        .service-link:hover {
+            color: #B8860B;
+        }
+
+        .product-showcase {
+            background: #002855;
+            color: white;
+            padding: 6rem 0;
+        }
+
+        .product-showcase h2 {
+            font-size: 2.75rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .product-showcase p {
+            font-size: 1.125rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #4A4A4A;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-balance-scale" aria-hidden="true"></i>
+                    <h1>Innovtelier</h1>
+                </div>
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="#services" class="nav-link">Services</a>
+                    <a href="products.html" class="nav-link">Products</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="auth.html" class="btn-primary" style="padding: 0.5rem 1.5rem;"
+                        aria-label="Login or register">
+                        <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <h1>WHERE SUPPORT MEETS INNOVATION</h1>
+                <p>Innovtelier provides professional support services to attorneys, nonprofits, and small businesses.
+                    All legal support is offered exclusively under the supervision of a licensed attorney, ensuring
+                    compliance with applicable law.</p>
+
+                <div class="hero-ctas">
+                    <a href="#services" class="btn-hero-primary">
+                        <i class="fas fa-compass" aria-hidden="true"></i> Explore Services
+                    </a>
+                    <a href="products.html" class="btn-hero-secondary">
+                        <i class="fas fa-cube" aria-hidden="true"></i> View Products
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section section-white">
+            <div class="container">
+                <div class="about-content">
+                    <h2
+                        style="font-size: 2.75rem; font-weight: 300; color: #002855; margin-bottom: 2rem; letter-spacing: -0.5px;">
+                        About Innovtelier</h2>
+
+                    <p>Innovtelier provides support services to attorneys, nonprofits, and small businesses to allow
+                        them to focus on their primary objectives. Many organizations dedicate themselves to serving
+                        clients, communities, or missions, but administrative and operational demands can divert
+                        attention from these core goals.</p>
+
+                    <p>Our services are precise, reliable, and efficient, handling operational and administrative tasks
+                        without offering legal advice. By taking on essential but non-legal tasks, Innovtelier enables
+                        clients to focus on strategy, advocacy, or program execution.</p>
+
+                    <p>We combine expertise, efficiency, and discretion to deliver work that is accurate, timely, and
+                        tailored to each client's needs, supporting attorneys, nonprofits, and small businesses in
+                        creating meaningful impact within their communities.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section section-gray">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Our Services</h2>
+                    <p>Comprehensive support tailored to your organization's needs</p>
+                </div>
+
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">⚖️</div>
+                        <h3>Legal Support Services</h3>
+                        <p>All legal support services are provided under the direct supervision of a licensed attorney.
+                            Services include drafting and formatting documents, organizing case files, conducting
+                            research, and preparing materials for trial or hearing support.</p>
+                        <a href="#" class="service-link">
+                            Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">🤝</div>
+                        <h3>Non-Profit Support</h3>
+                        <p>We strengthen nonprofit operations through document management and recordkeeping, website
+                            design and digital communication, technology integration and system development, and
+                            strategic and operational consulting.</p>
+                        <a href="#" class="service-link">
+                            Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">📊</div>
+                        <h3>Organization & Productivity Strategy</h3>
+                        <p>We support business owners and startups with workflow and process design, branding and
+                            digital presence, administrative and operational support, and technology and strategy
+                            consulting.</p>
+                        <a href="#" class="service-link">
+                            Learn More <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Product Showcase -->
+        <section class="product-showcase">
+            <div class="container" style="text-align: center;">
+                <h2>Introducing Our Case Management System</h2>
+                <p>Modern legal case management software designed for growing law firms</p>
+                <div class="hero-ctas">
+                    <a href="products.html" class="btn-hero-primary">
+                        <i class="fas fa-cube" aria-hidden="true"></i> View Product
+                    </a>
+                    <a href="auth.html" class="btn-hero-secondary">
+                        <i class="fas fa-rocket" aria-hidden="true"></i> Start Free Trial
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Values Section -->
+        <section class="section section-white">
+            <div class="container">
+                <div class="about-content">
+                    <h2
+                        style="font-size: 2.75rem; font-weight: 300; color: #002855; margin-bottom: 2rem; letter-spacing: -0.5px;">
+                        What We Stand For</h2>
+
+                    <p>We're passionate about supporting mission-driven attorneys, nonprofits, and businesses that make
+                        a real difference in their communities.</p>
+
+                    <p>We partner with you to strengthen your operations, streamline your workflows, and provide the
+                        reliable support you need to focus on what matters most — creating positive impact.</p>
+
+                    <p>By delivering precise, efficient, and tailored solutions, we help you overcome administrative
+                        challenges so you can dedicate more time to your clients and communities.</p>
+
+                    <p style="font-weight: 500; color: #002855;">Together, we can build stronger organizations and
+                        foster lasting change for the future.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <section id="contact" class="section section-gray">
+            <div class="container" style="text-align: center;">
+                <h2
+                    style="font-size: 2.75rem; font-weight: 300; color: #002855; margin-bottom: 1rem; letter-spacing: -0.5px;">
+                    Ready to Get Started?</h2>
+                <p style="font-size: 1.125rem; color: #4A4A4A; margin-bottom: 2.5rem; font-weight: 300;">Reach out to us
+                    and let's discuss how we can support your organization</p>
+                <a href="mailto:support@innovtelier.com" class="btn-hero-primary"
+                    style="background: #002855; color: white;">
+                    <i class="fas fa-envelope" aria-hidden="true"></i> Contact Us
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer" style="background: #002855; color: rgba(255, 255, 255, 0.8); padding: 3rem 0 1.5rem;">
+        <div class="container">
+            <div class="footer-content"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Innovtelier</h4>
+                    <p style="font-size: 0.875rem; line-height: 1.6; font-weight: 300;">Professional support services
+                        and legal technology solutions.</p>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Services</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Legal
+                                Support</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Non-Profit
+                                Support</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#services"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Organization
+                                & Productivity</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Products</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="products.html"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Case
+                                Management System</a></li>
+                        <li style="margin-bottom: 0.5rem;"><a href="auth.html"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Login</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4
+                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
+                        Company</h4>
+                    <ul style="list-style: none;">
+                        <li style="margin-bottom: 0.5rem;"><a href="#about"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">About</a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;"><a href="#contact"
+                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; font-weight: 300;">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom" style="text-align: center; padding-top: 1.5rem;">
+                <p style="font-size: 0.75rem; opacity: 0.6; font-weight: 300; margin-bottom: 0.5rem;">Innovtelier is not
+                    a law firm and does not provide legal advice or representation. Legal support services are offered
+                    exclusively under the supervision of a licensed attorney.</p>
+                <p style="font-size: 0.8125rem; opacity: 0.6; font-weight: 300;">&copy; 2024 Innovtelier. All rights
+                    reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

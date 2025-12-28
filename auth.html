@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Login or register for Innovtelier legal case management system">
+    <title>Login / Register - Innovtelier</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #002855 0%, #001a3d 100%);
+            padding: 2rem;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 2px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .auth-header {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .auth-header h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #002855;
+            margin-bottom: 0.5rem;
+        }
+
+        .auth-header p {
+            color: #6b7280;
+            font-size: 0.9375rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .auth-tab:hover {
+            color: #002855;
+            background: #f9fafb;
+        }
+
+        .auth-tab.active {
+            color: #002855;
+            border-bottom-color: #B8860B;
+        }
+
+        .auth-body {
+            padding: 2rem;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #374151;
+            font-size: 0.875rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 2px;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #002855;
+            box-shadow: 0 0 0 3px rgba(0, 40, 85, 0.1);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            font-size: 0.875rem;
+        }
+
+        .auth-submit {
+            width: 100%;
+            padding: 0.875rem;
+            background: #002855;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auth-submit:hover {
+            background: #001a3d;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 40, 85, 0.3);
+        }
+
+        .auth-divider {
+            display: flex;
+            align-items: center;
+            margin: 1.5rem 0;
+            color: #9ca3af;
+            font-size: 0.875rem;
+        }
+
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .auth-divider span {
+            padding: 0 1rem;
+        }
+
+        .oauth-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .oauth-btn {
+            width: 100%;
+            padding: 0.875rem;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 2px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .oauth-btn:hover {
+            background: #f9fafb;
+            border-color: #002855;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-top: 0.5rem;
+        }
+
+        .forgot-password a {
+            color: #002855;
+            font-size: 0.875rem;
+            text-decoration: none;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-footer {
+            text-align: center;
+            padding: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .auth-footer a {
+            color: #002855;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <main id="main-content" role="main">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h1>Welcome to Innovtelier</h1>
+                    <p>Legal case management made simple</p>
+                </div>
+
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login" aria-label="Switch to login form">Login</button>
+                    <button class="auth-tab" data-tab="register"
+                        aria-label="Switch to registration form">Register</button>
+                </div>
+
+                <div class="auth-body">
+                    <!-- Login Form -->
+                    <form id="loginForm" class="auth-form active">
+                        <div class="form-group">
+                            <label for="loginEmail">Email Address</label>
+                            <input type="email" id="loginEmail" name="email" required aria-required="true"
+                                placeholder="you@lawfirm.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Password</label>
+                            <input type="password" id="loginPassword" name="password" required aria-required="true"
+                                placeholder="••••••••">
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <label for="rememberMe">Remember me</label>
+                        </div>
+
+                        <div class="forgot-password">
+                            <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                        </div>
+
+                        <div class="error-message" id="loginError" role="alert"></div>
+
+                        <button type="submit" class="auth-submit">Login</button>
+
+                        <div class="auth-divider">
+                            <span>Or continue with</span>
+                        </div>
+
+                        <div class="oauth-buttons">
+                            <button type="button" class="oauth-btn" aria-label="Continue with Google">
+                                <i class="fab fa-google" aria-hidden="true"></i> Continue with Google
+                            </button>
+                            <button type="button" class="oauth-btn" aria-label="Continue with Microsoft">
+                                <i class="fab fa-microsoft" aria-hidden="true"></i> Continue with Microsoft
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Registration Form -->
+                    <form id="registerForm" class="auth-form">
+                        <div class="form-group">
+                            <label for="firmName">Law Firm Name</label>
+                            <input type="text" id="firmName" name="firmName" required aria-required="true"
+                                placeholder="Smith & Associates">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" required aria-required="true"
+                                placeholder="John Smith">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerEmail">Email Address</label>
+                            <input type="email" id="registerEmail" name="email" required aria-required="true"
+                                placeholder="you@lawfirm.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerPassword">Password</label>
+                            <input type="password" id="registerPassword" name="password" required aria-required="true"
+                                placeholder="••••••••" minlength="8">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                aria-required="true" placeholder="••••••••">
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="acceptTerms" name="acceptTerms" required aria-required="true">
+                            <label for="acceptTerms">I agree to the <a href="#" style="color: #002855;">Terms of
+                                    Service</a> and <a href="#" style="color: #002855;">Privacy Policy</a></label>
+                        </div>
+
+                        <div class="error-message" id="registerError" role="alert"></div>
+
+                        <button type="submit" class="auth-submit">Create Account</button>
+
+                        <div class="auth-divider">
+                            <span>Or continue with</span>
+                        </div>
+
+                        <div class="oauth-buttons">
+                            <button type="button" class="oauth-btn" aria-label="Continue with Google">
+                                <i class="fab fa-google" aria-hidden="true"></i> Continue with Google
+                            </button>
+                            <button type="button" class="oauth-btn" aria-label="Continue with Microsoft">
+                                <i class="fab fa-microsoft" aria-hidden="true"></i> Continue with Microsoft
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="auth-footer">
+                    <a href="index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Home</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="auth.js"></script>
+</body>
+
+</html>

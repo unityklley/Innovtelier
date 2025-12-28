@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client Intake Form - Legal Services</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-gavel" aria-hidden="true"></i>
+                    <h1>Legal Services Intake</h1>
+                </div>
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="paralegal-dashboard.html" class="nav-link">Paralegal Portal</a>
+                    <a href="reports-dashboard.html" class="nav-link">Reports</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="main" role="main">
+        <section class="intake-section">
+            <div class="container">
+                <div class="intake-container">
+                    <div class="intake-header">
+                        <h2>Client Intake Form</h2>
+                        <p>Please fill out this form to submit your legal matter. All information will be kept
+                            confidential.</p>
+                    </div>
+
+                    <form id="intakeForm" class="intake-form">
+                        <!-- Personal Information -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-user" aria-hidden="true"></i> Personal Information</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name *</label>
+                                    <input type="text" id="firstName" name="firstName" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name *</label>
+                                    <input type="text" id="lastName" name="lastName" required aria-required="true">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" name="email" required aria-required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" required aria-required="true">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="address">Street Address</label>
+                                    <input type="text" id="address" name="address">
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" name="city">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="state">State</label>
+                                    <input type="text" id="state" name="state" maxlength="2" placeholder="IL">
+                                </div>
+                                <div class="form-group">
+                                    <label for="zipCode">ZIP Code</label>
+                                    <input type="text" id="zipCode" name="zipCode" maxlength="10">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Case Information -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-folder-open"></i> Case Information</h3>
+                            <div class="form-group">
+                                <label for="caseType">Type of Legal Matter *</label>
+                                <select id="caseType" name="caseType" required aria-required="true">
+                                    <option value="">Select a case type...</option>
+                                    <option value="family-law">Family Law</option>
+                                    <option value="criminal-defense">Criminal Defense</option>
+                                    <option value="personal-injury">Personal Injury</option>
+                                    <option value="employment">Employment Law</option>
+                                    <option value="immigration">Immigration</option>
+                                    <option value="housing">Housing/Landlord-Tenant</option>
+                                    <option value="estate-planning">Estate Planning</option>
+                                    <option value="business">Business Law</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="otherCaseTypeGroup" style="display: none;">
+                                <label for="otherCaseType">Please specify</label>
+                                <input type="text" id="otherCaseType" name="otherCaseType">
+                            </div>
+                            <div class="form-group">
+                                <label for="urgency">Urgency Level *</label>
+                                <select id="urgency" name="urgency" required aria-required="true">
+                                    <option value="">Select urgency level...</option>
+                                    <option value="emergency">Emergency (within 24 hours)</option>
+                                    <option value="urgent">Urgent (within 3 days)</option>
+                                    <option value="normal">Normal (within 1 week)</option>
+                                    <option value="low">Low Priority</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="caseDescription">Case Description *</label>
+                                <textarea id="caseDescription" name="caseDescription" rows="6" required
+                                    placeholder="Please provide a detailed description of your legal matter..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="previousAttorney">Have you consulted with another attorney about this
+                                    matter?</label>
+                                <select id="previousAttorney" name="previousAttorney">
+                                    <option value="no">No</option>
+                                    <option value="yes">Yes</option>
+                                </select>
+                            </div>
+                            <div class="form-group" id="previousAttorneyDetails" style="display: none;">
+                                <label for="previousAttorneyInfo">Previous Attorney Information</label>
+                                <textarea id="previousAttorneyInfo" name="previousAttorneyInfo" rows="3"
+                                    placeholder="Attorney name, firm, and any relevant details..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Family Law Specific Fields -->
+                        <div class="form-section" id="familyLawSection" style="display: none;">
+                            <h3><i class="fas fa-users"></i> Family Law Details</h3>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="county">County</label>
+                                    <select id="county" name="county">
+                                        <option value="">Select county...</option>
+                                        <option value="Cook">Cook County</option>
+                                        <option value="DuPage">DuPage County</option>
+                                        <option value="Lake">Lake County</option>
+                                        <option value="Will">Will County</option>
+                                        <option value="Kane">Kane County</option>
+                                        <option value="McHenry">McHenry County</option>
+                                        <option value="Winnebago">Winnebago County</option>
+                                        <option value="Madison">Madison County</option>
+                                        <option value="St. Clair">St. Clair County</option>
+                                        <option value="Sangamon">Sangamon County</option>
+                                        <option value="Champaign">Champaign County</option>
+                                        <option value="Peoria">Peoria County</option>
+                                        <option value="Rock Island">Rock Island County</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="judgeAssigned">Judge Assigned (if known)</label>
+                                    <input type="text" id="judgeAssigned" name="judgeAssigned"
+                                        placeholder="Judge's name">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Are children involved in this case?</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="childrenInvolved" value="no" checked>
+                                        <span>No</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="childrenInvolved" value="yes">
+                                        <span>Yes</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="numberOfChildrenGroup" style="display: none;">
+                                <label for="numberOfChildren">Number of Children</label>
+                                <input type="number" id="numberOfChildren" name="numberOfChildren" min="1" max="20">
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="domesticViolence" name="domesticViolence">
+                                    <span class="checkmark"></span>
+                                    This case involves domestic violence
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Additional Information -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-info-circle"></i> Additional Information</h3>
+                            <div class="form-group">
+                                <label for="referralSource">How did you hear about us?</label>
+                                <select id="referralSource" name="referralSource">
+                                    <option value="">Select an option...</option>
+                                    <option value="website">Website</option>
+                                    <option value="referral">Referral from friend/family</option>
+                                    <option value="google">Google Search</option>
+                                    <option value="social-media">Social Media</option>
+                                    <option value="advertisement">Advertisement</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="additionalNotes">Additional Notes or Information</label>
+                                <textarea id="additionalNotes" name="additionalNotes" rows="4"
+                                    placeholder="Any other information that may be relevant to your case..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- File Attachments -->
+                        <div class="form-section">
+                            <h3><i class="fas fa-paperclip"></i> Document Attachments</h3>
+                            <div class="form-group">
+                                <label for="fileUpload">Upload Documents (Optional)</label>
+                                <div class="file-upload-area" id="fileUploadArea">
+                                    <input type="file" id="fileUpload" name="fileUpload" multiple
+                                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.txt">
+                                    <div class="file-upload-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Click to upload or drag and drop</p>
+                                        <p class="file-upload-hint">PDF, DOC, DOCX, JPG, PNG, TXT (Max 10MB per file)
+                                        </p>
+                                    </div>
+                                </div>
+                                <div id="fileList" class="file-list"></div>
+                            </div>
+                        </div>
+
+                        <!-- Consent and Submission -->
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="consent" name="consent" required aria-required="true">
+                                    <span class="checkmark"></span>
+                                    I consent to being contacted regarding this matter and understand that submitting
+                                    this form does not create an attorney-client relationship. *
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="privacyConsent" name="privacyConsent" required aria-required="true">
+                                    <span class="checkmark"></span>
+                                    I have read and agree to the Privacy Policy and Terms of Service. *
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" id="saveDraftBtn">
+                                <i class="fas fa-save"></i>
+                                Save Draft
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Submit Intake Form
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Legal Services</h4>
+                    <p>Professional legal representation you can trust.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Email: info@legalservices.com</p>
+                    <p>Phone: (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Legal Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Intake Form Submitted Successfully!</h3>
+                <button class="modal-close" onclick="closeSuccessModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <p>Thank you for submitting your intake form. Your case has been assigned case number:</p>
+                <p class="case-number" id="submittedCaseNumber"></p>
+                <p>Our team will review your submission and contact you within 1-2 business days.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeSuccessModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="client-intake.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paralegal Dashboard - Case Management</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+    // Authentication check
+    (function() {
+        const session = JSON.parse(localStorage.getItem("innovtelierSession") || "null");
+        if (!session || !session.isAuthenticated) {
+            window.location.href = "auth.html";
+        }
+    })();
+    </script>
+
+</head>
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-briefcase"></i>
+                    <h1>Paralegal Dashboard</h1>
+                </div>
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="client-intake.html" class="nav-link">Client Intake</a>
+                    <a href="reports-dashboard.html" class="nav-link">Reports</a>
+                    <button onclick="localStorage.removeItem('innovtelierSession'); window.location.href='index.html';" class="btn-secondary" style="padding: 0.5rem 1rem;" aria-label="Logout">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout
+                    </button>
+                    <button class="btn-icon" id="refreshBtn" title="Refresh Cases">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="main" role="main">
+        <!-- Dashboard Stats -->
+        <section class="dashboard-stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="pendingCount">0</h3>
+                            <p>Pending Cases</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon active">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="activeCount">0</h3>
+                            <p>Active Cases</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon completed">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="completedCount">0</h3>
+                            <p>Completed Cases</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon total">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="totalCount">0</h3>
+                            <p>Total Cases</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters and Search -->
+        <section class="dashboard-controls">
+            <div class="container">
+                <div class="controls-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search cases by name, case number, or type...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="active">Active</option>
+                            <option value="on-hold">On Hold</option>
+                            <option value="completed">Completed</option>
+                            <option value="closed">Closed</option>
+                        </select>
+                        <select id="typeFilter">
+                            <option value="">All Types</option>
+                            <option value="family-law">Family Law</option>
+                            <option value="criminal-defense">Criminal Defense</option>
+                            <option value="personal-injury">Personal Injury</option>
+                            <option value="employment">Employment Law</option>
+                            <option value="immigration">Immigration</option>
+                            <option value="housing">Housing</option>
+                            <option value="estate-planning">Estate Planning</option>
+                            <option value="business">Business Law</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <select id="urgencyFilter">
+                            <option value="">All Urgency Levels</option>
+                            <option value="emergency">Emergency</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low Priority</option>
+                        </select>
+                        <button class="btn-secondary" id="clearFiltersBtn">
+                            <i class="fas fa-times"></i>
+                            Clear Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cases List -->
+        <section class="cases-section">
+            <div class="container">
+                <div class="cases-header">
+                    <h2>Cases</h2>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="list" title="List View">
+                            <i class="fas fa-list"></i>
+                        </button>
+                        <button class="view-btn" data-view="grid" title="Grid View">
+                            <i class="fas fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="casesContainer" class="cases-container">
+                    <!-- Cases will be populated by JavaScript -->
+                </div>
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <i class="fas fa-inbox"></i>
+                    <h4>No cases found</h4>
+                    <p>No cases match your current filters. Try adjusting your search criteria.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Case Detail Modal -->
+    <div id="caseModal" class="modal" style="display: none;">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 id="modalCaseTitle">Case Details</h3>
+                <button class="modal-close" onclick="closeCaseModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalCaseBody">
+                <!-- Case details will be populated by JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCaseModal()">Close</button>
+                <button class="btn-primary" id="updateCaseBtn">
+                    <i class="fas fa-save"></i>
+                    Update Case
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Case Status Modal -->
+    <div id="updateStatusModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Case Status</h3>
+                <button class="modal-close" onclick="closeUpdateStatusModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newStatus">New Status *</label>
+                    <select id="newStatus" required>
+                        <option value="pending">Pending</option>
+                        <option value="active">Active</option>
+                        <option value="on-hold">On Hold</option>
+                        <option value="completed">Completed</option>
+                        <option value="closed">Closed</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusNotes">Notes (Optional)</label>
+                    <textarea id="statusNotes" rows="4" placeholder="Add any notes about this status change..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeUpdateStatusModal()">Cancel</button>
+                <button class="btn-primary" id="confirmStatusUpdateBtn">
+                    <i class="fas fa-check"></i>
+                    Update Status
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Paralegal Dashboard</h4>
+                    <p>Case management system for legal professionals.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Actions</h4>
+                    <ul>
+                        <li><a href="client-intake.html">New Client Intake</a></li>
+                        <li><a href="#" onclick="exportCases()">Export Cases</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Legal Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="paralegal-dashboard.js"></script>
+</body>
+</html>
+

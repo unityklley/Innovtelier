@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Dashboard - Case Management</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .reports-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .report-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .report-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .report-card h3 i {
+            color: #667eea;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 1rem;
+        }
+
+        .metric-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .metric-item:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 500;
+            color: #4a5568;
+        }
+
+        .metric-value {
+            font-weight: 600;
+            font-size: 1.125rem;
+            color: #1a202c;
+        }
+
+        .metric-value.positive {
+            color: #10b981;
+        }
+
+        .metric-value.negative {
+            color: #ef4444;
+        }
+
+        .date-range-selector {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .date-range-selector h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1a202c;
+        }
+
+        .date-inputs {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            flex-wrap: wrap;
+        }
+
+        .date-input-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .date-input-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-input-group input {
+            width: 100%;
+            padding: 0.625rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .quick-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .quick-filter-btn {
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-filter-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .quick-filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            color: white;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .summary-card h4 {
+            font-size: 0.875rem;
+            font-weight: 500;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .summary-card .change {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .export-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .no-data-message {
+            text-align: center;
+            padding: 3rem;
+            color: #6b7280;
+        }
+
+        .no-data-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+    <script>
+    // Authentication check
+    (function() {
+        const session = JSON.parse(localStorage.getItem("innovtelierSession") || "null");
+        if (!session || !session.isAuthenticated) {
+            window.location.href = "auth.html";
+        }
+    })();
+    </script>
+
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="header" role="banner">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                    <h1>Reports Dashboard</h1>
+                </div>
+                <nav class="nav" role="navigation" aria-label="Main navigation">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="client-intake.html" class="nav-link">Client Intake</a>
+                    <a href="paralegal-dashboard.html" class="nav-link">Dashboard</a>
+                    <button onclick="localStorage.removeItem('innovtelierSession'); window.location.href='index.html';" class="btn-secondary" style="padding: 0.5rem 1rem;" aria-label="Logout">
+                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout
+                    </button>
+                    <button class="btn-icon" id="refreshBtn" title="Refresh Reports">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" class="main" role="main">
+        <div class="container">
+            <!-- Date Range Selector -->
+            <div class="date-range-selector">
+                <h3><i class="fas fa-calendar-alt"></i> Date Range</h3>
+                <div class="date-inputs">
+                    <div class="date-input-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate">
+                    </div>
+                    <div class="date-input-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate">
+                    </div>
+                    <button class="btn-primary" id="applyDateRange">
+                        <i class="fas fa-filter"></i> Apply Filter
+                    </button>
+                </div>
+                <div class="quick-filters">
+                    <button class="quick-filter-btn active" data-range="all">All Time</button>
+                    <button class="quick-filter-btn" data-range="today">Today</button>
+                    <button class="quick-filter-btn" data-range="week">This Week</button>
+                    <button class="quick-filter-btn" data-range="month">This Month</button>
+                    <button class="quick-filter-btn" data-range="quarter">This Quarter</button>
+                    <button class="quick-filter-btn" data-range="year">This Year</button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="summary-cards" id="summaryCards">
+                <!-- Populated by JavaScript -->
+            </div>
+
+            <!-- Export Section -->
+            <div class="export-section">
+                <h3><i class="fas fa-download"></i> Export Reports</h3>
+                <div class="export-buttons">
+                    <button class="btn-primary" id="exportPDF">
+                        <i class="fas fa-file-pdf"></i> Export as PDF
+                    </button>
+                    <button class="btn-secondary" id="exportCSV">
+                        <i class="fas fa-file-csv"></i> Export as CSV
+                    </button>
+                    <button class="btn-secondary" id="exportJSON">
+                        <i class="fas fa-file-code"></i> Export as JSON
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reports Grid -->
+            <div class="reports-grid" id="reportsGrid">
+                <!-- Case Status Distribution -->
+                <div class="report-card">
+                    <h3><i class="fas fa-chart-pie"></i> Case Status Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Case Types -->
+                <div class="report-card">
+                    <h3><i class="fas fa-chart-bar"></i> Cases by Type</h3>
+                    <div class="chart-container">
+                        <canvas id="typeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Urgency Levels -->
+                <div class="report-card">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Urgency Levels</h3>
+                    <div class="chart-container">
+                        <canvas id="urgencyChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cases Over Time -->
+                <div class="report-card">
+                    <h3><i class="fas fa-chart-line"></i> Cases Over Time</h3>
+                    <div class="chart-container">
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Top Metrics -->
+                <div class="report-card">
+                    <h3><i class="fas fa-list-ol"></i> Key Metrics</h3>
+                    <ul class="metric-list" id="metricsList">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+
+                <!-- Case Resolution Time -->
+                <div class="report-card">
+                    <h3><i class="fas fa-clock"></i> Average Resolution Time</h3>
+                    <ul class="metric-list" id="resolutionMetrics">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Family Law Specific Metrics -->
+            <div id="familyLawMetricsSection" style="display: none;">
+                <h2 style="margin: 3rem 0 1.5rem 0; color: #1a202c;">
+                    <i class="fas fa-users"></i> Family Law Analytics
+                </h2>
+
+                <div class="reports-grid">
+                    <!-- County Distribution -->
+                    <div class="report-card">
+                        <h3><i class="fas fa-map-marker-alt"></i> Cases by County</h3>
+                        <div class="chart-container">
+                            <canvas id="countyChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Judge Distribution -->
+                    <div class="report-card">
+                        <h3><i class="fas fa-gavel"></i> Cases by Judge</h3>
+                        <div class="chart-container">
+                            <canvas id="judgeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Children Involvement -->
+                    <div class="report-card">
+                        <h3><i class="fas fa-child"></i> Children Involvement</h3>
+                        <div class="chart-container">
+                            <canvas id="childrenChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Family Law Metrics -->
+                    <div class="report-card">
+                        <h3><i class="fas fa-list-check"></i> Family Law Metrics</h3>
+                        <ul class="metric-list" id="familyLawMetricsList">
+                            <!-- Populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="noDataMessage" class="no-data-message" style="display: none;">
+                <i class="fas fa-chart-bar"></i>
+                <h3>No Data Available</h3>
+                <p>Start by adding cases through the Client Intake form to see reports.</p>
+                <a href="client-intake.html" class="btn-primary" style="margin-top: 1rem; display: inline-block;">
+                    <i class="fas fa-plus"></i> Add First Case
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Reports Dashboard</h4>
+                    <p>Analytics and insights for your legal case management.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="client-intake.html">New Client Intake</a></li>
+                        <li><a href="paralegal-dashboard.html">Case Dashboard</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Legal Services. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="reports-dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Management System - Navigation</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .navigation-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+        }
+
+        .nav-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .nav-card-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .nav-card h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-card-features {
+            list-style: none;
+            text-align: left;
+            margin: 1.5rem 0;
+        }
+
+        .nav-card-features li {
+            padding: 0.5rem 0;
+            color: #4a5568;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-card-features li i {
+            color: #667eea;
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-card:hover .btn-nav {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="navigation-container">
+        <div class="nav-cards">
+            <a href="client-intake.html" class="nav-card">
+                <div class="nav-card-icon">
+                    <i class="fas fa-file-signature"></i>
+                </div>
+                <h2>Client Intake Form</h2>
+                <p>For clients to submit their legal matter intake forms with file attachments</p>
+                <ul class="nav-card-features">
+                    <li><i class="fas fa-check"></i> Personal information collection</li>
+                    <li><i class="fas fa-check"></i> Case type and urgency selection</li>
+                    <li><i class="fas fa-check"></i> File attachment support</li>
+                    <li><i class="fas fa-check"></i> Auto-save draft functionality</li>
+                </ul>
+                <span class="btn-nav">
+                    Go to Intake Form <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <a href="paralegal-dashboard.html" class="nav-card">
+                <div class="nav-card-icon">
+                    <i class="fas fa-briefcase"></i>
+                </div>
+                <h2>Katrina's Case Management Tool</h2>
+                <p>For paralegals to view, manage, and track client cases</p>
+                <ul class="nav-card-features">
+                    <li><i class="fas fa-check"></i> Case search and filtering</li>
+                    <li><i class="fas fa-check"></i> Status management</li>
+                    <li><i class="fas fa-check"></i> Case notes and updates</li>
+                    <li><i class="fas fa-check"></i> File download access</li>
+                </ul>
+                <span class="btn-nav">
+                    Go to Dashboard <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+
+            <a href="reports-dashboard.html" class="nav-card">
+                <div class="nav-card-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2>Reports Dashboard</h2>
+                <p>Analytics and insights for growth, time tracking, expenses, and more</p>
+                <ul class="nav-card-features">
+                    <li><i class="fas fa-check"></i> Revenue and growth tracking</li>
+                    <li><i class="fas fa-check"></i> Billable vs non-billable hours</li>
+                    <li><i class="fas fa-check"></i> Accounts receivable & trust balances</li>
+                    <li><i class="fas fa-check"></i> Detailed drill-down reports</li>
+                </ul>
+                <span class="btn-nav">
+                    View Reports <i class="fas fa-arrow-right"></i>
+                </span>
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
