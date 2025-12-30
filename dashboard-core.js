@@ -427,7 +427,7 @@ const Dashboard = {
                 <td><span class="badge badge-${user.status}">${user.status}</span></td>
                 <td>${this.formatDate(user.createdAt)}</td>
                 <td>
-                    <button class="btn-sm btn-reject" onclick="deleteUser('${user.id}')" title="Delete User">
+                    <button class="btn-sm btn-reject" onclick="Dashboard.deleteUser('${user.id}')" title="Delete User">
                         <i class="fas fa-trash"></i>
                     </button>
                 </td>
@@ -436,6 +436,7 @@ const Dashboard = {
     },
 
     deleteUser(userId) {
+        console.log('Attempting to delete user:', userId);
         if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) {
             return;
         }
