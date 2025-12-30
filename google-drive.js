@@ -241,7 +241,9 @@ const GoogleDrive = {
             return result;
         } catch (error) {
             console.error('Error uploading to Drive:', error);
-            alert('Failed to upload to Google Drive. Please try again.');
+            // Alert specific error to help debugging
+            const errorMessage = error.message || (error.result && error.result.error && error.result.error.message) || JSON.stringify(error);
+            alert(`Failed to upload to Google Drive: ${errorMessage}`);
             return null;
         }
     },
