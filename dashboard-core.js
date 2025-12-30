@@ -446,6 +446,103 @@ const Dashboard = {
         `;
     },
 
+    openAddNewClientModal() {
+        const modal = document.getElementById('addNewClientModal');
+        if (modal) modal.classList.add('active');
+    },
+
+    async createNewClient() {
+        const orgName = document.getElementById('newClientOrgName').value.trim();
+        const clientName = document.getElementById('newClientName').value.trim();
+        const email = document.getElementById('newClientEmail').value.trim();
+        const btn = document.getElementById('btnCreateClient');
+
+        if (!orgName || !clientName || !email) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        // Show loading state
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            btn.disabled = true;
+        }
+
+        try {
+            // 1. Generate Folder Structure in Google Drive
+            // We use a simplified ID for the folder name to keep it clean
+            const simpleId = 'CL-' + Math.floor(1000 + Math.random() * 9000); // e.g. CL-1234
+            let driveFolderId = null;
+
+            if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn) {
+                console.log('Generating Drive folders...');
+                driveFolderId = await GoogleDrive.createClientFolderStructure(orgName, simpleId);
+            } else {
+                console.warn('Google Drive not connected. Folders will not be created.');
+                // We proceed anyway, just without the folder link
+            }
+
+            // 2. Create Organization Record
+            const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+            const newOrg = {
+                id: 'org_' + Date.now(),
+                name: orgName,
+                clientId: simpleId,
+                type: 'client',
+                status: 'active',
+                driveFolderId: driveFolderId, // Link to the root folder
+                createdAt: new Date().toISOString()
+            };
+            organizations.push(newOrg);
+            localStorage.setItem('organizations', JSON.stringify(organizations));
+
+            // 3. Create Client Admin User
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            // Split name
+            const names = clientName.split(' ');
+            const firstName = names[0];
+            const lastName = names.slice(1).join(' ') || '';
+
+            const newUser = {
+                id: 'user_' + Date.now(),
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: 'welcome123',
+                organizationId: newOrg.id,
+                organizationName: orgName,
+                role: 'client_admin',
+                status: 'active',
+                createdAt: new Date().toISOString()
+            };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            // 4. Cleanup & Refresh
+            this.closeModal();
+            this.loadAllUsers();
+            this.loadOrganizations();
+            this.loadAdminStats();
+
+            let successMsg = `Client "${orgName}" onboarded successfully!`;
+            if (driveFolderId) {
+                successMsg += `\n\nGoogle Drive Folders Created.`;
+            } else {
+                successMsg += `\n\n(Note: Google Drive was not connected, so folders were not created)`;
+            }
+            alert(successMsg);
+
+        } catch (error) {
+            console.error('Error creating client:', error);
+            alert('Failed to complete onboarding: ' + error.message);
+        } finally {
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-magic"></i> Create Client & Folders';
+                btn.disabled = false;
+            }
+        }
+    },
+
     approveUser(userId) {
         this.selectedUserId = userId;
         const users = JSON.parse(localStorage.getItem('users') || '[]');
@@ -1057,4 +1154,9 @@ document.addEventListener('DOMContentLoaded', () => {
 window.uploadDocument = uploadDocument;
 window.shareDocument = shareDocument;
 window.deleteDocument = deleteDocument;
+
+// Expose new client functions
+window.openAddNewClientModal = () => Dashboard.openAddNewClientModal();
+window.createNewClient = () => Dashboard.createNewClient();
+
 console.log('Global functions exposed to window');
