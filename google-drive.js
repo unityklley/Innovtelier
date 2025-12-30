@@ -135,6 +135,47 @@ const GoogleDrive = {
         alert('Disconnected from Google Drive');
     },
 
+    async getOrCreateFolder(folderName) {
+        if (!this.isSignedIn || !this.accessToken) return null;
+
+        try {
+            // 1. Search for existing folder
+            const searchResponse = await fetch(
+                `https://www.googleapis.com/drive/v3/files?q=mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false&fields=files(id, name)`,
+                {
+                    headers: { 'Authorization': `Bearer ${this.accessToken}` }
+                }
+            );
+            const searchResult = await searchResponse.json();
+
+            if (searchResult.files && searchResult.files.length > 0) {
+                return searchResult.files[0].id;
+            }
+
+            // 2. Create folder if not found
+            const metadata = {
+                name: folderName,
+                mimeType: 'application/vnd.google-apps.folder'
+            };
+
+            const createResponse = await fetch('https://www.googleapis.com/drive/v3/files', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(metadata)
+            });
+
+            const createResult = await createResponse.json();
+            return createResult.id;
+
+        } catch (error) {
+            console.error('Error getting/creating folder:', error);
+            return null;
+        }
+    },
+
     async uploadFile(file, category) {
         if (!this.isSignedIn) {
             alert('Please enable demo mode or sign in to Google Drive first');
@@ -154,7 +195,7 @@ const GoogleDrive = {
                     modifiedTime: new Date().toISOString()
                 };
 
-                // Store file metadata (not actual file in demo mode)
+                // Store file metadata
                 const demoFiles = JSON.parse(localStorage.getItem('demoFiles') || '[]');
                 demoFiles.push(fileData);
                 localStorage.setItem('demoFiles', JSON.stringify(demoFiles));
@@ -169,10 +210,14 @@ const GoogleDrive = {
 
         // Real Google Drive upload
         try {
+            // Get or create specific folder
+            const folderId = await this.getOrCreateFolder('Innovtelier Documents');
+
             const metadata = {
                 name: file.name,
                 mimeType: file.type,
-                description: `Category: ${category}`
+                description: `Category: ${category}`,
+                parents: folderId ? [folderId] : [] // Add to folder if found
             };
 
             const form = new FormData();
