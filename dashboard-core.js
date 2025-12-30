@@ -582,7 +582,26 @@ const Dashboard = {
                 this.loadOrganizations();
                 this.loadAdminStats();
 
-                alert(`Client "${orgName}" onboarded successfully!${driveStatusMsg}`);
+                // Show Success Modal
+                const successModal = document.getElementById('onboardingSuccessModal');
+                const driveBadge = document.getElementById('driveSuccessBadge');
+
+                if (successModal) {
+                    if (!driveFolderId) {
+                        driveBadge.style.display = 'none'; // Hide if drive failed
+                    } else {
+                        driveBadge.style.display = 'inline-block';
+                    }
+
+                    successModal.classList.add('active');
+
+                    // Auto close after 3 seconds
+                    setTimeout(() => {
+                        successModal.classList.remove('active');
+                    }, 3000);
+                } else {
+                    alert(`Client "${orgName}" onboarded successfully!${driveStatusMsg}`);
+                }
             }, 100);
 
         } catch (error) {
@@ -1212,5 +1231,6 @@ window.deleteDocument = deleteDocument;
 window.openAddNewClientModal = () => Dashboard.openAddNewClientModal();
 window.createNewClient = () => Dashboard.createNewClient();
 window.deleteUser = (id) => Dashboard.deleteUser(id);
+window.closeModal = () => Dashboard.closeModal();
 
 console.log('Global functions exposed to window');
