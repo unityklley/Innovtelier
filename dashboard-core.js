@@ -426,8 +426,39 @@ const Dashboard = {
                 <td>${this.formatRole(user.role)}</td>
                 <td><span class="badge badge-${user.status}">${user.status}</span></td>
                 <td>${this.formatDate(user.createdAt)}</td>
+                <td>
+                    <button class="btn-sm btn-reject" onclick="deleteUser('${user.id}')" title="Delete User">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
             </tr>
         `).join('');
+    },
+
+    deleteUser(userId) {
+        if (!confirm('Are you sure you want to delete this user? This cannot be undone.')) {
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const userIndex = users.findIndex(u => u.id === userId);
+
+        if (userIndex === -1) return;
+
+        // Prevent deleting yourself
+        if (users[userIndex].id === this.currentUser.id) {
+            alert('You cannot delete your own account.');
+            return;
+        }
+
+        const deletedUser = users[userIndex];
+        users.splice(userIndex, 1);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        this.loadAllUsers();
+        this.loadAdminStats();
+
+        alert(`User ${deletedUser.firstName} ${deletedUser.lastName} deleted successfully.`);
     },
 
     loadOrganizations() {
@@ -1180,5 +1211,6 @@ window.deleteDocument = deleteDocument;
 // Expose new client functions
 window.openAddNewClientModal = () => Dashboard.openAddNewClientModal();
 window.createNewClient = () => Dashboard.createNewClient();
+window.deleteUser = (id) => Dashboard.deleteUser(id);
 
 console.log('Global functions exposed to window');
