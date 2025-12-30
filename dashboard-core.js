@@ -781,6 +781,13 @@ const Dashboard = {
                 return;
             }
 
+            if (!driveFile) {
+                console.log('Upload cancelled or failed silently');
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+                return;
+            }
+
             uploadBtn.innerHTML = originalText;
             uploadBtn.disabled = false;
         }
