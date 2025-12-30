@@ -185,6 +185,12 @@ const GoogleDrive = {
             return null;
         }
 
+        if (!this.accessToken) {
+            alert('Please grant Google Drive permissions to continue. A popup will appear - please approve access, then try uploading again.');
+            this.tokenClient.requestAccessToken();
+            return null;
+        }
+
         // Demo mode - simulate upload with localStorage
         if (this.demoMode) {
             try {
