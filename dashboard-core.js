@@ -964,7 +964,13 @@ const Dashboard = {
             return;
         }
 
-        // In a real app, this would download from server
+        // Open actual file link if available
+        if (document.url) {
+            window.open(document.url, '_blank');
+            return;
+        }
+
+        // Fallback for mock data without URLs
         alert(`Downloading: ${document.name}\n\nIn a production environment, this would download the actual file.`);
     },
 
