@@ -178,8 +178,10 @@ const GoogleDrive = {
     },
 
     async uploadFile(file, category) {
+        console.log('Starting uploadFile...', file.name);
+
         if (!this.isSignedIn) {
-            alert('Please enable demo mode or sign in to Google Drive first');
+            alert('Please sign in to Google Drive first. If you are signed in, try refreshing the page.');
             return null;
         }
 
