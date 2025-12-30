@@ -3,7 +3,8 @@
 
 const GoogleDrive = {
     CLIENT_ID: '449386559636-rvq9i6h15h3p0vjj5j1nhkqv6bs498i6.apps.googleusercontent.com',
-    SCOPES: 'https://www.googleapis.com/auth/drive.file',
+    SCOPES: 'https://www.googleapis.com/auth/drive', // Full Drive access to use existing folders
+    MASTER_FOLDER_ID: '1aE8vaRZ3TQ5rVcuf4Kd11BMz6__GUv7K', // User defined master folder
     tokenClient: null,
     accessToken: null,
     isSignedIn: false,
@@ -210,14 +211,14 @@ const GoogleDrive = {
 
         // Real Google Drive upload
         try {
-            // Get or create specific folder
-            const folderId = await this.getOrCreateFolder('Innovtelier Documents');
+            // Use the specific master folder provided by user
+            const folderId = this.MASTER_FOLDER_ID;
 
             const metadata = {
                 name: file.name,
                 mimeType: file.type,
                 description: `Category: ${category}`,
-                parents: folderId ? [folderId] : [] // Add to folder if found
+                parents: [folderId] // Always upload to the master folder
             };
 
             const form = new FormData();
