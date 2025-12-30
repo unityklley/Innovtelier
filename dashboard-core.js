@@ -786,7 +786,7 @@ const Dashboard = {
         }
 
         // Create document object
-        const document = {
+        const newDoc = {
             id: driveFile ? driveFile.id : 'doc_' + Date.now(),
             name: file.name,
             type: file.name.split('.').pop().toLowerCase(),
@@ -807,7 +807,7 @@ const Dashboard = {
 
         // Save to localStorage
         const documents = JSON.parse(localStorage.getItem('documents') || '[]');
-        documents.push(document);
+        documents.push(newDoc);
         localStorage.setItem('documents', JSON.stringify(documents));
 
         // Clear input
