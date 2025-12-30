@@ -136,30 +136,17 @@ const GoogleDrive = {
         alert('Disconnected from Google Drive');
     },
 
-    async getOrCreateFolder(folderName) {
+    async createFolder(folderName, parentId) {
         if (!this.isSignedIn || !this.accessToken) return null;
 
         try {
-            // 1. Search for existing folder
-            const searchResponse = await fetch(
-                `https://www.googleapis.com/drive/v3/files?q=mimeType='application/vnd.google-apps.folder' and name='${folderName}' and trashed=false&fields=files(id, name)`,
-                {
-                    headers: { 'Authorization': `Bearer ${this.accessToken}` }
-                }
-            );
-            const searchResult = await searchResponse.json();
-
-            if (searchResult.files && searchResult.files.length > 0) {
-                return searchResult.files[0].id;
-            }
-
-            // 2. Create folder if not found
             const metadata = {
                 name: folderName,
-                mimeType: 'application/vnd.google-apps.folder'
+                mimeType: 'application/vnd.google-apps.folder',
+                parents: [parentId]
             };
 
-            const createResponse = await fetch('https://www.googleapis.com/drive/v3/files', {
+            const response = await fetch('https://www.googleapis.com/drive/v3/files', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`,
@@ -168,12 +155,47 @@ const GoogleDrive = {
                 body: JSON.stringify(metadata)
             });
 
-            const createResult = await createResponse.json();
-            return createResult.id;
+            if (!response.ok) throw new Error('Failed to create folder');
+            const result = await response.json();
+            return result.id;
+        } catch (error) {
+            console.error(`Error creating folder "${folderName}":`, error);
+            return null;
+        }
+    },
+
+    async createClientFolderStructure(clientName, clientId) {
+        console.log(`Creating folder structure for ${clientName}...`);
+
+        // 1. Create Root Client Folder
+        const rootName = `${clientName} - ${clientId}`;
+        const rootId = await this.createFolder(rootName, this.MASTER_FOLDER_ID);
+
+        if (!rootId) {
+            alert('Failed to create client root folder in Drive.');
+            return null;
+        }
+
+        // 2. Create Sub-folders
+        try {
+            // Administrative Folder
+            await this.createFolder('Administrative Folder', rootId);
+
+            // Case Files & its Subfolders
+            const caseFilesId = await this.createFolder('Case Files', rootId);
+            if (caseFilesId) {
+                await this.createFolder('Pending Filings', caseFilesId);
+                await this.createFolder('Communications', caseFilesId);
+                await this.createFolder('Entered Filings', caseFilesId);
+            }
+
+            console.log('Folder structure created successfully!');
+            return rootId;
 
         } catch (error) {
-            console.error('Error getting/creating folder:', error);
-            return null;
+            console.error('Error creating subfolders:', error);
+            // We return the rootId anyway so we can at least link the main folder
+            return rootId;
         }
     },
 
