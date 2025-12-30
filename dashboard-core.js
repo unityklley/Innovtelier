@@ -462,24 +462,49 @@ const Dashboard = {
             return;
         }
 
+        // Check for duplicate email locally first
+        const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+        if (existingUsers.some(u => u.email === email)) {
+            alert('A user with this email address already exists.');
+            return;
+        }
+
         // Show loading state
         if (btn) {
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             btn.disabled = true;
         }
 
         try {
             // 1. Generate Folder Structure in Google Drive
-            // We use a simplified ID for the folder name to keep it clean
             const simpleId = 'CL-' + Math.floor(1000 + Math.random() * 9000); // e.g. CL-1234
             let driveFolderId = null;
+            let driveStatusMsg = '';
 
-            if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn) {
-                console.log('Generating Drive folders...');
-                driveFolderId = await GoogleDrive.createClientFolderStructure(orgName, simpleId);
-            } else {
-                console.warn('Google Drive not connected. Folders will not be created.');
-                // We proceed anyway, just without the folder link
+            // Ensure Google Drive is ready
+            if (typeof GoogleDrive !== 'undefined') {
+                if (!GoogleDrive.isSignedIn) {
+                    console.log('Drive not signed in. Attempting check...');
+                    await GoogleDrive.checkAuth();
+                }
+
+                if (GoogleDrive.isSignedIn) {
+                    console.log('Generating Drive folders...');
+                    try {
+                        driveFolderId = await GoogleDrive.createClientFolderStructure(orgName, simpleId);
+                        if (driveFolderId) {
+                            driveStatusMsg = '\n\n✅ Google Drive Folders Created.';
+                        } else {
+                            driveStatusMsg = '\n\n⚠️ Failed to create folders (API Error). Check console.';
+                        }
+                    } catch (driveErr) {
+                        console.error('Drive creation error:', driveErr);
+                        driveStatusMsg = '\n\n⚠️ Drive Error: ' + driveErr.message;
+                    }
+                } else {
+                    console.warn('Google Drive not connected.');
+                    driveStatusMsg = '\n\n(Note: Google Drive was not connected, so folders were not created. Please sign in to Drive and try again for future clients.)';
+                }
             }
 
             // 2. Create Organization Record
@@ -498,7 +523,6 @@ const Dashboard = {
 
             // 3. Create Client Admin User
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            // Split name
             const names = clientName.split(' ');
             const firstName = names[0];
             const lastName = names.slice(1).join(' ') || '';
@@ -519,18 +543,16 @@ const Dashboard = {
             localStorage.setItem('users', JSON.stringify(users));
 
             // 4. Cleanup & Refresh
-            this.closeModal();
-            this.loadAllUsers();
-            this.loadOrganizations();
-            this.loadAdminStats();
+            this.closeModal(); // Visual close
 
-            let successMsg = `Client "${orgName}" onboarded successfully!`;
-            if (driveFolderId) {
-                successMsg += `\n\nGoogle Drive Folders Created.`;
-            } else {
-                successMsg += `\n\n(Note: Google Drive was not connected, so folders were not created)`;
-            }
-            alert(successMsg);
+            // Allow UI to update before alerting
+            setTimeout(() => {
+                this.loadAllUsers();
+                this.loadOrganizations();
+                this.loadAdminStats();
+
+                alert(`Client "${orgName}" onboarded successfully!${driveStatusMsg}`);
+            }, 100);
 
         } catch (error) {
             console.error('Error creating client:', error);
