@@ -820,6 +820,7 @@ const Dashboard = {
         isActive('approvalModal');
         isActive('rejectionModal');
         isActive('addClientUserModal');
+        isActive('addNewClientModal');
 
         const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
         setVal('approvalNotes', '');
