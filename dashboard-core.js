@@ -1024,6 +1024,7 @@ function deleteDocument(docId) {
 
 // Setup organization selector
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - Initializing Dashboard');
     Dashboard.init();
 
     const orgSelect = document.getElementById('assignOrganization');
@@ -1038,3 +1039,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Explicitly expose functions to window to ensure HTML access
+window.uploadDocument = uploadDocument;
+window.shareDocument = shareDocument;
+window.deleteDocument = deleteDocument;
+console.log('Global functions exposed to window');
