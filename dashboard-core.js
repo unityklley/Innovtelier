@@ -751,7 +751,7 @@ const Dashboard = {
         if (emailInput) emailInput.value = currentUser.email || '';
     },
 
-    uploadDocument() {
+    async uploadDocument() {
         const fileInput = document.getElementById('documentFileInput');
         const category = document.getElementById('documentCategory').value;
 
@@ -762,10 +762,32 @@ const Dashboard = {
 
         const file = fileInput.files[0];
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        let driveFile = null;
+
+        // Upload to Google Drive if connected
+        if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn) {
+            const uploadBtn = document.querySelector('button[onclick="uploadDocument()"]');
+            const originalText = uploadBtn.innerHTML;
+            uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading to Drive...';
+            uploadBtn.disabled = true;
+
+            try {
+                driveFile = await GoogleDrive.uploadFile(file, category);
+            } catch (error) {
+                console.error('Drive upload failed:', error);
+                alert('Failed to upload to Google Drive');
+                uploadBtn.innerHTML = originalText;
+                uploadBtn.disabled = false;
+                return;
+            }
+
+            uploadBtn.innerHTML = originalText;
+            uploadBtn.disabled = false;
+        }
 
         // Create document object
         const document = {
-            id: 'doc_' + Date.now(),
+            id: driveFile ? driveFile.id : 'doc_' + Date.now(),
             name: file.name,
             type: file.name.split('.').pop().toLowerCase(),
             size: file.size,
@@ -773,7 +795,10 @@ const Dashboard = {
             uploadedBy: currentUser.id,
             uploadedAt: new Date().toISOString(),
             sharedWith: [], // Array of organization IDs
-            url: URL.createObjectURL(file), // In real app, this would be server URL
+            // Use Drive link if available, otherwise local blob (for demo/fallback)
+            url: driveFile ? driveFile.webViewLink : URL.createObjectURL(file),
+            thumbnail: driveFile ? driveFile.thumbnailLink : null,
+            isDriveFile: !!driveFile,
             permissions: {
                 canDownload: true,
                 canComment: false
@@ -791,7 +816,7 @@ const Dashboard = {
         // Reload documents
         this.loadDocuments();
 
-        alert(`Document "${file.name}" uploaded successfully!`);
+        alert(`Document "${file.name}" uploaded successfully${driveFile ? ' to Google Drive' : ''}!`);
     },
 
     loadDocuments() {
