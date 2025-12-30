@@ -1223,6 +1223,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+// Explicitly expose Dashboard object to window for HTML onclick handlers
+window.Dashboard = Dashboard;
+
 // Explicitly expose functions to window to ensure HTML access
 window.uploadDocument = uploadDocument;
 window.shareDocument = shareDocument;
