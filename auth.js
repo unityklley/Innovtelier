@@ -1,185 +1,237 @@
-// Authentication JavaScript
+// Access Control & Authentication System
+const AuthSystem = {
+    // Initialize the system
+    init() {
+        this.setupEventListeners();
+        this.checkAuth();
+    },
 
-// Tab switching
-document.addEventListener('DOMContentLoaded', function () {
-    const tabs = document.querySelectorAll('.auth-tab');
-    const forms = document.querySelectorAll('.auth-form');
+    // Setup form event listeners
+    setupEventListeners() {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const tabs = document.querySelectorAll('.auth-tab');
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function () {
-            const targetTab = this.dataset.tab;
+        if (loginForm) {
+            loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+        }
 
-            // Update active tab
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
+        if (registerForm) {
+            registerForm.addEventListener('submit', (e) => this.handleRegister(e));
+        }
 
-            // Update active form
-            forms.forEach(f => f.classList.remove('active'));
-            document.getElementById(`${targetTab}Form`).classList.add('active');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => this.switchTab(tab.dataset.tab));
         });
-    });
+    },
 
-    // Login form submission
-    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    // Switch between login and register tabs
+    switchTab(tabName) {
+        const tabs = document.querySelectorAll('.auth-tab');
+        const forms = document.querySelectorAll('.auth-form');
 
-    // Registration form submission
-    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+        tabs.forEach(tab => {
+            if (tab.dataset.tab === tabName) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
 
-    // Forgot password link
-    document.getElementById('forgotPasswordLink').addEventListener('click', function (e) {
+        forms.forEach(form => {
+            if (form.id === `${tabName}Form`) {
+                form.classList.add('active');
+            } else {
+                form.classList.remove('active');
+            }
+        });
+    },
+
+    // Handle login
+    async handleLogin(e) {
         e.preventDefault();
-        alert('Password reset functionality would be implemented here. For demo purposes, please use the registration form to create a new account.');
-    });
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const errorEl = document.getElementById('loginError');
 
-    // OAuth buttons (demo only)
-    document.querySelectorAll('.oauth-btn').forEach(btn => {
-        btn.addEventListener('click', function () {
-            alert('OAuth integration would be implemented here. For demo purposes, please use the email/password forms.');
+        // Get all users
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        // Find user
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (!user) {
+            this.showError(errorEl, 'Invalid email or password');
+            return;
+        }
+
+        // Check if user is pending approval
+        if (user.status === 'pending') {
+            this.showError(errorEl, 'Your account is pending approval. You will receive an email once approved.');
+            return;
+        }
+
+        // Check if user is rejected
+        if (user.status === 'rejected') {
+            this.showError(errorEl, 'Your account registration was not approved. Please contact support for more information.');
+            return;
+        }
+
+        // Check if user is suspended
+        if (user.status === 'suspended') {
+            this.showError(errorEl, 'Your account has been suspended. Please contact support.');
+            return;
+        }
+
+        // Update last login
+        user.lastLogin = new Date().toISOString();
+        const userIndex = users.findIndex(u => u.id === user.id);
+        users[userIndex] = user;
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Set current user
+        localStorage.setItem('currentUser', JSON.stringify(user));
+
+        // Redirect to unified dashboard
+        window.location.href = 'dashboard.html';
+    },
+
+    // Handle registration
+    async handleRegister(e) {
+        e.preventDefault();
+        const errorEl = document.getElementById('registerError');
+
+        // Get form values
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const organizationName = document.getElementById('organizationName').value;
+        const organizationType = document.getElementById('organizationType').value;
+        const accessReason = document.getElementById('accessReason').value;
+
+        // Validate passwords match
+        if (password !== confirmPassword) {
+            this.showError(errorEl, 'Passwords do not match');
+            return;
+        }
+
+        // Check if email already exists
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.find(u => u.email === email)) {
+            this.showError(errorEl, 'An account with this email already exists');
+            return;
+        }
+
+        // Create new user with pending status
+        const newUser = {
+            id: 'user_' + Date.now(),
+            email,
+            password, // In production, this should be hashed
+            firstName,
+            lastName,
+            organizationName,
+            organizationType,
+            accessReason,
+            role: 'client-admin', // Will be client-admin once approved
+            organizationId: null, // Will be assigned upon approval
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            approvedAt: null,
+            approvedBy: null,
+            lastLogin: null
+        };
+
+        // Save user
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Create pending approval notification for master admin
+        this.createApprovalNotification(newUser);
+
+        // Show success message
+        alert('Registration submitted successfully! Your account is pending approval. You will receive an email notification once your account has been reviewed.');
+
+        // Switch to login tab
+        this.switchTab('login');
+
+        // Clear form
+        document.getElementById('registerForm').reset();
+    },
+
+    // Create approval notification
+    createApprovalNotification(user) {
+        const notifications = JSON.parse(localStorage.getItem('pendingApprovals') || '[]');
+        notifications.push({
+            id: 'approval_' + Date.now(),
+            userId: user.id,
+            type: 'registration',
+            status: 'pending',
+            createdAt: new Date().toISOString()
         });
-    });
+        localStorage.setItem('pendingApprovals', JSON.stringify(notifications));
+    },
+
+    // Show error message
+    showError(element, message) {
+        element.textContent = message;
+        element.classList.add('show');
+        setTimeout(() => {
+            element.classList.remove('show');
+        }, 5000);
+    },
+
+    // Check if user is already logged in
+    checkAuth() {
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (currentUser && currentUser.status === 'active') {
+            // Redirect to unified dashboard
+            window.location.href = 'dashboard.html';
+        }
+    }
+};
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    AuthSystem.init();
+
+    // Initialize master admin if no users exist
+    initializeMasterAdmin();
 });
 
-// Handle login
-function handleLogin(e) {
-    e.preventDefault();
+// Initialize master admin account
+function initializeMasterAdmin() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
 
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    const rememberMe = document.getElementById('rememberMe').checked;
-    const errorElement = document.getElementById('loginError');
+    // Check if master admin exists
+    const masterAdmin = users.find(u => u.role === 'master-admin');
 
-    // Get users from localStorage
-    const users = JSON.parse(localStorage.getItem('innovtelierUsers') || '[]');
+    if (!masterAdmin) {
+        // Create default master admin account
+        const admin = {
+            id: 'user_master_admin',
+            email: 'admin@innovtelier.com',
+            password: 'admin123', // CHANGE THIS IN PRODUCTION
+            firstName: 'Master',
+            lastName: 'Admin',
+            organizationName: 'Innovtelier',
+            organizationType: 'vendor',
+            role: 'master-admin',
+            organizationId: null,
+            status: 'active',
+            createdAt: new Date().toISOString(),
+            approvedAt: new Date().toISOString(),
+            approvedBy: null,
+            lastLogin: null
+        };
 
-    // Find user
-    const user = users.find(u => u.email === email);
+        users.push(admin);
+        localStorage.setItem('users', JSON.stringify(users));
 
-    if (!user) {
-        showError(errorElement, 'No account found with this email address.');
-        return;
+        console.log('Master admin account created:');
+        console.log('Email: admin@innovtelier.com');
+        console.log('Password: admin123');
+        console.log('PLEASE CHANGE THIS PASSWORD IMMEDIATELY');
     }
-
-    // Simple password check (in production, use proper hashing)
-    if (user.password !== btoa(password)) {
-        showError(errorElement, 'Incorrect password. Please try again.');
-        return;
-    }
-
-    // Set authentication
-    const session = {
-        isAuthenticated: true,
-        user: {
-            email: user.email,
-            fullName: user.fullName,
-            firmName: user.firmName
-        },
-        loginTime: new Date().toISOString(),
-        rememberMe: rememberMe
-    };
-
-    localStorage.setItem('innovtelierSession', JSON.stringify(session));
-
-    // Redirect to dashboard
-    window.location.href = 'paralegal-dashboard.html';
-}
-
-// Handle registration
-function handleRegister(e) {
-    e.preventDefault();
-
-    const firmName = document.getElementById('firmName').value;
-    const fullName = document.getElementById('fullName').value;
-    const email = document.getElementById('registerEmail').value;
-    const password = document.getElementById('registerPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const acceptTerms = document.getElementById('acceptTerms').checked;
-    const errorElement = document.getElementById('registerError');
-
-    // Validation
-    if (!acceptTerms) {
-        showError(errorElement, 'You must accept the Terms of Service and Privacy Policy.');
-        return;
-    }
-
-    if (password.length < 8) {
-        showError(errorElement, 'Password must be at least 8 characters long.');
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        showError(errorElement, 'Passwords do not match.');
-        return;
-    }
-
-    // Get existing users
-    const users = JSON.parse(localStorage.getItem('innovtelierUsers') || '[]');
-
-    // Check if email already exists
-    if (users.some(u => u.email === email)) {
-        showError(errorElement, 'An account with this email already exists. Please login instead.');
-        return;
-    }
-
-    // Create new user (simple base64 encoding for demo - use proper hashing in production)
-    const newUser = {
-        firmName,
-        fullName,
-        email,
-        password: btoa(password), // Simple encoding for demo
-        createdAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    localStorage.setItem('innovtelierUsers', JSON.stringify(users));
-
-    // Auto-login after registration
-    const session = {
-        isAuthenticated: true,
-        user: {
-            email: newUser.email,
-            fullName: newUser.fullName,
-            firmName: newUser.firmName
-        },
-        loginTime: new Date().toISOString(),
-        rememberMe: false
-    };
-
-    localStorage.setItem('innovtelierSession', JSON.stringify(session));
-
-    // Redirect to dashboard
-    window.location.href = 'paralegal-dashboard.html';
-}
-
-// Show error message
-function showError(element, message) {
-    element.textContent = message;
-    element.classList.add('show');
-
-    // Hide after 5 seconds
-    setTimeout(() => {
-        element.classList.remove('show');
-    }, 5000);
-}
-
-// Logout function (to be called from other pages)
-function logout() {
-    localStorage.removeItem('innovtelierSession');
-    window.location.href = 'index.html';
-}
-
-// Check authentication (to be called from protected pages)
-function checkAuth() {
-    const session = JSON.parse(localStorage.getItem('innovtelierSession') || 'null');
-
-    if (!session || !session.isAuthenticated) {
-        window.location.href = 'auth.html';
-        return false;
-    }
-
-    return session;
-}
-
-// Export functions for use in other files
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { logout, checkAuth };
 }

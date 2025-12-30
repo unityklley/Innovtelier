@@ -9,23 +9,25 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Hide header navigation when loaded in iframe */
-        body.in-iframe .header {
-            display: none !important;
+        /* Remove all top spacing for clean iframe display */
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        body.in-iframe .main {
-            padding-top: 0 !important;
-            margin-top: -2rem !important;
-        }
-
-        body.in-iframe .dashboard-stats {
+        .main {
             padding-top: 0 !important;
             margin-top: 0 !important;
         }
 
-        body.in-iframe .dashboard-controls {
-            padding-top: 1rem !important;
+        .dashboard-stats {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
+        }
+
+        .dashboard-stats .container {
+            padding-top: 0 !important;
+            margin-top: 0 !important;
         }
     </style>
     <script>
@@ -51,31 +53,6 @@
 </head>
 
 <body>
-    <!-- Skip to Main Content Link -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
-
-    <header class="header" role="banner">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <i class="fas fa-briefcase"></i>
-                    <h1>Paralegal Dashboard</h1>
-                </div>
-                <nav class="nav" role="navigation" aria-label="Main navigation">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="client-intake.html" class="nav-link">Client Intake</a>
-                    <a href="reports-dashboard.html" class="nav-link">Reports</a>
-                    <button onclick="localStorage.removeItem('innovtelierSession'); window.location.href='index.html';"
-                        class="btn-secondary" style="padding: 0.5rem 1rem;" aria-label="Logout">
-                        <i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout
-                    </button>
-                    <button class="btn-icon" id="refreshBtn" title="Refresh Cases">
-                        <i class="fas fa-sync-alt"></i>
-                    </button>
-                </nav>
-            </div>
-        </div>
-    </header>
 
     <main id="main-content" class="main" role="main">
         <!-- Dashboard Stats -->

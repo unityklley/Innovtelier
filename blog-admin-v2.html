@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Admin - Innovtelier</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Quill Rich Text Editor -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Admin Colors */
+            --admin-sidebar-bg: #1a1a1a;
+            --admin-sidebar-text: #ffffff;
+            --admin-sidebar-hover: #2a2a2a;
+            --admin-sidebar-active: #AFB38E;
+            --admin-content-bg: #f8f9fa;
+            --admin-card-bg: #ffffff;
+            --admin-border: #e5e5e5;
+            --admin-text-dark: #1a1a1a;
+            --admin-text-light: #666666;
+            --admin-success: #4CAF50;
+            --admin-warning: #FF9800;
+            --admin-error: #f44336;
+            --admin-info: #2196F3;
+            --gold-accent: #AFB38E;
+
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--admin-text-dark);
+            background: var(--admin-content-bg);
+            overflow-x: hidden;
+        }
+
+        /* Login View */
+        #login-view {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--gold-accent) 0%, var(--admin-sidebar-bg) 100%);
+        }
+
+        .login-container {
+            background: var(--admin-card-bg);
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo i {
+            font-size: 3rem;
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            font-family: 'Manrope', sans-serif;
+            color: var(--admin-text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .login-logo p {
+            color: var(--admin-text-light);
+            font-size: 0.9375rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--admin-text-dark);
+            font-size: 0.9375rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--admin-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(175, 179, 142, 0.1);
+        }
+
+        .btn-login {
+            padding: 1rem;
+            background: var(--admin-sidebar-bg);
+            color: var(--admin-sidebar-text);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-login:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        #login-error {
+            display: none;
+            color: var(--admin-error);
+            font-size: 0.875rem;
+            text-align: center;
+            padding: 0.75rem;
+            background: rgba(244, 67, 54, 0.1);
+            border-radius: 6px;
+        }
+
+        .login-hint {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--admin-text-light);
+            padding: 1rem;
+            background: var(--admin-content-bg);
+            border-radius: 8px;
+        }
+
+        .login-hint strong {
+            color: var(--admin-text-dark);
+        }
+
+        /* Admin Panel Layout */
+        #admin-panel {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .admin-sidebar {
+            width: 260px;
+            background: var(--admin-sidebar-bg);
+            color: var(--admin-sidebar-text);
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .sidebar-logo i {
+            font-size: 1.5rem;
+            color: var(--gold-accent);
+        }
+
+        .sidebar-nav {
+            padding: var(--spacing-md) 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem var(--spacing-lg);
+            color: var(--admin-sidebar-text);
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--admin-sidebar-hover);
+        }
+
+        .nav-item.active {
+            background: var(--admin-sidebar-hover);
+            border-left-color: var(--admin-sidebar-active);
+            color: var(--admin-sidebar-active);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        /* Main Content */
+        .admin-main {
+            margin-left: 260px;
+            flex: 1;
+            min-height: 100vh;
+            background: var(--admin-content-bg);
+        }
+
+        .admin-header {
+            background: var(--admin-card-bg);
+            padding: var(--spacing-lg) var(--spacing-xl);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--admin-sidebar-bg);
+            color: var(--admin-sidebar-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--admin-content-bg);
+            color: var(--admin-text-dark);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-success {
+            background: var(--admin-success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-danger {
+            background: var(--admin-error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Content Area */
+        .admin-content {
+            padding: var(--spacing-xl);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--admin-card-bg);
+            padding: var(--spacing-lg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--admin-success);
+        }
+
+        .stat-icon.warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--admin-warning);
+        }
+
+        .stat-icon.info {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--admin-info);
+        }
+
+        .stat-icon.primary {
+            background: rgba(175, 179, 142, 0.1);
+            color: var(--gold-accent);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--admin-text-light);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--admin-text-dark);
+        }
+
+        /* Card */
+        .card {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .card-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--admin-content-bg);
+        }
+
+        th {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--admin-text-light);
+            border-bottom: 2px solid var(--admin-border);
+        }
+
+        td {
+            padding: var(--spacing-md);
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+        tr:hover {
+            background: var(--admin-content-bg);
+        }
+
+        /* Status Badge */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8125rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--admin-success);
+        }
+
+        .badge-warning {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--admin-warning);
+        }
+
+        .badge-info {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--admin-info);
+        }
+
+        .badge-featured {
+            background: rgba(175, 179, 142, 0.1);
+            color: var(--gold-accent);
+        }
+
+        /* Post Editor */
+        .editor-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .editor-sidebar {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .editor-main {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--admin-text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--admin-border);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        /* Post Title Input */
+        #post-title {
+            font-size: 1.5rem !important;
+            font-weight: 600 !important;
+            border: none !important;
+            border-bottom: 1px solid var(--admin-border) !important;
+            border-radius: 0 !important;
+            padding: 0.75rem 0 !important;
+            transition: border-color 0.3s !important;
+        }
+
+        #post-title:focus {
+            border-bottom-color: var(--gold-accent) !important;
+        }
+
+        /* Quill Editor Customization */
+        .ql-toolbar {
+            background: white !important;
+            border: 1px solid var(--admin-border) !important;
+            border-radius: 8px 8px 0 0 !important;
+            padding: 0.75rem !important;
+            max-width: 100%;
+        }
+
+        .ql-container {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            min-height: 400px;
+            max-height: 600px;
+            border: 1px solid var(--admin-border) !important;
+            border-top: none !important;
+            border-radius: 0 0 8px 8px !important;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .ql-editor {
+            min-height: 400px;
+            max-height: 600px;
+            padding: 1.5rem !important;
+            overflow-y: auto;
+        }
+
+        .ql-editor:focus {
+            outline: none;
+        }
+
+        /* Quill Image Resizing */
+        .ql-editor img {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+            transition: box-shadow 0.3s, opacity 0.3s;
+        }
+
+        .ql-editor img:hover {
+            box-shadow: 0 0 0 3px rgba(175, 179, 142, 0.3);
+        }
+
+        .ql-editor img.image-selected {
+            box-shadow: 0 0 0 3px var(--gold-accent);
+            position: relative;
+        }
+
+        /* Image resize container and handles */
+        .image-resize-container {
+            box-sizing: border-box;
+        }
+
+        .resize-handle {
+            box-sizing: border-box;
+            transition: transform 0.2s;
+        }
+
+        .resize-handle:hover {
+            transform: scale(1.3);
+        }
+
+        /* Quill Toolbar Buttons */
+        .ql-toolbar button:hover,
+        .ql-toolbar button.ql-active {
+            color: var(--gold-accent) !important;
+        }
+
+        .ql-toolbar .ql-stroke {
+            stroke: var(--admin-text-dark);
+        }
+
+        .ql-toolbar button:hover .ql-stroke,
+        .ql-toolbar button.ql-active .ql-stroke {
+            stroke: var(--gold-accent);
+        }
+
+        .ql-toolbar .ql-fill {
+            fill: var(--admin-text-dark);
+        }
+
+        .ql-toolbar button:hover .ql-fill,
+        .ql-toolbar button.ql-active .ql-fill {
+            fill: var(--gold-accent);
+        }
+
+        /* Notification Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(400px);
+            transition: transform 0.3s;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: var(--admin-success);
+            color: white;
+        }
+
+        .toast-error {
+            background: var(--admin-error);
+            color: white;
+        }
+
+        .toast-info {
+            background: var(--admin-info);
+            color: white;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--admin-text-light);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: var(--spacing-md);
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--admin-text-dark);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: var(--admin-card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--admin-text-light);
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--admin-content-bg);
+            color: var(--admin-text-dark);
+        }
+
+        .modal-body {
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--admin-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--spacing-sm);
+        }
+
+        .category-list {
+            list-style: none;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--admin-border);
+            cursor: move;
+            transition: background 0.2s;
+        }
+
+        .category-item:hover {
+            background: var(--admin-content-bg);
+        }
+
+        .category-item.dragging {
+            opacity: 0.5;
+        }
+
+        .category-item:last-child {
+            border-bottom: none;
+        }
+
+        .category-name {
+            font-weight: 500;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Image Upload Tabs */
+        .image-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--admin-border);
+        }
+
+        .image-tab {
+            flex: 1;
+            padding: 0.75rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--admin-text-light);
+            transition: all 0.3s;
+            margin-bottom: -2px;
+        }
+
+        .image-tab:hover {
+            color: var(--admin-text-dark);
+            background: var(--admin-content-bg);
+        }
+
+        .image-tab.active {
+            color: var(--gold-accent);
+            border-bottom-color: var(--gold-accent);
+        }
+
+        .image-tab-content {
+            padding: 1rem 0;
+        }
+
+        /* Image Gallery Grid */
+        .image-gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.75rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .gallery-image-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .gallery-image-item:hover {
+            border-color: var(--gold-accent);
+            transform: scale(1.05);
+        }
+
+        .gallery-image-item.selected {
+            border-color: var(--gold-accent);
+            box-shadow: 0 0 0 3px rgba(175, 179, 142, 0.3);
+        }
+
+        .gallery-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-image-delete {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+
+        .gallery-image-item:hover .gallery-image-delete {
+            display: flex;
+        }
+
+        .gallery-empty {
+            text-align: center;
+            padding: 2rem;
+            color: var(--admin-text-light);
+        }
+
+        .gallery-empty i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Media Library */
+        .storage-info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .storage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .storage-header div {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .storage-bar {
+            height: 8px;
+            background: var(--admin-border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .storage-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-accent), #8B8E6F);
+            transition: width 0.3s;
+        }
+
+        .storage-bar-fill.warning {
+            background: linear-gradient(90deg, #ff9800, #f57c00);
+        }
+
+        .storage-bar-fill.danger {
+            background: linear-gradient(90deg, #f44336, #d32f2f);
+        }
+
+        .media-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .media-filters input {
+            flex: 1;
+        }
+
+        .media-filters select {
+            min-width: 150px;
+        }
+
+        .media-library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .media-item {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .media-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .media-item-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .media-item-info {
+            padding: 1rem;
+        }
+
+        .media-item-name {
+            font-weight: 500;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .media-item-meta {
+            font-size: 0.75rem;
+            color: var(--admin-text-light);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .media-item-actions {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0 1rem 1rem;
+        }
+
+        .media-item-actions button {
+            flex: 1;
+            padding: 0.5rem;
+            font-size: 0.8125rem;
+        }
+
+        .media-empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--admin-text-light);
+        }
+
+        .media-empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .media-empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: var(--admin-text-dark);
+        }
+
+        .media-empty-state p {
+            margin-bottom: 2rem;
+        }
+
+        /* Status Pipeline */
+        .status-pipeline-container {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .status-pipeline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .pipeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+        }
+
+        .step-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--admin-border);
+            color: var(--admin-text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: all 0.3s;
+        }
+
+        .pipeline-step.active .step-circle {
+            background: var(--gold-accent);
+            color: white;
+            box-shadow: 0 4px 12px rgba(175, 179, 142, 0.3);
+            transform: scale(1.1);
+        }
+
+        .pipeline-step.completed .step-circle {
+            background: #4caf50;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--admin-text-light);
+            transition: color 0.3s;
+        }
+
+        .pipeline-step.active .step-label {
+            color: var(--gold-accent);
+            font-weight: 600;
+        }
+
+        .pipeline-step.completed .step-label {
+            color: #4caf50;
+        }
+
+        .pipeline-connector {
+            width: 80px;
+            height: 3px;
+            background: var(--admin-border);
+            margin: 0 0.5rem;
+            position: relative;
+            top: -12px;
+        }
+
+        .pipeline-connector.active {
+            background: var(--gold-accent);
+        }
+
+        .pipeline-info {
+            text-align: center;
+            color: var(--admin-text-light);
+        }
+
+        .pipeline-info small {
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .editor-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .editor-sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .admin-sidebar.open {
+                transform: translateX(0);
+            }
+
+            .admin-main {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-actions {
+                flex-direction: column;
+            }
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-0 {
+            margin-bottom: 0;
+        }
+
+        .mb-1 {
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .mb-2 {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .mb-3 {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mt-0 {
+            margin-top: 0;
+        }
+
+        .mt-1 {
+            margin-top: var(--spacing-sm);
+        }
+
+        .mt-2 {
+            margin-top: var(--spacing-md);
+        }
+
+        .mt-3 {
+            margin-top: var(--spacing-lg);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Login View -->
+    <div id="login-view">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-shield-alt"></i>
+                <h1>Blog Admin</h1>
+                <p>Innovtelier Content Management System</p>
+            </div>
+            <form class="login-form" onsubmit="AdminV2.handleLogin(event)">
+                <div class="form-group">
+                    <label for="admin-password">Admin Password</label>
+                    <input type="password" id="admin-password" placeholder="Enter your password" required
+                        autocomplete="current-password">
+                </div>
+                <div id="login-error">Incorrect password. Please try again.</div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+                </button>
+            </form>
+            <div class="login-hint">
+                <strong>Default password:</strong> admin123<br>
+                <em>Change this immediately after logging in!</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel">
+        <div class="admin-layout">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <div class="sidebar-logo">
+                        <i class="fas fa-blog"></i>
+                        <span>Blog CMS</span>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a class="nav-item active" onclick="AdminV2.showView('dashboard')" data-view="dashboard">
+                        <i class="fas fa-th-large"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-item" onclick="AdminV2.showView('posts')" data-view="posts">
+                        <i class="fas fa-file-alt"></i>
+                        <span>All Posts</span>
+                    </a>
+                    <a class="nav-item" onclick="AdminV2.showView('media')" data-view="media">
+                        <i class="fas fa-photo-video"></i>
+                        <span>Media</span>
+                    </a>
+                    <a class="nav-item" onclick="AdminV2.showView('recycle-bin')" data-view="recycle-bin">
+                        <i class="fas fa-trash-restore"></i>
+                        <span>Recycle Bin</span>
+                    </a>
+                    <a class="nav-item" onclick="AdminV2.showView('categories')" data-view="categories">
+                        <i class="fas fa-folder"></i>
+                        <span>Categories</span>
+                    </a>
+                    <a class="nav-item" onclick="AdminV2.showView('settings')" data-view="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <button onclick="AdminV2.logout()" class="btn btn-danger" style="width: 100%;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="admin-main">
+                <!-- Dashboard View -->
+                <div id="view-dashboard" class="admin-view">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">Dashboard</h1>
+                            <div class="header-actions">
+                                <button onclick="AdminV2.loadDashboard()" class="btn btn-secondary">
+                                    <i class="fas fa-sync-alt"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Overview Cards -->
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-icon"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <i class="fas fa-file-alt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Total Posts</div>
+                                    <div class="stat-value" id="stat-total-posts">0</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon"
+                                    style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Published</div>
+                                    <div class="stat-value" id="stat-published">0</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon"
+                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Drafts</div>
+                                    <div class="stat-value" id="stat-drafts">0</div>
+                                </div>
+                            </div>
+
+                            <div class="stat-card">
+                                <div class="stat-icon"
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+                                    <i class="fas fa-folder"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <div class="stat-label">Categories</div>
+                                    <div class="stat-value" id="stat-categories">0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Charts Row -->
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                            <!-- Status Breakdown -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Status Breakdown</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dashboard-status-chart"></div>
+                                </div>
+                            </div>
+
+                            <!-- Category Distribution -->
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Posts by Category</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="dashboard-category-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance Metrics -->
+                        <div class="card" style="margin-bottom: 2rem;">
+                            <div class="card-header">
+                                <h2 class="card-title">Performance Metrics</h2>
+                            </div>
+                            <div class="card-body">
+                                <div
+                                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem;">
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--admin-text-light); margin-bottom: 0.5rem;">
+                                            Storage Used</div>
+                                        <div style="font-size: 1.5rem; font-weight: 600; margin-bottom: 0.5rem;"
+                                            id="dashboard-storage-mb">0 MB</div>
+                                        <div class="progress-bar"
+                                            style="height: 8px; background: var(--admin-border); border-radius: 4px; overflow: hidden;">
+                                            <div id="dashboard-storage-bar"
+                                                style="height: 100%; background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); width: 0%; transition: width 0.3s;">
+                                            </div>
+                                        </div>
+                                        <small style="color: var(--admin-text-light); font-size: 0.75rem;"
+                                            id="dashboard-storage-percent">0% of 5MB limit</small>
+                                    </div>
+
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--admin-text-light); margin-bottom: 0.5rem;">
+                                            Media Files</div>
+                                        <div style="font-size: 1.5rem; font-weight: 600;" id="dashboard-media-count">0
+                                        </div>
+                                        <small style="color: var(--admin-text-light); font-size: 0.75rem;">Images
+                                            uploaded</small>
+                                    </div>
+
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--admin-text-light); margin-bottom: 0.5rem;">
+                                            Avg. Post Length</div>
+                                        <div style="font-size: 1.5rem; font-weight: 600;" id="dashboard-avg-length">0
+                                        </div>
+                                        <small style="color: var(--admin-text-light); font-size: 0.75rem;">words per
+                                            post</small>
+                                    </div>
+
+                                    <div>
+                                        <div
+                                            style="font-size: 0.875rem; color: var(--admin-text-light); margin-bottom: 0.5rem;">
+                                            Recycle Bin</div>
+                                        <div style="font-size: 1.5rem; font-weight: 600;" id="dashboard-recycle-count">0
+                                        </div>
+                                        <small style="color: var(--admin-text-light); font-size: 0.75rem;">deleted
+                                            items</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Recent Posts</h2>
+                            </div>
+                            <div class="card-body">
+                                <div id="dashboard-recent-posts"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- All Posts View -->
+                <div id="view-posts" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">All Posts</h1>
+                            <div class="header-actions">
+                                <button
+                                    onclick="AdminV2.currentEditId = null; AdminV2.resetPostForm(); AdminV2.showView('new-post');"
+                                    class="btn btn-primary">
+                                    <i class="fas fa-plus"></i> New Post
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-container">
+                                    <table id="all-posts-table"></table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- New/Edit Post View -->
+                <div id="view-new-post" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title" id="post-editor-title">Add New Post</h1>
+                            <div class="header-actions">
+                                <span id="auto-save-status"
+                                    style="font-size: 0.875rem; color: var(--admin-text-light); margin-right: 1rem;">
+                                    <!-- Auto-save status -->
+                                </span>
+                                <button onclick="AdminV2.previewPost()" class="btn btn-secondary">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
+                                <button onclick="AdminV2.saveDraft()" class="btn btn-secondary">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                                <button onclick="AdminV2.saveAndPublish()" class="btn btn-success">
+                                    <i class="fas fa-paper-plane"></i> Save & Publish
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Status Pipeline -->
+                        <div class="status-pipeline-container">
+                            <div class="status-pipeline">
+                                <div class="pipeline-step" data-status="draft">
+                                    <div class="step-circle">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="step-label">Draft</div>
+                                </div>
+                                <div class="pipeline-connector"></div>
+                                <div class="pipeline-step" data-status="for-review">
+                                    <div class="step-circle">
+                                        <i class="fas fa-eye"></i>
+                                    </div>
+                                    <div class="step-label">For Review</div>
+                                </div>
+                                <div class="pipeline-connector"></div>
+                                <div class="pipeline-step" data-status="for-publishing">
+                                    <div class="step-circle">
+                                        <i class="fas fa-calendar-check"></i>
+                                    </div>
+                                    <div class="step-label">For Publishing</div>
+                                </div>
+                                <div class="pipeline-connector"></div>
+                                <div class="pipeline-step" data-status="published">
+                                    <div class="step-circle">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="step-label">Published</div>
+                                </div>
+                            </div>
+                            <div class="pipeline-info">
+                                <small id="pipeline-status-text">Current status: Draft</small>
+                            </div>
+                        </div>
+
+                        <div class="editor-layout">
+                            <!-- Sidebar Settings -->
+                            <div class="editor-sidebar">
+                                <form id="post-form">
+                                    <div class="form-section">
+                                        <div class="section-title">Post Settings</div>
+
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select id="post-status" onchange="AdminV2.handleStatusChange()">
+                                                <option value="draft">📝 Draft</option>
+                                                <option value="for-review">👀 For Review</option>
+                                                <option value="for-publishing">📅 For Publishing</option>
+                                                <option value="published">✅ Published</option>
+                                                <option value="on-hold">⏸️ On Hold</option>
+                                            </select>
+                                            <small id="status-timestamp"
+                                                style="color: var(--admin-text-light); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                                                <!-- Status timestamp will appear here -->
+                                            </small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Category</label>
+                                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                                <select id="post-category" required style="flex: 1;">
+                                                    <option value="Legal Tech">Legal Tech</option>
+                                                    <option value="Nonprofit">Nonprofit</option>
+                                                    <option value="Productivity">Productivity</option>
+                                                    <option value="Company News">Company News</option>
+                                                    <option value="Tips & Tricks">Tips & Tricks</option>
+                                                    <option value="Case Studies">Case Studies</option>
+                                                </select>
+                                                <button type="button" onclick="AdminV2.manageCategoriesModal()"
+                                                    class="btn btn-sm btn-secondary" title="Manage Categories">
+                                                    <i class="fas fa-cog"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Author</label>
+                                            <input type="text" id="post-author" value="Innovtelier Team" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Publish Date</label>
+                                            <input type="date" id="post-date" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label
+                                                style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                                <input type="checkbox" id="post-featured">
+                                                <span>Featured Post</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- SEO Section -->
+                                    <div class="form-section">
+                                        <div class="section-title">SEO Settings</div>
+
+                                        <div class="form-group">
+                                            <label>Meta Title</label>
+                                            <input type="text" id="post-meta-title"
+                                                placeholder="Leave blank to use post title" maxlength="60">
+                                            <small
+                                                style="color: var(--admin-text-light); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                                                <span id="meta-title-count">0</span>/60 characters
+                                            </small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Meta Description</label>
+                                            <textarea id="post-meta-description" rows="3"
+                                                placeholder="Leave blank to use excerpt" maxlength="160"></textarea>
+                                            <small
+                                                style="color: var(--admin-text-light); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                                                <span id="meta-description-count">0</span>/160 characters
+                                            </small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Focus Keyword</label>
+                                            <input type="text" id="post-focus-keyword"
+                                                placeholder="e.g., legal services">
+                                            <small
+                                                style="color: var(--admin-text-light); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                                                Main keyword for SEO optimization
+                                            </small>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>URL Slug</label>
+                                            <input type="text" id="post-slug" placeholder="auto-generated-from-title">
+                                            <small
+                                                style="color: var(--admin-text-light); font-size: 0.75rem; display: block; margin-top: 0.25rem;">
+                                                Leave blank to auto-generate from title
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-section">
+                                        <div class="section-title">Featured Image</div>
+
+                                        <!-- Image Tabs -->
+                                        <div class="image-tabs">
+                                            <button type="button" class="image-tab active" data-tab="upload"
+                                                onclick="AdminV2.switchImageTab('upload')">
+                                                <i class="fas fa-upload"></i> Upload
+                                            </button>
+                                            <button type="button" class="image-tab" data-tab="gallery"
+                                                onclick="AdminV2.switchImageTab('gallery')">
+                                                <i class="fas fa-images"></i> Gallery
+                                            </button>
+                                            <button type="button" class="image-tab" data-tab="url"
+                                                onclick="AdminV2.switchImageTab('url')">
+                                                <i class="fas fa-link"></i> URL
+                                            </button>
+                                        </div>
+
+                                        <!-- Upload Tab -->
+                                        <div id="image-tab-upload" class="image-tab-content active">
+                                            <input type="file" id="image-file-input" accept="image/*"
+                                                style="display: none;" onchange="AdminV2.handleImageUpload(event)">
+                                            <button type="button" class="btn btn-secondary"
+                                                style="width: 100%; margin-bottom: 0.5rem;"
+                                                onclick="document.getElementById('image-file-input').click()">
+                                                <i class="fas fa-cloud-upload-alt"></i> Choose Image
+                                            </button>
+                                            <small
+                                                style="color: var(--admin-text-light); font-size: 0.8125rem; display: block; text-align: center;">
+                                                JPG, PNG, GIF, WebP
+                                            </small>
+                                        </div>
+
+                                        <!-- Gallery Tab -->
+                                        <div id="image-tab-gallery" class="image-tab-content" style="display: none;">
+                                            <div id="image-gallery-grid" class="image-gallery-grid">
+                                                <!-- Gallery images will be loaded here -->
+                                            </div>
+                                        </div>
+
+                                        <!-- URL Tab -->
+                                        <div id="image-tab-url" class="image-tab-content" style="display: none;">
+                                            <input type="url" id="post-image-url"
+                                                placeholder="https://example.com/image.jpg">
+                                            <button type="button" class="btn btn-secondary"
+                                                style="width: 100%; margin-top: 0.5rem;"
+                                                onclick="AdminV2.setImageFromUrl()">
+                                                <i class="fas fa-check"></i> Use This URL
+                                            </button>
+                                        </div>
+
+
+                                        <!-- Hidden field to store selected image -->
+                                        <input type="hidden" id="post-image" required>
+
+                                        <!-- Preview -->
+                                        <div id="image-preview-container" style="display: none; margin-top: 1rem;">
+                                            <div
+                                                style="font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--admin-text-light);">
+                                                PREVIEW</div>
+                                            <div style="position: relative;">
+                                                <img id="image-preview" src="" alt="Preview"
+                                                    style="width: 100%; border-radius: 8px; border: 1px solid var(--admin-border);">
+                                                <button type="button" onclick="AdminV2.clearSelectedImage()"
+                                                    style="position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-section">
+                                        <div class="section-title">Tags</div>
+                                        <div class="form-group">
+                                            <input type="text" id="post-tags" placeholder="Comma-separated tags">
+                                            <small style="color: var(--admin-text-light); font-size: 0.8125rem;">
+                                                e.g. legal, technology, tips
+                                            </small>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Main Editor -->
+                            <div class="editor-main">
+                                <div class="form-group mb-3">
+                                    <input type="text" id="post-title" placeholder="Enter your post title..." required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label
+                                        style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Excerpt</label>
+                                    <textarea id="post-excerpt"
+                                        placeholder="Write a compelling summary of your post (150-200 characters)"
+                                        rows="3" required></textarea>
+                                </div>
+
+                                <div style="margin-bottom: 0.75rem;">
+                                    <label
+                                        style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Content</label>
+                                </div>
+                                <div id="post-content-editor"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories View -->
+                <div id="view-categories" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">Categories</h1>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <div class="card">
+                            <div class="card-body">
+                                <p class="text-center" style="color: var(--admin-text-light);">
+                                    Category management coming soon!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Media View -->
+                <div id="view-media" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">Media Library</h1>
+                            <button class="btn btn-primary" onclick="AdminV2.openMediaUploader()">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                Upload Files
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Storage Info -->
+                        <div class="storage-info-card">
+                            <div class="storage-header">
+                                <div>
+                                    <i class="fas fa-database"></i>
+                                    <span>Storage Usage</span>
+                                </div>
+                                <span id="storage-usage-text">0 MB / 5 MB</span>
+                            </div>
+                            <div class="storage-bar">
+                                <div id="storage-bar-fill" class="storage-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <small id="storage-items-count">0 images uploaded</small>
+                        </div>
+
+                        <!-- Media Filters -->
+                        <div class="media-filters">
+                            <input type="text" id="media-search" placeholder="Search images..."
+                                onkeyup="AdminV2.filterMedia()">
+                            <select id="media-sort" onchange="AdminV2.filterMedia()">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="largest">Largest First</option>
+                                <option value="smallest">Smallest First</option>
+                            </select>
+                        </div>
+
+                        <!-- Media Grid -->
+                        <div id="media-library-grid" class="media-library-grid">
+                            <!-- Images will be loaded here -->
+                        </div>
+
+                        <!-- Empty State -->
+                        <div id="media-empty-state" class="media-empty-state" style="display: none;">
+                            <i class="fas fa-images"></i>
+                            <h3>No Media Files</h3>
+                            <p>Upload images to build your media library</p>
+                            <button class="btn btn-primary" onclick="AdminV2.openMediaUploader()">
+                                <i class="fas fa-upload"></i>
+                                Upload Your First Image
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recycle Bin View -->
+                <div id="view-recycle-bin" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">Recycle Bin</h1>
+                            <div class="header-actions">
+                                <button onclick="AdminV2.emptyRecycleBin()" class="btn btn-danger">
+                                    <i class="fas fa-trash-alt"></i> Empty Recycle Bin
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- Tabs -->
+                        <div class="image-tabs" style="margin-bottom: 2rem;">
+                            <button type="button" class="image-tab active" data-tab="posts"
+                                onclick="AdminV2.switchRecycleBinTab('posts')">
+                                <i class="fas fa-file-alt"></i> Posts
+                            </button>
+                            <button type="button" class="image-tab" data-tab="media"
+                                onclick="AdminV2.switchRecycleBinTab('media')">
+                                <i class="fas fa-photo-video"></i> Media
+                            </button>
+                        </div>
+
+                        <!-- Posts Tab -->
+                        <div id="recycle-posts-tab" class="recycle-tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Deleted Posts</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recycle-posts-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Tab -->
+                        <div id="recycle-media-tab" class="recycle-tab-content" style="display: none;">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h2 class="card-title">Deleted Media</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div id="recycle-media-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div id="view-settings" class="admin-view hidden">
+                    <div class="admin-header">
+                        <div class="header-content">
+                            <h1 class="header-title">Settings</h1>
+                        </div>
+                    </div>
+
+                    <div class="admin-content">
+                        <!-- General Settings -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h2 class="card-title">General Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Site Name</label>
+                                    <input type="text" id="setting-site-name" placeholder="Innovtelier Blog">
+                                </div>
+                                <div class="form-group">
+                                    <label>Site Description</label>
+                                    <textarea id="setting-site-description" rows="3"
+                                        placeholder="Your blog description..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Default Author</label>
+                                    <input type="text" id="setting-default-author" placeholder="Innovtelier Team">
+                                </div>
+                                <button onclick="AdminV2.saveGeneralSettings()" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save General Settings
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Publishing Settings -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h2 class="card-title">Publishing Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Posts Per Page</label>
+                                    <select id="setting-posts-per-page">
+                                        <option value="6">6 posts</option>
+                                        <option value="9">9 posts</option>
+                                        <option value="12">12 posts</option>
+                                        <option value="15">15 posts</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Default Post Status</label>
+                                    <select id="setting-default-status">
+                                        <option value="draft">Draft</option>
+                                        <option value="for-review">For Review</option>
+                                        <option value="published">Published</option>
+                                    </select>
+                                </div>
+                                <button onclick="AdminV2.savePublishingSettings()" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Publishing Settings
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SEO Settings -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h2 class="card-title">SEO Settings</h2>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Meta Title Template</label>
+                                    <input type="text" id="setting-meta-title" placeholder="{post_title} | {site_name}">
+                                    <small style="color: var(--admin-text-light); display: block; margin-top: 0.25rem;">
+                                        Use {post_title} and {site_name} as placeholders
+                                    </small>
+                                </div>
+                                <div class="form-group">
+                                    <label>Meta Description Template</label>
+                                    <textarea id="setting-meta-description" rows="2"
+                                        placeholder="{post_excerpt}"></textarea>
+                                </div>
+                                <button onclick="AdminV2.saveSEOSettings()" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save SEO Settings
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Security -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <h2 class="card-title">Security</h2>
+                            </div>
+                            <div class="card-body">
+                                <button onclick="AdminV2.changePassword()" class="btn btn-primary">
+                                    <i class="fas fa-key"></i> Change Password
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Data Management -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h2 class="card-title">Data Management</h2>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <button onclick="AdminV2.exportData()" class="btn btn-secondary">
+                                        <i class="fas fa-download"></i> Export All Data
+                                    </button>
+                                    <button onclick="AdminV2.importData()" class="btn btn-secondary">
+                                        <i class="fas fa-upload"></i> Import Data
+                                    </button>
+                                    <button onclick="AdminV2.clearAllData()" class="btn btn-danger">
+                                        <i class="fas fa-trash-alt"></i> Clear All Data
+                                    </button>
+                                </div>
+                                <small style="color: var(--admin-text-light); display: block; margin-top: 1rem;">
+                                    <strong>Note:</strong> Export your data regularly as a backup. Clear All Data will
+                                    permanently delete all posts, categories, and settings.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+        <div class="modal-dialog" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="confirm-modal-title">Confirm Action</h2>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-modal-message" style="margin: 0; color: var(--admin-text-dark);"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="confirm-modal-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-modal-confirm" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Management Modal -->
+    <div id="category-modal" class="modal-overlay">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h2 class="modal-title">Manage Categories</h2>
+                <button class="modal-close" onclick="AdminV2.closeCategoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group mb-3">
+                    <label>Add New Category</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="new-category-input" placeholder="Enter category name" style="flex: 1;">
+                        <button onclick="AdminV2.addCategory()" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label style="font-weight: 600; margin-bottom: 0.5rem; display: block;">Existing Categories</label>
+                    <ul id="category-list" class="category-list"></ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button onclick="AdminV2.closeCategoryModal()" class="btn btn-secondary">Close</button>
+                <button onclick="AdminV2.saveCategoryChanges()" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <!-- Google API for Drive Picker -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js"></script>
+    <script>
+        // Register the image resize module
+        if (window.ImageResize) {
+            Quill.register('modules/imageResize', ImageResize.default);
+        }
+    </script>
+    <script src="blog-data.js"></script>
+    <script src="blog-functions.js"></script>
+    <script src="blog-admin-v2.js"></script>
+</body>
+
+</html>

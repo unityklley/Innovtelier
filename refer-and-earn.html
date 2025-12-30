@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Refer clients to Innovtelier and earn rewards - referral program for legal professionals, non-profits, and business consultants">
+    <title>Refer and Earn - Innovtelier</title>
+    <link rel="stylesheet" href="case-management.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Manrope:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Squarespace-inspired Design */
+        :root {
+            --gold-accent: #AFB38E;
+            --black: #000000;
+            --white: #FFFFFF;
+            --light-gray: #F8F8F8;
+            --text-dark: #2C2C2C;
+            --text-light: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--black);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.54);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 4vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-img {
+            height: 82px;
+            width: auto;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .main-nav a,
+        .main-nav .nav-dropdown {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            font-weight: 400;
+            transition: color 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .main-nav a:hover,
+        .main-nav .nav-dropdown:hover {
+            color: var(--gold-accent);
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 250px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            padding-top: 1.5rem;
+        }
+
+        .nav-dropdown:hover .dropdown-menu,
+        .dropdown-menu:hover {
+            display: block;
+        }
+
+        .dropdown-menu a {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .dropdown-menu a:hover {
+            background: var(--light-gray);
+        }
+
+        .dropdown-menu a.active {
+            color: var(--gold-accent);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .header-actions a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9375rem;
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .refer-btn {
+            background: var(--black);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .refer-btn:hover {
+            background: #333;
+        }
+
+        .refer-btn.active {
+            background: var(--gold-accent);
+            color: var(--black);
+        }
+
+        /* Page Content */
+        .page-section {
+            padding: 6rem 4vw;
+        }
+
+        .page-section.white-bold {
+            background: var(--white);
+        }
+
+        .page-section.light {
+            background: var(--light-gray);
+        }
+
+        .page-section.bright-inverse {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .content-wrapper {
+            max-width: 1340px;
+            margin: 0 auto;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 3rem;
+            font-weight: 400;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.25rem;
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 3rem;
+        }
+
+        /* How It Works Section */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .step-card {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--gold-accent);
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .step-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        /* Benefits Grid */
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .benefit-icon {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .benefit-icon i {
+            font-size: 2.5rem;
+            color: var(--gold-accent);
+        }
+
+        .benefit-text h4 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-text p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+
+        /* Rewards Section */
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin: 4rem 0;
+        }
+
+        .reward-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .reward-amount {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold-accent);
+            margin-bottom: 1rem;
+        }
+
+        .reward-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .reward-description {
+            font-size: 0.9375rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+        }
+
+        /* Contact Form Section */
+        .contact-section {
+            background: var(--white);
+            padding: 6rem 4vw;
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .contact-header h2 {
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9375rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: var(--black);
+            color: var(--white);
+            padding: 1rem 3rem;
+            border-radius: 0;
+            border: none;
+            font-size: 0.9375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #333;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--white);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid #E5E5E5;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-nav-columns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            text-align: left;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--gold-accent);
+        }
+
+        .footer-logo {
+            margin: 3rem 0;
+        }
+
+        .footer-logo img {
+            height: 120px;
+            width: auto;
+            margin: 0 auto 1rem;
+        }
+
+        .footer-url {
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid #E5E5E5;
+        }
+
+        .footer-disclaimer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+
+            .steps-grid,
+            .rewards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to Content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="innovlogobus.png" alt="Innovtelier" class="logo-img">
+                </a>
+            </div>
+
+            <nav class="main-nav" role="navigation" aria-label="Main navigation">
+                <a href="index.html">Home</a>
+                <div class="nav-dropdown">
+                    <span>Services</span>
+                    <div class="dropdown-menu">
+                        <a href="legal-support-services.html">Legal Support Services</a>
+                        <a href="nonprofit-support-services.html">Non-profit Support Services</a>
+                        <a href="organization-strategy-and-productivity.html">Organization Strategy and Productivity</a>
+                    </div>
+                </div>
+                <a href="#blog">Blog</a>
+                <a href="#contact">Contact</a>
+            </nav>
+
+            <div class="header-actions">
+                <a href="auth.html"><i class="fas fa-user-circle" aria-hidden="true"></i> Client Portal</a>
+                <a href="refer-and-earn.html" class="refer-btn active" aria-current="page">Refer and Earn</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content" role="main">
+        <!-- Page Title Section -->
+        <section class="page-section white-bold">
+            <div class="content-wrapper">
+                <h1 class="page-title">Refer and Earn</h1>
+                <p class="page-subtitle">Share Innovtelier with your network and earn rewards for every successful
+                    referral</p>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="page-section light">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">How It Works</h2>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3>Refer a Client</h3>
+                        <p>Share Innovtelier with attorneys, non-profits, or businesses who could benefit from our
+                            professional support services.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3>They Subscribe</h3>
+                        <p>When your referral signs up for any of our service tiers and completes their first month, you
+                            both earn rewards.</p>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3>Earn Rewards</h3>
+                        <p>Receive your referral bonus via check, PayPal, or account credit. Your referral also gets a
+                            discount on their first month.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section class="page-section white-bold">
+            <div class="content-wrapper">
+                <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem;">Why Refer Innovtelier?</h2>
+
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Generous Rewards</h4>
+                            <p>Earn up to $500 per referral depending on the service tier they choose. No limit on how
+                                many referrals you can make.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Win-Win Partnership</h4>
+                            <p>Your referrals receive 10% off their first month, making it easier for them to try our
+                                services risk-free.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Track Your Progress</h4>
+                            <p>Access your personalized referral dashboard to monitor pending and completed referrals in
+                                real-time.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="benefit-text">
+                            <h4>Quality Services</h4>
+                            <p>Refer with confidence knowing Innovtelier delivers professional, compliant, and reliable
+                                support services.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rewards Tiers Section -->
+        <section class="page-section bright-inverse">
+            <div class="content-wrapper">
+                <div class="contact-header">
+                    <h2 style="color: var(--white);">Referral Rewards</h2>
+                    <p style="color: rgba(255, 255, 255, 0.8);">Earn based on the service tier your referral selects</p>
+                </div>
+
+                <div class="rewards-grid">
+                    <div class="reward-card">
+                        <div class="reward-amount">$150</div>
+                        <h3 class="reward-title">Tier I Referral</h3>
+                        <p class="reward-description">When your referral subscribes to any Tier I service ($975/month)
+                        </p>
+                    </div>
+
+                    <div class="reward-card">
+                        <div class="reward-amount">$250</div>
+                        <h3 class="reward-title">Tier II Referral</h3>
+                        <p class="reward-description">When your referral subscribes to any Tier II service
+                            ($1,475/month)</p>
+                    </div>
+
+                    <div class="reward-card">
+                        <div class="reward-amount">$500</div>
+                        <h3 class="reward-title">Tier III Referral</h3>
+                        <p class="reward-description">When your referral subscribes to any Tier III service
+                            ($3,275/month)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Referral Form Section -->
+        <section class="contact-section">
+            <div class="content-wrapper">
+                <div class="contact-header">
+                    <h2>Submit a Referral</h2>
+                    <p>Fill out the form below to refer a potential client</p>
+                </div>
+
+                <form class="contact-form">
+                    <h3 style="margin-bottom: 1.5rem;">Your Information</h3>
+
+                    <div class="form-group">
+                        <label for="your-name">Your Name *</label>
+                        <input type="text" id="your-name" name="your-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="your-email">Your Email *</label>
+                        <input type="email" id="your-email" name="your-email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="your-phone">Your Phone Number</label>
+                        <input type="tel" id="your-phone" name="your-phone">
+                    </div>
+
+                    <h3 style="margin: 2rem 0 1.5rem;">Referral Information</h3>
+
+                    <div class="form-group">
+                        <label for="referral-name">Referral Name *</label>
+                        <input type="text" id="referral-name" name="referral-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral-email">Referral Email *</label>
+                        <input type="email" id="referral-email" name="referral-email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral-phone">Referral Phone Number</label>
+                        <input type="tel" id="referral-phone" name="referral-phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="referral-organization">Organization Name *</label>
+                        <input type="text" id="referral-organization" name="referral-organization" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="service-interest">Service Interest *</label>
+                        <select id="service-interest" name="service-interest" required>
+                            <option value="">Select a service...</option>
+                            <option value="legal">Legal Support Services</option>
+                            <option value="nonprofit">Non-profit Support Services</option>
+                            <option value="organization">Organization Strategy and Productivity</option>
+                            <option value="unsure">Not Sure / Multiple Services</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additional-info">Additional Information</label>
+                        <textarea id="additional-info" name="additional-info"
+                            placeholder="Tell us more about this referral and why they'd be a good fit for Innovtelier..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Referral</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-nav-columns">
+                <div class="footer-column">
+                    <a href="index.html">Home</a>
+                    <a href="legal-support-services.html">Legal Support</a>
+                    <a href="nonprofit-support-services.html">Digital Design & Performance</a>
+                    <a href="organization-strategy-and-productivity.html">Organization and Productivity</a>
+                </div>
+                <div class="footer-column">
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#stories">Stories</a>
+                    <a href="index.html#tools">Tools & Resources</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+
+            <div class="footer-logo">
+                <img src="innovlogo-frame.png" alt="Innovtelier">
+                <p class="footer-url">www.innovtelier.com</p>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><em>Innovtelier is not a law firm and does not provide legal advice or representation. Legal support
+                        services are offered exclusively under the supervision of a licensed attorney. Use of
+                        Innovtelier's services or information on this website does not create an attorney-client
+                        relationship with Innovtelier or any associated attorneys. Innovtelier disclaims liability for
+                        any legal decisions, actions, or outcomes made by supervising attorneys or their firms.</em></p>
+                <p><em>While Innovtelier strives to maintain confidentiality, information shared with Innovtelier may
+                        not be protected by attorney-client privilege. Innovtelier disclaims all liability for actions
+                        taken or not taken based on the contents of this website.</em></p>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

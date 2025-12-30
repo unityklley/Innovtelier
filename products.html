@@ -11,6 +11,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --gold-accent: #AFB38E;
+            --black: #000000;
+            --white: #FFFFFF;
+            --light-gray: #F8F8F8;
+            --text-dark: #2C2C2C;
+            --text-light: #666666;
+        }
+
         /* Product page specific styles */
         .product-hero {
             background: linear-gradient(135deg, #002855 0%, #001a3d 100%);
@@ -82,6 +91,91 @@
         .btn-product-secondary:hover {
             border-color: white;
             background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--white);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid #E5E5E5;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-nav-columns {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            text-align: left;
+        }
+
+        .footer-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .footer-column a {
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.9375rem;
+            transition: color 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: var(--gold-accent);
+        }
+
+        .footer-logo {
+            margin: 3rem 0;
+        }
+
+        .footer-logo img {
+            height: 120px;
+            width: auto;
+            margin: 0 auto 1rem;
+        }
+
+        .footer-url {
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid #E5E5E5;
+        }
+
+        .footer-disclaimer p {
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive Footer */
+        @media (max-width: 968px) {
+            .footer-nav-columns {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .footer-column {
+                align-items: center;
+            }
+
+            .footer-logo img {
+                height: 80px;
+            }
         }
     </style>
 </head>
@@ -310,66 +404,38 @@
         </section>
     </main>
 
-    <footer class="footer" style="background: #002855; color: rgba(255, 255, 255, 0.8); padding: 3rem 0 1.5rem;">
-        <div class="container">
-            <div class="footer-content"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 3rem; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                <div class="footer-section">
-                    <h4
-                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
-                        Innovtelier</h4>
-                    <p style="font-size: 0.875rem; line-height: 1.6; font-weight: 300;">Professional support services
-                        and legal technology solutions.</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-nav-columns">
+                <div class="footer-column">
+                    <a href="index.html">Home</a>
+                    <a href="legal-support-services.html">Legal Support</a>
+                    <a href="nonprofit-support-services.html">Digital Design & Performance</a>
+                    <a href="organization-strategy-and-productivity.html">Organization and Productivity</a>
                 </div>
-                <div class="footer-section">
-                    <h4
-                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
-                        Product</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 0.5rem;"><a href="#features"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Features</a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;"><a href="auth.html"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Login</a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;"><a href="paralegal-dashboard.html"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Dashboard</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4
-                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
-                        Services</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Legal
-                                Support</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Non-Profit
-                                Support</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html#services"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Organization
-                                & Productivity</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4
-                        style="color: white; font-weight: 600; margin-bottom: 1rem; font-size: 0.9375rem; letter-spacing: 0.5px;">
-                        Company</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html#about"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">About</a>
-                        </li>
-                        <li style="margin-bottom: 0.5rem;"><a href="index.html#contact"
-                                style="color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; font-weight: 300;">Contact</a>
-                        </li>
-                    </ul>
+                <div class="footer-column">
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#stories">Stories</a>
+                    <a href="index.html#tools">Tools & Resources</a>
+                    <a href="contact.html">Contact</a>
                 </div>
             </div>
-            <div class="footer-bottom" style="text-align: center; padding-top: 1.5rem;">
-                <p style="font-size: 0.8125rem; opacity: 0.6; font-weight: 300;">&copy; 2024 Innovtelier. All rights
-                    reserved.</p>
+
+            <div class="footer-logo">
+                <img src="innovlogo-frame.png" alt="Innovtelier">
+                <p class="footer-url">www.innovtelier.com</p>
+            </div>
+
+            <div class="footer-disclaimer">
+                <p><em>Innovtelier is not a law firm and does not provide legal advice or representation. Legal support
+                        services are offered exclusively under the supervision of a licensed attorney. Use of
+                        Innovtelier's services or information on this website does not create an attorney-client
+                        relationship with Innovtelier or any associated attorneys. Innovtelier disclaims liability for
+                        any legal decisions, actions, or outcomes made by supervising attorneys or their firms.</em></p>
+                <p><em>While Innovtelier strives to maintain confidentiality, information shared with Innovtelier may
+                        not be protected by attorney-client privilege. Innovtelier disclaims all liability for actions
+                        taken or not taken based on the contents of this website.</em></p>
             </div>
         </div>
     </footer>

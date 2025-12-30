@@ -6,7 +6,7 @@ let currentView = 'list';
 let currentCaseId = null;
 
 // Initialize dashboard when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     loadCases();
     initializeEventListeners();
 });
@@ -15,30 +15,30 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeEventListeners() {
     // Search
     document.getElementById('searchInput').addEventListener('input', handleSearch);
-    
+
     // Filters
     document.getElementById('statusFilter').addEventListener('change', applyFilters);
     document.getElementById('typeFilter').addEventListener('change', applyFilters);
     document.getElementById('urgencyFilter').addEventListener('change', applyFilters);
     document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
-    
+
     // View toggle
     document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             currentView = this.dataset.view;
             displayCases();
         });
     });
-    
+
     // Refresh button
-    document.getElementById('refreshBtn').addEventListener('click', function() {
+    document.getElementById('refreshBtn').addEventListener('click', function () {
         this.classList.add('spinning');
         loadCases();
         setTimeout(() => this.classList.remove('spinning'), 500);
     });
-    
+
     // Update case button
     document.getElementById('updateCaseBtn').addEventListener('click', openUpdateStatusModal);
     document.getElementById('confirmStatusUpdateBtn').addEventListener('click', confirmStatusUpdate);
@@ -47,11 +47,25 @@ function initializeEventListeners() {
 // Load cases from localStorage
 function loadCases() {
     const cases = localStorage.getItem('legalCases');
-    allCases = cases ? JSON.parse(cases) : [];
-    
+    let rawCases = cases ? JSON.parse(cases) : [];
+
+    // Auth & Access Control
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+    if (!currentUser) return; // Should be handled by auth check in HTML
+
+    if (currentUser.role === 'master-admin') {
+        // Master Admin sees ALL cases
+        allCases = rawCases;
+    } else {
+        // Client Admin sees ONLY their organization's cases
+        // Cases without organizationId are hidden from clients for security
+        allCases = rawCases.filter(c => c.organizationId && c.organizationId === currentUser.organizationId);
+    }
+
     // Sort by timestamp (newest first)
     allCases.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
+
     updateStats();
     applyFilters();
 }
@@ -64,7 +78,7 @@ function updateStats() {
         completed: allCases.filter(c => c.status === 'completed' || c.status === 'closed').length,
         total: allCases.length
     };
-    
+
     document.getElementById('pendingCount').textContent = stats.pending;
     document.getElementById('activeCount').textContent = stats.active;
     document.getElementById('completedCount').textContent = stats.completed;
@@ -74,7 +88,7 @@ function updateStats() {
 // Handle search
 function handleSearch(e) {
     const searchTerm = e.target.value.toLowerCase().trim();
-    
+
     if (searchTerm === '') {
         filteredCases = [...allCases];
     } else {
@@ -82,14 +96,14 @@ function handleSearch(e) {
             const fullName = `${caseItem.personalInfo.firstName} ${caseItem.personalInfo.lastName}`.toLowerCase();
             const caseType = getCaseTypeLabel(caseItem.caseInfo.type).toLowerCase();
             const caseId = caseItem.id.toLowerCase();
-            
+
             return fullName.includes(searchTerm) ||
-                   caseType.includes(searchTerm) ||
-                   caseId.includes(searchTerm) ||
-                   caseItem.caseInfo.description.toLowerCase().includes(searchTerm);
+                caseType.includes(searchTerm) ||
+                caseId.includes(searchTerm) ||
+                caseItem.caseInfo.description.toLowerCase().includes(searchTerm);
         });
     }
-    
+
     displayCases();
 }
 
@@ -99,29 +113,29 @@ function applyFilters() {
     const typeFilter = document.getElementById('typeFilter').value;
     const urgencyFilter = document.getElementById('urgencyFilter').value;
     const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-    
+
     filteredCases = allCases.filter(caseItem => {
         // Status filter
         if (statusFilter && caseItem.status !== statusFilter) {
             return false;
         }
-        
+
         // Type filter
         if (typeFilter && caseItem.caseInfo.type !== typeFilter) {
             return false;
         }
-        
+
         // Urgency filter
         if (urgencyFilter && caseItem.caseInfo.urgency !== urgencyFilter) {
             return false;
         }
-        
+
         // Search filter
         if (searchTerm) {
             const fullName = `${caseItem.personalInfo.firstName} ${caseItem.personalInfo.lastName}`.toLowerCase();
             const caseType = getCaseTypeLabel(caseItem.caseInfo.type).toLowerCase();
             const caseId = caseItem.id.toLowerCase();
-            
+
             if (!fullName.includes(searchTerm) &&
                 !caseType.includes(searchTerm) &&
                 !caseId.includes(searchTerm) &&
@@ -129,10 +143,10 @@ function applyFilters() {
                 return false;
             }
         }
-        
+
         return true;
     });
-    
+
     displayCases();
 }
 
@@ -149,15 +163,15 @@ function clearFilters() {
 function displayCases() {
     const container = document.getElementById('casesContainer');
     const emptyState = document.getElementById('emptyState');
-    
+
     if (filteredCases.length === 0) {
         container.innerHTML = '';
         emptyState.style.display = 'block';
         return;
     }
-    
+
     emptyState.style.display = 'none';
-    
+
     if (currentView === 'list') {
         container.className = 'cases-container list-view';
         container.innerHTML = filteredCases.map(caseItem => createCaseCard(caseItem)).join('');
@@ -165,10 +179,10 @@ function displayCases() {
         container.className = 'cases-container grid-view';
         container.innerHTML = filteredCases.map(caseItem => createCaseCard(caseItem)).join('');
     }
-    
+
     // Add event listeners to case cards
     container.querySelectorAll('.case-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const caseId = this.dataset.caseId;
             openCaseModal(caseId);
         });
@@ -185,7 +199,7 @@ function createCaseCard(caseItem) {
     const date = new Date(caseItem.timestamp).toLocaleDateString();
     const time = new Date(caseItem.timestamp).toLocaleTimeString();
     const fileCount = caseItem.files ? caseItem.files.length : 0;
-    
+
     return `
         <div class="case-card" data-case-id="${caseItem.id}">
             <div class="case-card-header">
@@ -229,24 +243,24 @@ function openCaseModal(caseId) {
     currentCaseId = caseId;
     const caseItem = allCases.find(c => c.id === caseId);
     if (!caseItem) return;
-    
+
     const modal = document.getElementById('caseModal');
     const modalBody = document.getElementById('modalCaseBody');
     const modalTitle = document.getElementById('modalCaseTitle');
-    
+
     modalTitle.textContent = `Case: ${caseItem.id}`;
-    
+
     modalBody.innerHTML = generateCaseDetailsHTML(caseItem);
     modal.style.display = 'flex';
-    
+
     // Add event listeners for file downloads
     modalBody.querySelectorAll('.file-download').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', function (e) {
             e.stopPropagation();
             downloadFile(this.dataset.fileIndex, caseId);
         });
     });
-    
+
     // Add event listener for adding notes
     const addNoteBtn = modalBody.querySelector('#addNoteBtn');
     if (addNoteBtn) {
@@ -265,7 +279,7 @@ function generateCaseDetailsHTML(caseItem) {
     const lastUpdated = new Date(caseItem.lastUpdated).toLocaleString();
     const fileCount = caseItem.files ? caseItem.files.length : 0;
     const notes = caseItem.notes || [];
-    
+
     return `
         <div class="case-details">
             <div class="case-details-header">
@@ -523,22 +537,22 @@ function addNoteToCase() {
         alert('Please enter a note.');
         return;
     }
-    
+
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem) return;
-    
+
     if (!caseItem.notes) {
         caseItem.notes = [];
     }
-    
+
     caseItem.notes.push({
         content: noteContent,
         timestamp: new Date().toISOString(),
         author: 'Paralegal' // In a real app, this would be the logged-in user
     });
-    
+
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     saveCases();
     openCaseModal(currentCaseId);
 }
@@ -547,7 +561,7 @@ function addNoteToCase() {
 function downloadFile(fileIndex, caseId) {
     const caseItem = allCases.find(c => c.id === caseId);
     if (!caseItem || !caseItem.files[fileIndex]) return;
-    
+
     const file = caseItem.files[fileIndex];
     const link = document.createElement('a');
     link.href = file.data;
@@ -561,7 +575,7 @@ function downloadFile(fileIndex, caseId) {
 function openUpdateStatusModal() {
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem) return;
-    
+
     document.getElementById('newStatus').value = caseItem.status;
     document.getElementById('statusNotes').value = '';
     document.getElementById('updateStatusModal').style.display = 'flex';
@@ -571,30 +585,30 @@ function openUpdateStatusModal() {
 function confirmStatusUpdate() {
     const newStatus = document.getElementById('newStatus').value;
     const notes = document.getElementById('statusNotes').value.trim();
-    
+
     if (!newStatus) {
         alert('Please select a status.');
         return;
     }
-    
+
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem) return;
-    
+
     const oldStatus = caseItem.status;
     caseItem.status = newStatus;
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     // Add note about status change
     if (!caseItem.notes) {
         caseItem.notes = [];
     }
-    
+
     caseItem.notes.push({
         content: `Status changed from ${getStatusLabel(oldStatus)} to ${getStatusLabel(newStatus)}. ${notes ? 'Note: ' + notes : ''}`,
         timestamp: new Date().toISOString(),
         author: 'Paralegal'
     });
-    
+
     saveCases();
     closeUpdateStatusModal();
     openCaseModal(currentCaseId);
@@ -706,13 +720,13 @@ function exportCases() {
 function editNote(noteIndex) {
     const editForm = document.getElementById(`note-edit-${noteIndex}`);
     const noteContent = document.getElementById(`note-content-${noteIndex}`);
-    
+
     if (!editForm || !noteContent) return;
-    
+
     // Hide content, show edit form
     noteContent.style.display = 'none';
     editForm.style.display = 'block';
-    
+
     // Focus on textarea
     const textarea = document.getElementById(`note-edit-text-${noteIndex}`);
     if (textarea) {
@@ -724,23 +738,23 @@ function editNote(noteIndex) {
 function saveNote(noteIndex) {
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem || !caseItem.notes || !caseItem.notes[noteIndex]) return;
-    
+
     const textarea = document.getElementById(`note-edit-text-${noteIndex}`);
     if (!textarea) return;
-    
+
     const newContent = textarea.value.trim();
     if (!newContent) {
         alert('Note content cannot be empty.');
         return;
     }
-    
+
     // Update note
     caseItem.notes[noteIndex].content = newContent;
     caseItem.notes[noteIndex].timestamp = new Date().toISOString();
     caseItem.notes[noteIndex].edited = true;
-    
+
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     saveCases();
     openCaseModal(currentCaseId);
 }
@@ -749,9 +763,9 @@ function saveNote(noteIndex) {
 function cancelEditNote(noteIndex) {
     const editForm = document.getElementById(`note-edit-${noteIndex}`);
     const noteContent = document.getElementById(`note-content-${noteIndex}`);
-    
+
     if (!editForm || !noteContent) return;
-    
+
     // Show content, hide edit form
     noteContent.style.display = 'block';
     editForm.style.display = 'none';
@@ -762,13 +776,13 @@ function deleteNote(noteIndex) {
     if (!confirm('Are you sure you want to delete this note?')) {
         return;
     }
-    
+
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem || !caseItem.notes) return;
-    
+
     caseItem.notes.splice(noteIndex, 1);
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     saveCases();
     openCaseModal(currentCaseId);
 }
@@ -778,7 +792,7 @@ function toggleEditCaseDetails() {
     const editSection = document.getElementById('editCaseSection');
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem || !editSection) return;
-    
+
     if (editSection.style.display === 'none' || !editSection.style.display) {
         // Populate form with current case data
         document.getElementById('editCaseStatus').value = caseItem.status;
@@ -788,7 +802,7 @@ function toggleEditCaseDetails() {
         document.getElementById('editCaseLastName').value = caseItem.personalInfo.lastName;
         document.getElementById('editCaseEmail').value = caseItem.personalInfo.email;
         document.getElementById('editCasePhone').value = caseItem.personalInfo.phone;
-        
+
         editSection.style.display = 'block';
         editSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } else {
@@ -800,7 +814,7 @@ function toggleEditCaseDetails() {
 function saveCaseDetails() {
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem) return;
-    
+
     // Validate required fields
     const status = document.getElementById('editCaseStatus').value;
     const urgency = document.getElementById('editCaseUrgency').value;
@@ -809,12 +823,12 @@ function saveCaseDetails() {
     const lastName = document.getElementById('editCaseLastName').value;
     const email = document.getElementById('editCaseEmail').value;
     const phone = document.getElementById('editCasePhone').value;
-    
+
     if (!status || !urgency || !description || !firstName || !lastName || !email || !phone) {
         alert('Please fill in all required fields.');
         return;
     }
-    
+
     // Update case details
     caseItem.status = status;
     caseItem.caseInfo.urgency = urgency;
@@ -824,7 +838,7 @@ function saveCaseDetails() {
     caseItem.personalInfo.email = email;
     caseItem.personalInfo.phone = phone;
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     saveCases();
     openCaseModal(currentCaseId);
     loadCases(); // Refresh the cases list
@@ -845,12 +859,12 @@ function openUploadDocumentModal() {
     input.type = 'file';
     input.multiple = true;
     input.accept = '.pdf,.doc,.docx,.jpg,.jpeg,.png,.txt';
-    
-    input.onchange = async function(e) {
+
+    input.onchange = async function (e) {
         const files = Array.from(e.target.files);
         await uploadDocuments(files);
     };
-    
+
     input.click();
 }
 
@@ -858,21 +872,21 @@ function openUploadDocumentModal() {
 async function uploadDocuments(files) {
     const caseItem = allCases.find(c => c.id === currentCaseId);
     if (!caseItem) return;
-    
+
     if (!caseItem.files) {
         caseItem.files = [];
     }
-    
+
     for (const file of files) {
         // Check file size (10MB limit)
         if (file.size > 10 * 1024 * 1024) {
             alert(`File "${file.name}" is too large. Maximum file size is 10MB.`);
             continue;
         }
-        
+
         // Convert to base64
         const fileData = await fileToBase64(file);
-        
+
         caseItem.files.push({
             name: file.name,
             size: file.size,
@@ -881,7 +895,7 @@ async function uploadDocuments(files) {
             data: fileData
         });
     }
-    
+
     caseItem.lastUpdated = new Date().toISOString();
     saveCases();
     openCaseModal(currentCaseId);
@@ -892,13 +906,13 @@ function deleteDocument(fileIndex, caseId) {
     if (!confirm('Are you sure you want to delete this document?')) {
         return;
     }
-    
+
     const caseItem = allCases.find(c => c.id === caseId);
     if (!caseItem || !caseItem.files) return;
-    
+
     caseItem.files.splice(fileIndex, 1);
     caseItem.lastUpdated = new Date().toISOString();
-    
+
     saveCases();
     openCaseModal(caseId);
 }

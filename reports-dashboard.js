@@ -42,7 +42,21 @@ function initializeEventListeners() {
 // Load cases from localStorage
 function loadCases() {
     const cases = localStorage.getItem('legalCases');
-    allCases = cases ? JSON.parse(cases) : [];
+    let rawCases = cases ? JSON.parse(cases) : [];
+
+    // Auth & Access Control
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+
+    if (!currentUser) return; // Should be handled by auth check in HTML
+
+    if (currentUser.role === 'master-admin') {
+        // Master Admin sees ALL cases
+        allCases = rawCases;
+    } else {
+        // Client Admin sees ONLY their organization's cases
+        allCases = rawCases.filter(c => c.organizationId && c.organizationId === currentUser.organizationId);
+    }
+
     applyDateFilter();
 }
 
@@ -621,14 +635,14 @@ function exportAsJSON() {
 // Family Law Specific Charts and Metrics
 function updateFamilyLawCharts() {
     const familyLawCases = filteredCases.filter(c => c.caseInfo.type === 'family-law' && c.familyLawDetails);
-    
+
     if (familyLawCases.length === 0) {
         document.getElementById('familyLawMetricsSection').style.display = 'none';
         return;
     }
-    
+
     document.getElementById('familyLawMetricsSection').style.display = 'block';
-    
+
     updateCountyChart(familyLawCases);
     updateJudgeChart(familyLawCases);
     updateChildrenChart(familyLawCases);
@@ -639,7 +653,7 @@ function updateFamilyLawCharts() {
 function updateCountyChart(familyLawCases) {
     const ctx = document.getElementById('countyChart');
     if (!ctx) return;
-    
+
     const countyCounts = {};
     familyLawCases.forEach(c => {
         const county = c.familyLawDetails.county || 'Not Specified';
@@ -647,12 +661,12 @@ function updateCountyChart(familyLawCases) {
             countyCounts[county] = (countyCounts[county] || 0) + 1;
         }
     });
-    
+
     // Destroy existing chart
     if (charts.county) {
         charts.county.destroy();
     }
-    
+
     charts.county = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -690,7 +704,7 @@ function updateCountyChart(familyLawCases) {
 function updateJudgeChart(familyLawCases) {
     const ctx = document.getElementById('judgeChart');
     if (!ctx) return;
-    
+
     const judgeCounts = {};
     familyLawCases.forEach(c => {
         const judge = c.familyLawDetails.judgeAssigned || 'Not Assigned';
@@ -698,12 +712,12 @@ function updateJudgeChart(familyLawCases) {
             judgeCounts[judge] = (judgeCounts[judge] || 0) + 1;
         }
     });
-    
+
     // Destroy existing chart
     if (charts.judge) {
         charts.judge.destroy();
     }
-    
+
     charts.judge = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -741,17 +755,17 @@ function updateJudgeChart(familyLawCases) {
 function updateChildrenChart(familyLawCases) {
     const ctx = document.getElementById('childrenChart');
     if (!ctx) return;
-    
+
     const childrenCounts = {
         'With Children': familyLawCases.filter(c => c.familyLawDetails.childrenInvolved === 'yes').length,
         'No Children': familyLawCases.filter(c => c.familyLawDetails.childrenInvolved === 'no').length
     };
-    
+
     // Destroy existing chart
     if (charts.children) {
         charts.children.destroy();
     }
-    
+
     charts.children = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -791,7 +805,7 @@ function updateFamilyLawMetrics(familyLawCases) {
     const avgChildren = withChildren.length > 0 ? (totalChildren / withChildren.length).toFixed(1) : 0;
     const dvCases = familyLawCases.filter(c => c.familyLawDetails.domesticViolence === true).length;
     const dvPercentage = familyLawCases.length > 0 ? ((dvCases / familyLawCases.length) * 100).toFixed(1) : 0;
-    
+
     const metricsHTML = `
         <li class="metric-item">
             <span class="metric-label">Total Family Law Cases</span>
@@ -810,6 +824,6 @@ function updateFamilyLawMetrics(familyLawCases) {
             <span class="metric-value ${dvCases > 0 ? 'negative' : ''}">${dvCases} (${dvPercentage}%)</span>
         </li>
     `;
-    
+
     document.getElementById('familyLawMetricsList').innerHTML = metricsHTML;
 }

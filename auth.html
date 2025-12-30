@@ -303,27 +303,55 @@
                     <!-- Registration Form -->
                     <form id="registerForm" class="auth-form">
                         <div class="form-group">
-                            <label for="firmName">Law Firm Name</label>
-                            <input type="text" id="firmName" name="firmName" required aria-required="true"
-                                placeholder="Smith & Associates">
+                            <label for="firstName">First Name</label>
+                            <input type="text" id="firstName" name="firstName" required aria-required="true"
+                                placeholder="John">
                         </div>
 
                         <div class="form-group">
-                            <label for="fullName">Full Name</label>
-                            <input type="text" id="fullName" name="fullName" required aria-required="true"
-                                placeholder="John Smith">
+                            <label for="lastName">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" required aria-required="true"
+                                placeholder="Smith">
                         </div>
 
                         <div class="form-group">
                             <label for="registerEmail">Email Address</label>
                             <input type="email" id="registerEmail" name="email" required aria-required="true"
-                                placeholder="you@lawfirm.com">
+                                placeholder="you@organization.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organizationName">Organization Name</label>
+                            <input type="text" id="organizationName" name="organizationName" required
+                                aria-required="true" placeholder="Your Law Firm or Organization">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="organizationType">Organization Type</label>
+                            <select id="organizationType" name="organizationType" required aria-required="true"
+                                style="width: 100%; padding: 0.875rem 1rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 1rem;">
+                                <option value="">Select organization type...</option>
+                                <option value="legal">Legal / Law Firm</option>
+                                <option value="nonprofit">Non-Profit Organization</option>
+                                <option value="business">Business / Corporate</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="accessReason">Reason for Access Request</label>
+                            <textarea id="accessReason" name="accessReason" required aria-required="true"
+                                placeholder="Please briefly explain why you need access to the client portal..."
+                                style="width: 100%; padding: 0.875rem 1rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 1rem; min-height: 100px; resize: vertical;"></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="registerPassword">Password</label>
                             <input type="password" id="registerPassword" name="password" required aria-required="true"
                                 placeholder="••••••••" minlength="8">
+                            <small
+                                style="color: #6b7280; font-size: 0.75rem; display: block; margin-top: 0.25rem;">Minimum
+                                8 characters</small>
                         </div>
 
                         <div class="form-group">
@@ -338,9 +366,18 @@
                                     Service</a> and <a href="#" style="color: #002855;">Privacy Policy</a></label>
                         </div>
 
+                        <div
+                            style="background: #fef3c7; border: 1px solid #f59e0b; border-radius: 2px; padding: 1rem; margin-bottom: 1.5rem;">
+                            <p style="margin: 0; font-size: 0.875rem; color: #92400e;">
+                                <i class="fas fa-info-circle" style="margin-right: 0.5rem;"></i>
+                                <strong>Registration requires approval.</strong> Your account will be reviewed by our
+                                team and you will receive an email notification once approved.
+                            </p>
+                        </div>
+
                         <div class="error-message" id="registerError" role="alert"></div>
 
-                        <button type="submit" class="auth-submit">Create Account</button>
+                        <button type="submit" class="auth-submit">Submit Registration</button>
 
                         <div class="auth-divider">
                             <span>Or continue with</span>

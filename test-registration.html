@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Registration System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            background: #002855;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: #001a3d;
+        }
+
+        .output {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Registration System Test Page</h1>
+
+    <div class="test-section">
+        <h2>Step 1: Check if auth.js is loaded</h2>
+        <button onclick="checkAuthJS()">Check auth.js</button>
+        <div id="authCheck" class="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 2: View Current Users</h2>
+        <button onclick="viewUsers()">View All Users</button>
+        <button onclick="clearUsers()">Clear All Users</button>
+        <div id="usersOutput" class="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 3: Create Test User Manually</h2>
+        <button onclick="createTestUser()">Create Test User</button>
+        <div id="createOutput" class="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 4: Test Login</h2>
+        <p>Email: testuser@example.com<br>Password: testpass123</p>
+        <button onclick="testLogin()">Test Login</button>
+        <div id="loginOutput" class="output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Step 5: Go to Auth Page</h2>
+        <button onclick="window.location.href='auth.html'">Open auth.html</button>
+        <button onclick="window.location.href='admin-dashboard.html'">Open Admin Dashboard</button>
+    </div>
+
+    <script>
+        function checkAuthJS() {
+            const output = document.getElementById('authCheck');
+            if (typeof AuthSystem !== 'undefined') {
+                output.innerHTML = '<span class="success">✅ auth.js is loaded correctly!</span>';
+            } else {
+                output.innerHTML = '<span class="error">❌ auth.js is NOT loaded. Check console for errors.</span>';
+            }
+        }
+
+        function viewUsers() {
+            const output = document.getElementById('usersOutput');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+            if (users.length === 0) {
+                output.innerHTML = '<span class="error">No users found in localStorage</span>';
+            } else {
+                output.innerHTML = '<span class="success">Found ' + users.length + ' user(s):</span>\n\n' +
+                    JSON.stringify(users, null, 2);
+            }
+        }
+
+        function clearUsers() {
+            if (confirm('Are you sure you want to clear all users?')) {
+                localStorage.removeItem('users');
+                localStorage.removeItem('organizations');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('pendingApprovals');
+                document.getElementById('usersOutput').innerHTML = '<span class="success">✅ All data cleared!</span>';
+            }
+        }
+
+        function createTestUser() {
+            const output = document.getElementById('createOutput');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+            // Check if test user already exists
+            if (users.find(u => u.email === 'testuser@example.com')) {
+                output.innerHTML = '<span class="error">❌ Test user already exists! Clear users first.</span>';
+                return;
+            }
+
+            // Create test user
+            const testUser = {
+                id: 'user_' + Date.now(),
+                email: 'testuser@example.com',
+                password: 'testpass123',
+                firstName: 'Test',
+                lastName: 'User',
+                organizationName: 'Test Law Firm',
+                organizationType: 'legal',
+                accessReason: 'Testing the system',
+                role: 'client-admin',
+                organizationId: null,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                approvedAt: null,
+                approvedBy: null,
+                lastLogin: null
+            };
+
+            users.push(testUser);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            output.innerHTML = '<span class="success">✅ Test user created successfully!</span>\n\n' +
+                'Email: testuser@example.com\n' +
+                'Password: testpass123\n' +
+                'Status: pending\n\n' +
+                'Now try to login - you should see "pending approval" message.';
+        }
+
+        function testLogin() {
+            const output = document.getElementById('loginOutput');
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === 'testuser@example.com' && u.password === 'testpass123');
+
+            if (!user) {
+                output.innerHTML = '<span class="error">❌ User not found. Create test user first.</span>';
+                return;
+            }
+
+            if (user.status === 'pending') {
+                output.innerHTML = '<span class="success">✅ Login validation working!</span>\n\n' +
+                    'User found but status is "pending".\n' +
+                    'This is correct - user should not be able to log in.\n\n' +
+                    'Next: Login as admin and approve this user.';
+            } else if (user.status === 'active') {
+                output.innerHTML = '<span class="success">✅ User is approved!</span>\n\n' +
+                    'User can now log in.\n' +
+                    'Status: ' + user.status + '\n' +
+                    'Organization ID: ' + user.organizationId;
+            } else {
+                output.innerHTML = '<span class="error">User status: ' + user.status + '</span>';
+            }
+        }
+
+        // Auto-check on load
+        window.onload = function () {
+            checkAuthJS();
+            viewUsers();
+        };
+    </script>
+</body>
+
+</html>

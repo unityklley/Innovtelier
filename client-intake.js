@@ -250,9 +250,14 @@ async function handleFormSubmit(e) {
         return;
     }
 
+    // Get current user for ownership
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+    const organizationId = currentUser ? currentUser.organizationId : null;
+
     // Prepare case data
     const caseData = {
         id: generateCaseId(),
+        organizationId: organizationId, // Link case to organization
         timestamp: new Date().toISOString(),
         status: 'pending',
         personalInfo: {
