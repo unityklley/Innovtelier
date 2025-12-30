@@ -575,9 +575,14 @@ const Dashboard = {
             localStorage.setItem('users', JSON.stringify(users));
 
             // 4. Cleanup & Refresh
+            // Clear form inputs
+            document.getElementById('newClientOrgName').value = '';
+            document.getElementById('newClientName').value = '';
+            document.getElementById('newClientEmail').value = '';
+
             this.closeModal(); // Visual close
 
-            // Allow UI to update before alerting
+            // Allow UI to update before showing success
             setTimeout(() => {
                 this.loadAllUsers();
                 this.loadOrganizations();
