@@ -94,7 +94,13 @@ const GoogleDrive = {
             picture: userInfo.picture
         }));
 
-        // Request Drive API access
+        // Update UI immediately to show we are logged in
+        this.isSignedIn = true;
+        this.demoMode = false;
+        this.updateUI();
+
+        // Request Drive API access (for uploading files)
+        // This triggers the second permission popup
         this.tokenClient.requestAccessToken();
     },
 
