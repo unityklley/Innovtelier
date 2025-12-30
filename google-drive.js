@@ -236,7 +236,9 @@ const GoogleDrive = {
             });
 
             if (!response.ok) {
-                throw new Error('Upload failed');
+                const errorBody = await response.text();
+                console.error('Drive API Error:', response.status, errorBody);
+                throw new Error(`API Error ${response.status}: ${errorBody}`);
             }
 
             const result = await response.json();
