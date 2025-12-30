@@ -816,7 +816,18 @@ const Dashboard = {
         // Reload documents
         this.loadDocuments();
 
-        alert(`Document "${file.name}" uploaded successfully${driveFile ? ' to Google Drive' : ''}!`);
+        let successMsg = `Document "${file.name}" uploaded successfully!`;
+        if (driveFile) {
+            successMsg += `\n\nLocation: Google Drive`;
+            successMsg += `\nFolder ID: ${driveFile.parents ? driveFile.parents[0] : 'Root/Unknown'}`;
+            // We can't make the link clickable in alert, but we can show it
+            console.log('File Link:', driveFile.webViewLink);
+        }
+        alert(successMsg);
+
+        if (driveFile && driveFile.webViewLink) {
+            window.open(driveFile.webViewLink, '_blank');
+        }
     },
 
     loadDocuments() {

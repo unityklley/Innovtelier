@@ -233,7 +233,7 @@ const GoogleDrive = {
             form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
             form.append('file', file);
 
-            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,thumbnailLink,size,mimeType&supportsAllDrives=true', {
+            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink,thumbnailLink,size,mimeType,parents&supportsAllDrives=true', {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${this.accessToken}`
