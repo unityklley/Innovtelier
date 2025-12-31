@@ -633,13 +633,15 @@ const Dashboard = {
     },
 
     async createNewClient() {
-        const orgName = document.getElementById('newClientOrgName').value.trim();
-        const clientName = document.getElementById('newClientName').value.trim();
+        const fullName = document.getElementById('newClientFullName').value.trim();
         const email = document.getElementById('newClientEmail').value.trim();
+        const orgName = document.getElementById('newClientOrgName').value.trim();
+        const jobTitle = document.getElementById('newClientJobTitle').value.trim();
+        const phone = document.getElementById('newClientPhone').value.trim();
         const btn = document.getElementById('btnCreateClient');
 
-        if (!orgName || !clientName || !email) {
-            alert('Please fill in all fields');
+        if (!fullName || !email || !orgName || !jobTitle) {
+            alert('Please fill in all required fields');
             return;
         }
 
@@ -699,7 +701,7 @@ const Dashboard = {
 
             // 3. Create Client Admin User
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const names = clientName.split(' ');
+            const names = fullName.split(' ');
             const firstName = names[0];
             const lastName = names.slice(1).join(' ') || '';
 
@@ -711,6 +713,8 @@ const Dashboard = {
                 password: 'welcome123',
                 organizationId: newOrg.id,
                 organizationName: orgName,
+                jobTitle: jobTitle,
+                phone: phone || null,
                 role: 'client_admin',
                 status: 'active',
                 createdAt: new Date().toISOString()
@@ -720,9 +724,11 @@ const Dashboard = {
 
             // 4. Cleanup & Refresh
             // Clear form inputs
-            document.getElementById('newClientOrgName').value = '';
-            document.getElementById('newClientName').value = '';
+            document.getElementById('newClientFullName').value = '';
             document.getElementById('newClientEmail').value = '';
+            document.getElementById('newClientOrgName').value = '';
+            document.getElementById('newClientJobTitle').value = '';
+            document.getElementById('newClientPhone').value = '';
 
             this.closeModal(); // Visual close
 
