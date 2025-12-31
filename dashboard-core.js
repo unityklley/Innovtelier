@@ -338,22 +338,26 @@ const Dashboard = {
     // ============ MASTER ADMIN FUNCTIONS ============
 
     loadAdminStats() {
-        const safeSetText = (id, text) => {
-            const el = document.getElementById(id);
-            if (el) el.textContent = text;
-            else console.error('Missing AdminStat ID:', id);
-        };
-
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
 
-        const pendingUsers = users.filter(u => u.status === 'pending');
-        const activeUsers = users.filter(u => u.status === 'active');
+        const pendingCount = users.filter(u => u.status === 'pending').length;
+        const activeCount = users.filter(u => u.status === 'active').length;
 
-        safeSetText('pendingCount', pendingUsers.length);
-        safeSetText('activeCount', activeUsers.length);
-        safeSetText('orgCount', organizations.length);
-        safeSetText('totalCount', users.length);
+        const safeSetText = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = text;
+            } else {
+                console.warn('Missing AdminStat ID:', id);
+            }
+        };
+
+        // Use 'master' prefix to match HTML IDs
+        safeSetText('masterPendingCount', pendingCount);
+        safeSetText('masterActiveCount', activeCount);
+        safeSetText('masterOrgCount', organizations.length);
+        safeSetText('masterTotalCount', users.length);
     },
 
     loadPendingApprovals() {
