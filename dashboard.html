@@ -780,8 +780,11 @@
                     <div class="section-card">
                         <div class="section-header">
                             <h2><i class="fas fa-users"></i> All Users</h2>
-                            <button class="btn btn-primary" onclick="openAddNewClientModal()"
-                                style="margin-left: 1rem;">
+                            <button class="btn btn-secondary" onclick="exportUsersToExcel()"
+                                style="margin-left: auto; margin-right: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-file-excel"></i> Export to Excel
+                            </button>
+                            <button class="btn btn-primary" onclick="openAddNewClientModal()">
                                 <i class="fas fa-user-plus"></i> Add New Client
                             </button>
                             <div style="display: flex; gap: 1rem;">
@@ -1398,10 +1401,13 @@
         </div>
     </div>
 
-    <!-- Load the unified dashboard logic -->
+    <!-- SheetJS library for Excel export -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
     <!-- Load the unified dashboard logic -->
     <script src="dashboard-core.js?v=6&t=20251230"></script>
     <script src="google-drive.js?v=6&t=20251230"></script>
+    <script src="excel-export.js?v=1"></script>
 </body>
 
 </html>
