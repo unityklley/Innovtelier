@@ -1243,72 +1243,117 @@
 
     <!-- Edit User Modal -->
     <div class="modal" id="editUserModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-edit"></i> Edit User Information</h3>
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header" style="padding: 2rem 2rem 1.5rem 2rem;">
+                <h3 style="font-size: 1.5rem; display: flex; align-items: center; gap: 0.75rem;"><i
+                        class="fas fa-user-edit"></i> Edit User Information</h3>
             </div>
 
-            <input type="hidden" id="editUserId">
+            <div style="padding: 2rem;">
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="form-group">
-                    <label>First Name <span style="color: #dc2626;">*</span></label>
-                    <input type="text" id="editUserFirstName" required>
+                <input type="hidden" id="editUserId">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">First Name <span
+                                style="color: #dc2626;">*</span></label>
+                        <input type="text" id="editUserFirstName" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Last Name <span
+                                style="color: #dc2626;">*</span></label>
+                        <input type="text" id="editUserLastName" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Last Name <span style="color: #dc2626;">*</span></label>
-                    <input type="text" id="editUserLastName" required>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email Address <span
+                            style="color: #dc2626;">*</span></label>
+                    <input type="email" id="editUserEmail" required
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label>Email Address <span style="color: #dc2626;">*</span></label>
-                <input type="email" id="editUserEmail" required>
-            </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Job Title / Role</label>
+                    <input type="text" id="editUserJobTitle"
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                </div>
 
-            <div class="form-group">
-                <label>Organization</label>
-                <select id="editUserOrganization">
-                    <option value="">No Organization</option>
-                </select>
-            </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Phone Number</label>
+                    <input type="tel" id="editUserPhone"
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="form-group">
-                    <label>User Role <span style="color: #dc2626;">*</span></label>
-                    <select id="editUserRole" required>
-                        <option value="master_admin">Master Admin</option>
-                        <option value="client_admin">Client Admin</option>
-                        <option value="client_user">Client User</option>
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Organization</label>
+                    <select id="editUserOrganization"
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: white;">
+                        <option value="">No Organization</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Status <span style="color: #dc2626;">*</span></label>
-                    <select id="editUserStatus" required>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="pending">Pending</option>
-                        <option value="rejected">Rejected</option>
-                        <option value="on-hold">On Hold</option>
-                        <option value="under-review">Under Review/Approval</option>
-                    </select>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">User Role <span
+                                style="color: #dc2626;">*</span></label>
+                        <select id="editUserRole" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: white;">
+                            <option value="master_admin">Master Admin</option>
+                            <option value="client_admin">Client Admin</option>
+                            <option value="client_user">Client User</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Status <span
+                                style="color: #dc2626;">*</span></label>
+                        <select id="editUserStatus" required
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: white;">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="pending">Pending</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="on-hold">On Hold</option>
+                            <option value="under-review">Under Review/Approval</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h4
+                    style="font-size: 1rem; font-weight: 600; color: #374151; margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
+                    Authorizing Contact</h4>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Authorizing Contact
+                        Name</label>
+                    <input type="text" id="editUserAuthName"
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Authorizing Contact
+                        Email</label>
+                    <input type="email" id="editUserAuthEmail"
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Date Created</label>
+                        <input type="text" id="editUserCreatedAt" disabled
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: #f3f4f6; color: #6b7280; cursor: not-allowed;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Last Modified</label>
+                        <input type="text" id="editUserModifiedAt" disabled
+                            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: #f3f4f6; color: #6b7280; cursor: not-allowed;">
+                    </div>
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="form-group">
-                    <label>Date Created</label>
-                    <input type="text" id="editUserCreatedAt" disabled
-                        style="background: #f3f4f6; cursor: not-allowed;">
-                </div>
-                <div class="form-group">
-                    <label>Last Modified</label>
-                    <input type="text" id="editUserModifiedAt" disabled
-                        style="background: #f3f4f6; cursor: not-allowed;">
-                </div>
-            </div>
-
-            <div class="modal-footer">
+            <div class="modal-footer" style="padding: 1.5rem 2rem 2rem 2rem;">
                 <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
                 <button class="btn btn-approve" onclick="Dashboard.saveUserEdits()">
                     <i class="fas fa-save"></i> Save Changes

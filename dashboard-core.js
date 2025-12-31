@@ -530,8 +530,12 @@ const Dashboard = {
         document.getElementById('editUserFirstName').value = user.firstName || '';
         document.getElementById('editUserLastName').value = user.lastName || '';
         document.getElementById('editUserEmail').value = user.email || '';
+        document.getElementById('editUserJobTitle').value = user.jobTitle || '';
+        document.getElementById('editUserPhone').value = user.phone || '';
         document.getElementById('editUserRole').value = user.role || '';
         document.getElementById('editUserStatus').value = user.status || 'active';
+        document.getElementById('editUserAuthName').value = user.authorizingContactName || '';
+        document.getElementById('editUserAuthEmail').value = user.authorizingContactEmail || '';
         document.getElementById('editUserCreatedAt').value = this.formatDate(user.createdAt);
         document.getElementById('editUserModifiedAt').value = user.modifiedAt ? this.formatDate(user.modifiedAt) : 'Never';
 
@@ -555,9 +559,13 @@ const Dashboard = {
         const firstName = document.getElementById('editUserFirstName').value.trim();
         const lastName = document.getElementById('editUserLastName').value.trim();
         const email = document.getElementById('editUserEmail').value.trim();
+        const jobTitle = document.getElementById('editUserJobTitle').value.trim();
+        const phone = document.getElementById('editUserPhone').value.trim();
         const role = document.getElementById('editUserRole').value;
         const status = document.getElementById('editUserStatus').value;
         const organizationId = document.getElementById('editUserOrganization').value;
+        const authName = document.getElementById('editUserAuthName').value.trim();
+        const authEmail = document.getElementById('editUserAuthEmail').value.trim();
 
         // Validation
         if (!firstName || !lastName || !email || !role) {
@@ -594,10 +602,14 @@ const Dashboard = {
             firstName,
             lastName,
             email,
+            jobTitle: jobTitle || null,
+            phone: phone || null,
             role,
             status,
             organizationId: organizationId || null,
             organizationName: organizationName || null,
+            authorizingContactName: authName || null,
+            authorizingContactEmail: authEmail || null,
             modifiedAt: new Date().toISOString()
         };
 
