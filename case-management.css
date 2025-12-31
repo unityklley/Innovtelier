@@ -715,7 +715,6 @@ textarea {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     display: none;
-    /* Changed from flex to none */
     justify-content: center;
     align-items: center;
     z-index: 2000;
@@ -728,8 +727,8 @@ textarea {
 
 .modal-content {
     background: white;
-    border-radius: 2px;
-    max-width: 600px;
+    border-radius: 8px;
+    max-width: 700px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
@@ -743,15 +742,26 @@ textarea {
 .modal-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 1.5rem;
+    align-items: flex-start;
+    padding: 2rem 2rem 1.5rem 2rem;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .modal-header h3 {
     margin: 0;
     color: #1a202c;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-header p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 400;
 }
 
 .modal-close {
@@ -776,15 +786,70 @@ textarea {
 }
 
 .modal-body {
-    padding: 1.5rem;
+    padding: 2rem;
 }
 
 .modal-footer {
-    padding: 1.5rem;
+    padding: 1.5rem 2rem 2rem 2rem;
     border-top: 1px solid #e2e8f0;
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+}
+
+/* Form Group Styles - Critical for Modal Forms */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #374151;
+    font-size: 0.875rem;
+    display: block;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #ffffff;
+    color: #1a202c;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #002855;
+    box-shadow: 0 0 0 3px rgba(0, 40, 85, 0.1);
+}
+
+/* Grid layouts for side-by-side fields */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .success-icon {
