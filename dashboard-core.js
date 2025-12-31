@@ -637,12 +637,13 @@ const Dashboard = {
         const email = document.getElementById('newClientEmail').value.trim();
         const orgName = document.getElementById('newClientOrgName').value.trim();
         const jobTitle = document.getElementById('newClientJobTitle').value.trim();
+        const roleRequested = document.getElementById('newClientRoleRequested').value;
         const phone = document.getElementById('newClientPhone').value.trim();
         const authName = document.getElementById('newClientAuthName').value.trim();
         const authEmail = document.getElementById('newClientAuthEmail').value.trim();
         const btn = document.getElementById('btnCreateClient');
 
-        if (!fullName || !email || !orgName || !jobTitle || !authName || !authEmail) {
+        if (!fullName || !email || !orgName || !jobTitle || !roleRequested || !authName || !authEmail) {
             alert('Please fill in all required fields');
             return;
         }
@@ -717,9 +718,10 @@ const Dashboard = {
                 organizationName: orgName,
                 jobTitle: jobTitle,
                 phone: phone || null,
+                roleRequested: roleRequested,
                 authorizingContactName: authName,
                 authorizingContactEmail: authEmail,
-                role: 'client_admin',
+                role: roleRequested,  // Grant the requested role
                 status: 'active',
                 createdAt: new Date().toISOString()
             };
@@ -732,6 +734,7 @@ const Dashboard = {
             document.getElementById('newClientEmail').value = '';
             document.getElementById('newClientOrgName').value = '';
             document.getElementById('newClientJobTitle').value = '';
+            document.getElementById('newClientRoleRequested').value = '';
             document.getElementById('newClientPhone').value = '';
             document.getElementById('newClientAuthName').value = '';
             document.getElementById('newClientAuthEmail').value = '';

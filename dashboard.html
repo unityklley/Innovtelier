@@ -1178,6 +1178,16 @@
                         style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">User Role Requested <span
+                            style="color: #dc2626;">*</span></label>
+                    <select id="newClientRoleRequested" required
+                        style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: white;">
+                        <option value="">Select a role...</option>
+                        <option value="client_admin">Client Admin (Full access to organization)</option>
+                        <option value="client_user">Client User (Limited access)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
                     <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Phone Number <span
                             style="color: #6b7280; font-weight: 400;">(Optional)</span></label>
                     <input type="tel" id="newClientPhone" placeholder="e.g. (555) 123-4567"
