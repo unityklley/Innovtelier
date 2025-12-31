@@ -662,13 +662,8 @@ const Dashboard = {
             let driveFolderId = null;
             let driveStatusMsg = '';
 
-            // Ensure Google Drive is ready
             if (typeof GoogleDrive !== 'undefined') {
-                if (!GoogleDrive.isSignedIn) {
-                    console.log('Drive not signed in. Attempting check...');
-                    await GoogleDrive.checkAuth();
-                }
-
+                // Check if already signed in, otherwise skip Drive folder creation
                 if (GoogleDrive.isSignedIn) {
                     console.log('Generating Drive folders...');
                     try {
@@ -684,7 +679,7 @@ const Dashboard = {
                     }
                 } else {
                     console.warn('Google Drive not connected.');
-                    driveStatusMsg = '\n\n(Note: Google Drive was not connected, so folders were not created. Please sign in to Drive and try again for future clients.)';
+                    driveStatusMsg = '\n\n(Note: Google Drive was not connected, so folders were not created. Please sign in to Drive from Document Library.)';
                 }
             }
 
