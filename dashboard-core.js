@@ -426,7 +426,10 @@ const Dashboard = {
                 <td>${this.formatRole(user.role)}</td>
                 <td><span class="badge badge-${user.status}">${user.status}</span></td>
                 <td>${this.formatDate(user.createdAt)}</td>
-                <td>
+                <td style="display: flex; gap: 0.5rem;">
+                    <button class="btn-sm btn-primary" onclick="Dashboard.editUser('${user.id}')" title="Edit User">
+                        <i class="fas fa-edit"></i>
+                    </button>
                     <button class="btn-sm btn-reject" onclick="Dashboard.deleteUser('${user.id}')" title="Delete User">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -460,6 +463,148 @@ const Dashboard = {
         this.loadAdminStats();
 
         alert(`User ${deletedUser.firstName} ${deletedUser.lastName} deleted successfully.`);
+    },
+
+    filterUsers() {
+        const searchTerm = document.getElementById('userSearchInput')?.value.toLowerCase() || '';
+        const roleFilter = document.getElementById('userRoleFilter')?.value || '';
+        const statusFilter = document.getElementById('userStatusFilter')?.value || '';
+
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+        const filteredUsers = users.filter(user => {
+            // Search filter (name or email)
+            const matchesSearch = !searchTerm ||
+                user.firstName.toLowerCase().includes(searchTerm) ||
+                user.lastName.toLowerCase().includes(searchTerm) ||
+                user.email.toLowerCase().includes(searchTerm);
+
+            // Role filter
+            const matchesRole = !roleFilter || user.role === roleFilter;
+
+            // Status filter
+            const matchesStatus = !statusFilter || user.status === statusFilter;
+
+            return matchesSearch && matchesRole && matchesStatus;
+        });
+
+        // Update table with filtered results
+        const tbody = document.getElementById('allUsersTable');
+        if (!tbody) return;
+
+        tbody.innerHTML = filteredUsers.map(user => `
+            <tr>
+                <td>${user.firstName} ${user.lastName}</td>
+                <td>${user.email}</td>
+                <td>${user.organizationName || '-'}</td>
+                <td>${this.formatRole(user.role)}</td>
+                <td><span class="badge badge-${user.status}">${user.status}</span></td>
+                <td>${this.formatDate(user.createdAt)}</td>
+                <td style="display: flex; gap: 0.5rem;">
+                    <button class="btn-sm btn-primary" onclick="Dashboard.editUser('${user.id}')" title="Edit User">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-sm btn-reject" onclick="Dashboard.deleteUser('${user.id}')" title="Delete User">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    },
+
+    editUser(userId) {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.id === userId);
+
+        if (!user) {
+            alert('User not found.');
+            return;
+        }
+
+        // Populate modal fields
+        document.getElementById('editUserId').value = user.id;
+        document.getElementById('editUserFirstName').value = user.firstName || '';
+        document.getElementById('editUserLastName').value = user.lastName || '';
+        document.getElementById('editUserEmail').value = user.email || '';
+        document.getElementById('editUserRole').value = user.role || '';
+        document.getElementById('editUserStatus').value = user.status || 'active';
+        document.getElementById('editUserCreatedAt').value = this.formatDate(user.createdAt);
+        document.getElementById('editUserModifiedAt').value = user.modifiedAt ? this.formatDate(user.modifiedAt) : 'Never';
+
+        // Populate organization dropdown
+        const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+        const orgSelect = document.getElementById('editUserOrganization');
+        if (orgSelect) {
+            orgSelect.innerHTML = '<option value="">No Organization</option>' +
+                organizations.map(org =>
+                    `<option value="${org.id}" ${user.organizationId === org.id ? 'selected' : ''}>${org.name}</option>`
+                ).join('');
+        }
+
+        // Show modal
+        const modal = document.getElementById('editUserModal');
+        if (modal) modal.classList.add('active');
+    },
+
+    saveUserEdits() {
+        const userId = document.getElementById('editUserId').value;
+        const firstName = document.getElementById('editUserFirstName').value.trim();
+        const lastName = document.getElementById('editUserLastName').value.trim();
+        const email = document.getElementById('editUserEmail').value.trim();
+        const role = document.getElementById('editUserRole').value;
+        const status = document.getElementById('editUserStatus').value;
+        const organizationId = document.getElementById('editUserOrganization').value;
+
+        // Validation
+        if (!firstName || !lastName || !email || !role) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const userIndex = users.findIndex(u => u.id === userId);
+
+        if (userIndex === -1) {
+            alert('User not found.');
+            return;
+        }
+
+        // Check for duplicate email (excluding current user)
+        const emailExists = users.some(u => u.id !== userId && u.email === email);
+        if (emailExists) {
+            alert('A user with this email already exists.');
+            return;
+        }
+
+        // Get organization name if organizationId is provided
+        let organizationName = '';
+        if (organizationId) {
+            const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+            const org = organizations.find(o => o.id === organizationId);
+            organizationName = org ? org.name : '';
+        }
+
+        // Update user
+        users[userIndex] = {
+            ...users[userIndex],
+            firstName,
+            lastName,
+            email,
+            role,
+            status,
+            organizationId: organizationId || null,
+            organizationName: organizationName || null,
+            modifiedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem('users', JSON.stringify(users));
+
+        // Close modal and refresh
+        this.closeModal();
+        this.loadAllUsers();
+        this.loadAdminStats();
+
+        alert('User updated successfully!');
     },
 
     loadOrganizations() {
@@ -821,6 +966,7 @@ const Dashboard = {
         isActive('rejectionModal');
         isActive('addClientUserModal');
         isActive('addNewClientModal');
+        isActive('editUserModal');
 
         const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
         setVal('approvalNotes', '');
@@ -1211,7 +1357,7 @@ function deleteDocument(docId) {
     Dashboard.deleteDocument(docId);
 }
 
-// Setup organization selector
+// Setup organization selector and filter listeners
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM Content Loaded - Initializing Dashboard');
     Dashboard.init();
@@ -1227,6 +1373,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
+    // Add event listeners for user filters
+    const userSearchInput = document.getElementById('userSearchInput');
+    const userRoleFilter = document.getElementById('userRoleFilter');
+    const userStatusFilter = document.getElementById('userStatusFilter');
+
+    if (userSearchInput) {
+        userSearchInput.addEventListener('input', () => Dashboard.filterUsers());
+    }
+    if (userRoleFilter) {
+        userRoleFilter.addEventListener('change', () => Dashboard.filterUsers());
+    }
+    if (userStatusFilter) {
+        userStatusFilter.addEventListener('change', () => Dashboard.filterUsers());
+    }
 });
 
 // Explicitly expose Dashboard object to window for HTML onclick handlers
@@ -1241,6 +1402,9 @@ window.deleteDocument = deleteDocument;
 window.openAddNewClientModal = () => Dashboard.openAddNewClientModal();
 window.createNewClient = () => Dashboard.createNewClient();
 window.deleteUser = (id) => Dashboard.deleteUser(id);
+window.editUser = (id) => Dashboard.editUser(id);
+window.saveUserEdits = () => Dashboard.saveUserEdits();
+window.filterUsers = () => Dashboard.filterUsers();
 window.closeModal = () => Dashboard.closeModal();
 
 console.log('Global functions exposed to window');
