@@ -638,9 +638,11 @@ const Dashboard = {
         const orgName = document.getElementById('newClientOrgName').value.trim();
         const jobTitle = document.getElementById('newClientJobTitle').value.trim();
         const phone = document.getElementById('newClientPhone').value.trim();
+        const authName = document.getElementById('newClientAuthName').value.trim();
+        const authEmail = document.getElementById('newClientAuthEmail').value.trim();
         const btn = document.getElementById('btnCreateClient');
 
-        if (!fullName || !email || !orgName || !jobTitle) {
+        if (!fullName || !email || !orgName || !jobTitle || !authName || !authEmail) {
             alert('Please fill in all required fields');
             return;
         }
@@ -715,6 +717,8 @@ const Dashboard = {
                 organizationName: orgName,
                 jobTitle: jobTitle,
                 phone: phone || null,
+                authorizingContactName: authName,
+                authorizingContactEmail: authEmail,
                 role: 'client_admin',
                 status: 'active',
                 createdAt: new Date().toISOString()
@@ -729,6 +733,8 @@ const Dashboard = {
             document.getElementById('newClientOrgName').value = '';
             document.getElementById('newClientJobTitle').value = '';
             document.getElementById('newClientPhone').value = '';
+            document.getElementById('newClientAuthName').value = '';
+            document.getElementById('newClientAuthEmail').value = '';
 
             this.closeModal(); // Visual close
 
