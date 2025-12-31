@@ -180,7 +180,7 @@ body {
 .form-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group label {
@@ -188,6 +188,7 @@ body {
     margin-bottom: 0.5rem;
     color: #374151;
     font-size: 0.875rem;
+    display: block;
 }
 
 input[type="text"],
@@ -195,14 +196,16 @@ input[type="email"],
 input[type="tel"],
 select,
 textarea {
-    padding: 0.875rem 1rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
     border: 1px solid #d1d5db;
-    border-radius: 2px;
+    border-radius: 6px;
     font-size: 1rem;
     transition: all 0.2s ease;
     background: #ffffff;
     color: #1a202c;
     font-family: inherit;
+    box-sizing: border-box;
 }
 
 input:focus,
