@@ -238,3 +238,40 @@
     background: #f3f4f6;
     color: #374151;
 }
+
+/* Inline Editing Styles */
+.editable-cell {
+    cursor: pointer;
+    position: relative;
+    padding: 0.5rem !important;
+}
+
+.editable-cell:hover {
+    background-color: #f9fafb;
+    outline: 1px solid #e5e7eb;
+}
+
+.editable-cell.editing {
+    padding: 0 !important;
+}
+
+.inline-edit-input,
+.inline-edit-select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #3b82f6;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    background: white;
+    outline: none;
+}
+
+.inline-edit-select {
+    cursor: pointer;
+}
+
+.inline-edit-input:focus,
+.inline-edit-select:focus {
+    border-color: #2563eb;
+}

@@ -159,14 +159,14 @@ function renderCasesTable() {
                 <td onclick="openCaseDetail('${caseItem.id}')">
                     ${getTypeBadge(caseItem.type)}
                 </td>
-                <td onclick="openCaseDetail('${caseItem.id}')">
+                <td class="editable-cell" onclick="editStatus('${caseItem.id}', event)" title="Click to edit">
                     ${getStatusBadge(caseItem.status)}
                 </td>
-                <td onclick="openCaseDetail('${caseItem.id}')">
+                <td class="editable-cell" onclick="editPriority('${caseItem.id}', event)" title="Click to edit">
                     ${getPriorityIcon(caseItem.priority)}
                 </td>
                 <td onclick="openCaseDetail('${caseItem.id}')">${caseItem.caseLeadName}</td>
-                <td onclick="openCaseDetail('${caseItem.id}')" style="${deadlineUrgent ? 'color: #dc2626; font-weight: 500;' : ''}">
+                <td class="editable-cell" onclick="editDeadline('${caseItem.id}', event)" title="Click to edit" style="${deadlineUrgent ? 'color: #dc2626; font-weight: 500;' : ''}">
                     ${formatDeadline(caseItem.nextDeadline)}
                 </td>
                 <td onclick="openCaseDetail('${caseItem.id}')" style="${activityStale ? 'color: #9ca3af;' : ''}">
