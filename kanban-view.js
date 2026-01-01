@@ -76,8 +76,10 @@ function createKanbanCard(caseData) {
                     ${caseData.name}
                 </div>
                 <button 
-                    onmousedown="event.stopPropagation(); openEditCaseModal('${caseData.id}')"
-                    onclick="event.preventDefault(); event.stopPropagation();"
+                    onmouseenter="this.closest('.kanban-card').setAttribute('draggable', 'false')"
+                    onmouseleave="this.closest('.kanban-card').setAttribute('draggable', 'true')"
+                    onclick="event.stopPropagation(); openEditCaseModal('${caseData.id}')" 
+                    onmousedown="event.stopPropagation()"
                     style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem; z-index: 100; position: relative;" 
                     title="Edit Details">
                     <i class="fas fa-pencil-alt" style="pointer-events: none;"></i>
