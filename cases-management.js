@@ -609,13 +609,24 @@ function openEditCaseModal(caseId) {
 
         if (clientSelect) {
             clientSelect.innerHTML = '<option value="">Select a client...</option>';
+            let matchFound = false;
+
             clientOrgs.forEach(org => {
                 const option = document.createElement('option');
                 option.value = org.id;
                 option.textContent = org.name;
-                if (org.id === caseItem.clientOrganizationId) {
+
+                // Try to match by ID (loose equality for string/number safety)
+                if (caseItem.clientOrganizationId && org.id == caseItem.clientOrganizationId) {
                     option.selected = true;
+                    matchFound = true;
                 }
+                // Fallback: Match by name if ID match failed and name is available
+                else if (!matchFound && caseItem.clientOrganizationName && org.name === caseItem.clientOrganizationName) {
+                    option.selected = true;
+                    matchFound = true;
+                }
+
                 clientSelect.appendChild(option);
             });
         }
