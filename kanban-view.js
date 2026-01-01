@@ -130,3 +130,6 @@ window.renderKanbanView = renderKanbanView;
 window.allowDrop = allowDrop;
 window.drag = drag;
 window.drop = drop;
+window.editKanbanTitle = editKanbanTitle;
+window.editKanbanPriority = editKanbanPriority;
+window.editKanbanDeadline = editKanbanDeadline;
