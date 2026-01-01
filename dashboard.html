@@ -646,7 +646,7 @@
                 <i class="fas fa-home"></i> Dashboard
             </a>
             <a class="nav-item" onclick="switchMasterAdminTab('cases')">
-                <i class="fas fa-briefcase"></i> Client Cases
+                <i class="fas fa-briefcase"></i> Client Dashboard
             </a>
             <a class="nav-item" onclick="switchMasterAdminTab('reports')">
                 <i class="fas fa-chart-pie"></i> Reports
@@ -852,6 +852,99 @@
                                 </thead>
                                 <tbody id="organizationsTable"></tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLIENT DASHBOARD VIEW -->
+                <div id="masterAdminCasesView" style="display: none;">
+                    <!-- Client Statistics Cards -->
+                    <div class="stats-grid" style="margin-bottom: 2rem;">
+                        <div class="stat-card">
+                            <div class="stat-icon total">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalClientsCount">0</h3>
+                                <p>Total Clients</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon active">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="activeClientsCount">0</h3>
+                                <p>Active Clients</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon pending">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalClientUsersCount">0</h3>
+                                <p>Total Users</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon completed">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="recentSignupsCount">0</h3>
+                                <p>Recent Signups (30d)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Client Organizations Section -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h2><i class="fas fa-building"></i> Client Organizations</h2>
+                            <button class="btn btn-secondary" onclick="exportClientsToExcel()"
+                                style="display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-file-excel"></i> Export to Excel
+                            </button>
+                        </div>
+                        <div class="section-body">
+                            <!-- Search and Filter Controls -->
+                            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                                <input type="text" id="clientSearchInput" placeholder="Search clients..."
+                                    style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 250px;">
+                                <select id="clientStatusFilter"
+                                    style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                                    <option value="">All Statuses</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                            <!-- Client Organizations Table -->
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Client ID</th>
+                                            <th>Organization Name</th>
+                                            <th>Total Users</th>
+                                            <th>Admins</th>
+                                            <th>Active Users</th>
+                                            <th>Primary Contact</th>
+                                            <th>Date Joined</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="clientOrganizationsTableBody">
+                                        <tr>
+                                            <td colspan="9" style="text-align: center; padding: 2rem; color: #6b7280;">
+                                                No client organizations found
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1408,6 +1501,7 @@
     <script src="dashboard-core.js?v=6&t=20251230"></script>
     <script src="google-drive.js?v=6&t=20251230"></script>
     <script src="excel-export.js?v=1"></script>
+    <script src="client-dashboard.js?v=1"></script>
 </body>
 
 </html>

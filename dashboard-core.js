@@ -162,23 +162,20 @@ const Dashboard = {
     },
 
     switchMasterAdminTab(tabName) {
-        // Update active nav item
-        document.querySelectorAll('#masterAdminSidebar .nav-item').forEach(item => item.classList.remove('active'));
+        // Update sidebar active state
+        const navItems = document.querySelectorAll('#masterAdminSidebar .nav-item');
         const activeItem = document.querySelector(`#masterAdminSidebar .nav-item[onclick="switchMasterAdminTab('${tabName}')"]`);
+        navItems.forEach(item => item.classList.remove('active'));
         if (activeItem) activeItem.classList.add('active');
 
-        // Helper function to safely set display
-        const safeStyle = (id, display) => {
-            const el = document.getElementById(id);
-            if (el) el.style.display = display;
-        };
-
-        // Hide all Master Admin views
-        safeStyle('masterAdminHomeView', 'none');
-        safeStyle('masterAdminUsersView', 'none');
-        safeStyle('masterAdminDocumentsView', 'none');
-        safeStyle('masterAdminOrganizationsView', 'none');
-        safeStyle('masterAdminSettingsView', 'none');
+        // Hide all views
+        const views = ['masterAdminHomeView', 'masterAdminCasesView', 'masterAdminReportsView',
+            'masterAdminDocumentsView', 'masterAdminUsersView', 'masterAdminOrganizationsView',
+            'masterAdminSettingsView'];
+        views.forEach(viewId => {
+            const view = document.getElementById(viewId);
+            if (view) view.style.display = 'none';
+        });
 
         // Hide iframes
         const hideIframe = (id) => {
@@ -201,14 +198,13 @@ const Dashboard = {
                 setTitle('Master Admin Dashboard');
                 break;
             case 'cases':
-                const casesFrame = document.getElementById('iframeMasterCases');
-                if (casesFrame) {
-                    casesFrame.classList.add('active');
-                    if (!casesFrame.getAttribute('src')) {
-                        casesFrame.src = 'paralegal-dashboard-content.html';
-                    }
+                // Show client dashboard instead of iframe
+                safeStyle('masterAdminCasesView', 'block');
+                setTitle('Client Dashboard');
+                // Load client dashboard data
+                if (typeof loadClientDashboard === 'function') {
+                    loadClientDashboard();
                 }
-                setTitle('Case Management');
                 break;
             case 'reports':
                 const reportsFrame = document.getElementById('iframeMasterReports');
