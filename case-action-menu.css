@@ -1,0 +1,240 @@
+/* ========================================
+   CASE ACTION MENU STYLES
+   ======================================== */
+
+/* Dropdown Menu Container */
+.case-action-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.25rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 280px;
+    max-width: 320px;
+    max-height: 600px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+}
+
+.case-action-menu.active {
+    display: block;
+}
+
+/* Menu Section */
+.menu-section {
+    padding: 0.5rem 0;
+}
+
+.menu-section:not(:last-child) {
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.menu-section-header {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #9ca3af;
+    letter-spacing: 0.05em;
+}
+
+/* Menu Item */
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.menu-item:hover {
+    background-color: #f9fafb;
+}
+
+.menu-item:focus {
+    background-color: #f3f4f6;
+    outline: none;
+}
+
+.menu-item i {
+    width: 1.25rem;
+    text-align: center;
+    color: #6b7280;
+}
+
+.menu-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.menu-item.disabled:hover {
+    background-color: transparent;
+}
+
+/* Danger Actions */
+.menu-item.danger {
+    color: #dc2626;
+}
+
+.menu-item.danger i {
+    color: #dc2626;
+}
+
+.menu-item.danger:hover {
+    background-color: #fef2f2;
+}
+
+/* Warning Actions */
+.menu-item.warning {
+    color: #f59e0b;
+}
+
+.menu-item.warning i {
+    color: #f59e0b;
+}
+
+/* Success Actions */
+.menu-item.success {
+    color: #10b981;
+}
+
+.menu-item.success i {
+    color: #10b981;
+}
+
+/* Menu Overlay (for click outside) */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    display: none;
+}
+
+.menu-overlay.active {
+    display: block;
+}
+
+/* Action Modal Styles */
+.action-modal {
+    display: none;
+}
+
+.action-modal.active {
+    display: flex;
+}
+
+.action-modal .modal-content {
+    max-width: 500px;
+}
+
+.action-modal textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.875rem;
+    resize: vertical;
+}
+
+.action-modal .form-group {
+    margin-bottom: 1rem;
+}
+
+.action-modal label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.action-modal input[type="text"],
+.action-modal input[type="date"],
+.action-modal select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+/* Activity Log Styles */
+.activity-log-entry {
+    padding: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.activity-log-entry:last-child {
+    border-bottom: none;
+}
+
+.activity-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 0.5rem;
+}
+
+.activity-log-user {
+    font-weight: 500;
+    color: #111827;
+}
+
+.activity-log-time {
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+.activity-log-action {
+    font-size: 0.875rem;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+.activity-log-details {
+    font-size: 0.875rem;
+    color: #6b7280;
+    background: #f9fafb;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+.activity-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.activity-badge.status-change {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.activity-badge.priority-change {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.activity-badge.risk {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.activity-badge.note {
+    background: #f3f4f6;
+    color: #374151;
+}

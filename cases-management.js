@@ -575,9 +575,7 @@ function bulkArchive() {
     alert(`Archive ${selectedCaseIds.size} selected cases (coming soon)`);
 }
 
-function toggleCaseMenu(caseId) {
-    alert(`Quick actions for case ${caseId} (coming soon)`);
-}
+// Export functions already exposed in case-action-menu.js
 
 // ========================================
 // EVENT LISTENERS

@@ -1426,6 +1426,155 @@
         </div>
     </div>
 
+    <!-- Activity Log Modal -->
+    <div class="modal action-modal" id="activityLogModal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3>Activity Log</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('activityLogModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="activityLogBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Activity Modal -->
+    <div class="modal action-modal" id="addActivityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Activity / Log Note</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('addActivityModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="activityNote">Note *</label>
+                    <textarea id="activityNote" rows="4" placeholder="Enter your note or activity description..."
+                        required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('addActivityModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveActivity()">Save Activity</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Status Modal -->
+    <div class="modal action-modal" id="changeStatusModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Change Case Status</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('changeStatusModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newStatus">New Status *</label>
+                    <select id="newStatus" required>
+                        <option value="active">Active</option>
+                        <option value="paused">Paused</option>
+                        <option value="closed">Closed</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('changeStatusModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveStatusChange()">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Priority Modal -->
+    <div class="modal action-modal" id="updatePriorityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Priority</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('updatePriorityModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newPriority">New Priority *</label>
+                    <select id="newPriority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('updatePriorityModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" onclick="savePriorityChange()">Update Priority</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Set Deadline Modal -->
+    <div class="modal action-modal" id="setDeadlineModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Set / Update Deadline</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('setDeadlineModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="newDeadline">Deadline Date</label>
+                    <input type="date" id="newDeadline">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('setDeadlineModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveDeadlineChange()">Update Deadline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flag Risk Modal -->
+    <div class="modal action-modal" id="flagRiskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Flag Case as At Risk</h3>
+                <button class="modal-close"
+                    onclick="document.getElementById('flagRiskModal').classList.remove('active')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="riskReason">Reason for Risk Flag *</label>
+                    <textarea id="riskReason" rows="4" placeholder="Explain why this case is at risk..."
+                        required></textarea>
+                </div>
+                <p style="color: #f59e0b; font-size: 0.875rem; margin-top: 1rem;">
+                    <i class="fas fa-exclamation-triangle"></i> Admin will be notified of this risk flag.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                    onclick="document.getElementById('flagRiskModal').classList.remove('active')">Cancel</button>
+                <button class="btn btn-warning" onclick="saveFlagRisk()">Flag as At Risk</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modals -->
     <div class="modal" id="approvalModal">
         <div class="modal-content">
@@ -1731,6 +1880,10 @@
     <script src="excel-export.js?v=1"></script>
     <script src="client-dashboard.js?v=1"></script>
     <script src="cases-management.js?v=1"></script>
+    <script src="case-action-menu.js?v=1"></script>
+
+    <!-- Case Action Menu Styles -->
+    <link rel="stylesheet" href="case-action-menu.css">
 </body>
 
 </html>
