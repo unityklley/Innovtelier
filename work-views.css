@@ -1,0 +1,328 @@
+/* ========================================
+   WORK VIEWS STYLING
+   ======================================== */
+
+/* View Switcher */
+.view-switcher {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0;
+}
+
+.view-btn {
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    bottom: -2px;
+}
+
+.view-btn:hover {
+    color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.view-btn.active {
+    color: #3b82f6;
+    border-bottom-color: #3b82f6;
+    font-weight: 600;
+}
+
+.view-btn i {
+    font-size: 1rem;
+}
+
+/* Work View Containers */
+.work-view {
+    display: none;
+}
+
+.work-view.active {
+    display: block;
+}
+
+/* Calendar View Styles */
+.calendar-container {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.calendar-nav button {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.calendar-nav button:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+    background: #e5e7eb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.calendar-day-header {
+    background: #f9fafb;
+    padding: 0.75rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #6b7280;
+}
+
+.calendar-day {
+    background: white;
+    min-height: 100px;
+    padding: 0.5rem;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.calendar-day:hover {
+    background: #f9fafb;
+}
+
+.calendar-day.other-month {
+    background: #f9fafb;
+    color: #9ca3af;
+}
+
+.calendar-day.today {
+    background: #eff6ff;
+    border: 2px solid #3b82f6;
+}
+
+.calendar-day-number {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.calendar-deadline {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin: 2px;
+}
+
+.calendar-deadline.legal {
+    background: #3b82f6;
+}
+
+.calendar-deadline.nonprofit {
+    background: #16a34a;
+}
+
+.calendar-deadline.other {
+    background: #d97706;
+}
+
+/* Kanban Board Styles */
+.kanban-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.kanban-column {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+    min-height: 500px;
+}
+
+.kanban-column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.kanban-column-title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    color: #374151;
+}
+
+.kanban-column-count {
+    background: #e5e7eb;
+    color: #6b7280;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.kanban-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.kanban-card {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: move;
+    transition: all 0.2s;
+}
+
+.kanban-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.kanban-card.dragging {
+    opacity: 0.5;
+}
+
+.kanban-card-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #111827;
+}
+
+.kanban-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.75rem;
+}
+
+.kanban-card-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.kanban-card-badge.legal {
+    background: #eff6ff;
+    color: #3b82f6;
+}
+
+.kanban-card-badge.nonprofit {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+
+.kanban-card-badge.other {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.kanban-card-badge.priority-critical {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.kanban-card-badge.priority-high {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+/* List View Styles */
+.list-view-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.list-view-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.list-view-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.group-selector {
+    padding: 0.5rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+.list-group {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.list-group-header {
+    padding: 1rem 1.5rem;
+    background: #f9fafb;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.list-group-header:hover {
+    background: #f3f4f6;
+}
+
+.list-group-content {
+    display: none;
+}
+
+.list-group.expanded .list-group-content {
+    display: block;
+}
+
+.list-group.expanded .list-group-toggle i {
+    transform: rotate(90deg);
+}
+
+.list-group-toggle i {
+    transition: transform 0.2s;
+}
