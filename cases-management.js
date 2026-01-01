@@ -174,7 +174,7 @@ function renderCasesTable() {
                 </td>
                 <td onclick="event.stopPropagation()">
                     <div class="dropdown" style="position: relative;">
-                        <button onclick="toggleCaseMenu('${caseItem.id}')" style="background: none; border: none; cursor: pointer; padding: 0.25rem 0.5rem; font-size: 1.25rem; color: #6b7280;">
+                        <button onclick="toggleCaseMenu('${caseItem.id}', event)" style="background: none; border: none; cursor: pointer; padding: 0.25rem 0.5rem; font-size: 1.25rem; color: #6b7280;">
                             ⋮
                         </button>
                     </div>
