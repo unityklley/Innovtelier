@@ -1281,6 +1281,112 @@
 
 
     <!-- Modals -->
+    <!-- New Case Modal -->
+    <div class="modal" id="newCaseModal">
+        <div class="modal-content" style="max-width: 600px; padding: 2rem;">
+            <div class="modal-header">
+                <h3>Create New Case</h3>
+                <button class="modal-close" onclick="closeNewCaseModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newCaseForm" onsubmit="event.preventDefault(); createNewCase();">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="newCaseName" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Case /
+                            Engagement Name *</label>
+                        <input type="text" id="newCaseName" required
+                            placeholder="e.g., Smith Family Trust, Jones v. State"
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="newCaseClient"
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Client Organization
+                            *</label>
+                        <select id="newCaseClient" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                            <option value="">Select a client...</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="newCaseType"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Type *</label>
+                            <select id="newCaseType" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                                <option value="">Select type...</option>
+                                <option value="legal">Legal</option>
+                                <option value="nonprofit">Nonprofit</option>
+                                <option value="strategy">Strategy</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCasePriority"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Priority *</label>
+                            <select id="newCasePriority" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                                <option value="high">High</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label for="newCaseStatus"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Status *</label>
+                            <select id="newCaseStatus" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                                <option value="active">Active</option>
+                                <option value="paused">Paused</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="newCaseDeadline"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Next Deadline</label>
+                            <input type="date" id="newCaseDeadline"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="newCaseDescription"
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Description</label>
+                        <textarea id="newCaseDescription" rows="3"
+                            placeholder="Brief description of the case or engagement..."
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; resize: vertical;"></textarea>
+                    </div>
+
+                    <div class="modal-footer"
+                        style="display: flex; justify-content: flex-end; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                        <button type="button" class="btn btn-secondary" onclick="closeNewCaseModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="btnCreateCase">
+                            <i class="fas fa-plus"></i> Create Case
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="caseSuccessModal">
+        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; color: #10b981; margin-bottom: 1rem;">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 style="margin-bottom: 0.5rem;">Case Created!</h3>
+            <p style="color: #6b7280; margin-bottom: 1.5rem;">Your new case has been created successfully.</p>
+            <button class="btn btn-primary" onclick="closeCaseSuccessModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Modals -->
     <div class="modal" id="approvalModal">
         <div class="modal-content">
             <div class="modal-header">

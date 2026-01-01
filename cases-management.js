@@ -441,9 +441,106 @@ function nextCasesPage() {
     }
 }
 
-// Placeholder functions
+// Open New Case Modal
 function openNewCaseModal() {
-    alert('New Case modal coming soon!');
+    // Populate client dropdown
+    const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+    const clientOrgs = organizations.filter(org => org.type === 'client');
+
+    const clientSelect = document.getElementById('newCaseClient');
+    if (clientSelect) {
+        clientSelect.innerHTML = '<option value="">Select a client...</option>';
+        clientOrgs.forEach(org => {
+            const option = document.createElement('option');
+            option.value = org.id;
+            option.textContent = org.name;
+            clientSelect.appendChild(option);
+        });
+    }
+
+    // Reset form
+    document.getElementById('newCaseForm').reset();
+
+    // Open modal
+    const modal = document.getElementById('newCaseModal');
+    if (modal) modal.classList.add('active');
+}
+
+// Close New Case Modal
+function closeNewCaseModal() {
+    const modal = document.getElementById('newCaseModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// Create New Case
+function createNewCase() {
+    const caseName = document.getElementById('newCaseName').value.trim();
+    const clientId = document.getElementById('newCaseClient').value;
+    const type = document.getElementById('newCaseType').value;
+    const priority = document.getElementById('newCasePriority').value;
+    const status = document.getElementById('newCaseStatus').value;
+    const deadline = document.getElementById('newCaseDeadline').value;
+    const description = document.getElementById('newCaseDescription').value.trim();
+
+    // Validation
+    if (!caseName || !clientId || !type || !priority || !status) {
+        alert('Please fill in all required fields.');
+        return;
+    }
+
+    // Get client organization name
+    const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+    const clientOrg = organizations.find(org => org.id === clientId);
+
+    if (!clientOrg) {
+        alert('Selected client organization not found.');
+        return;
+    }
+
+    // Get current user for case lead
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const caseLeadName = currentUser.firstName && currentUser.lastName
+        ? `${currentUser.firstName} ${currentUser.lastName}`
+        : 'Master Admin';
+
+    // Create new case object
+    const newCase = {
+        id: 'case_' + Date.now(),
+        name: caseName,
+        clientOrganizationId: clientId,
+        clientOrganizationName: clientOrg.name,
+        type: type,
+        status: status,
+        priority: priority,
+        caseLeadId: currentUser.id || null,
+        caseLeadName: caseLeadName,
+        nextDeadline: deadline ? new Date(deadline).toISOString() : null,
+        lastActivity: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        description: description,
+        tags: []
+    };
+
+    // Save to localStorage
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    cases.push(newCase);
+    localStorage.setItem('cases', JSON.stringify(cases));
+
+    // Close modal
+    closeNewCaseModal();
+
+    // Show success modal
+    const successModal = document.getElementById('caseSuccessModal');
+    if (successModal) successModal.classList.add('active');
+
+    // Refresh cases table
+    renderCasesTable();
+}
+
+// Close Success Modal
+function closeCaseSuccessModal() {
+    const modal = document.getElementById('caseSuccessModal');
+    if (modal) modal.classList.remove('active');
 }
 
 function exportCasesToExcel() {
@@ -532,6 +629,9 @@ window.openCaseDetail = openCaseDetail;
 window.previousCasesPage = previousCasesPage;
 window.nextCasesPage = nextCasesPage;
 window.openNewCaseModal = openNewCaseModal;
+window.closeNewCaseModal = closeNewCaseModal;
+window.createNewCase = createNewCase;
+window.closeCaseSuccessModal = closeCaseSuccessModal;
 window.exportCasesToExcel = exportCasesToExcel;
 window.bulkAssignLead = bulkAssignLead;
 window.bulkChangeStatus = bulkChangeStatus;
