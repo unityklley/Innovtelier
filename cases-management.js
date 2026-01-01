@@ -616,13 +616,15 @@ function openEditCaseModal(caseId) {
                 option.value = org.id;
                 option.textContent = org.name;
 
-                // Try to match by ID (loose equality for string/number safety)
+                // 1. Try match by ID (loose equality)
                 if (caseItem.clientOrganizationId && org.id == caseItem.clientOrganizationId) {
                     option.selected = true;
                     matchFound = true;
                 }
-                // Fallback: Match by name if ID match failed and name is available
-                else if (!matchFound && caseItem.clientOrganizationName && org.name === caseItem.clientOrganizationName) {
+                // 2. Fallback: Match by name (Case-insensitive, Trimmed)
+                else if (!matchFound && caseItem.clientOrganizationName &&
+                    (org.name === caseItem.clientOrganizationName ||
+                        org.name.trim().toLowerCase() === caseItem.clientOrganizationName.trim().toLowerCase())) {
                     option.selected = true;
                     matchFound = true;
                 }
@@ -635,7 +637,35 @@ function openEditCaseModal(caseId) {
         document.getElementById('editCaseId').value = caseItem.id;
         document.getElementById('editCaseName').value = caseItem.name || '';
         document.getElementById('editCaseClientType').value = caseItem.clientType || caseItem.type || 'legal';
-        document.getElementById('editCaseServices').value = caseItem.services || '';
+
+        // Services: Advanced Matching (Value or Text)
+        const servicesSelect = document.getElementById('editCaseServices');
+        const savedService = caseItem.services || '';
+        servicesSelect.value = ''; // Reset
+        let serviceMatched = false;
+
+        // Try exact match first
+        if (savedService) {
+            servicesSelect.value = savedService;
+            if (servicesSelect.value === savedService) {
+                serviceMatched = true;
+            }
+
+            // Fallback: Fuzzy Text Match logic for Services
+            if (!serviceMatched) {
+                for (let i = 0; i < servicesSelect.options.length; i++) {
+                    const opt = servicesSelect.options[i];
+                    // Check if option text contains the saved service string (or vice versa)
+                    if (opt.text.toLowerCase().includes(savedService.toLowerCase()) ||
+                        savedService.toLowerCase().includes(opt.text.toLowerCase())) {
+                        servicesSelect.value = opt.value;
+                        serviceMatched = true;
+                        break;
+                    }
+                }
+            }
+        }
+
         document.getElementById('editCasePriority').value = caseItem.priority || 'medium';
         document.getElementById('editCaseStatus').value = caseItem.status || 'active';
 
