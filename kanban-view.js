@@ -77,11 +77,11 @@ function createKanbanCard(caseData) {
                 </div>
                 <button 
                     draggable="false"
-                    onclick="event.preventDefault(); event.stopPropagation(); console.log('Edit clicked for ${caseData.id}'); openEditCaseModal('${caseData.id}')" 
+                    ondragstart="event.preventDefault(); event.stopPropagation();"
+                    onclick="event.preventDefault(); event.stopPropagation(); openEditCaseModal('${caseData.id}')" 
                     onmousedown="event.stopPropagation()" 
                     onmouseup="event.stopPropagation()"
-                    onpointerdown="event.stopPropagation()"
-                    style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem; z-index: 100; position: relative; pointer-events: auto;" 
+                    style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem; z-index: 100; position: relative;" 
                     title="Edit Details">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
