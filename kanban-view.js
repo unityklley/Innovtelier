@@ -71,8 +71,8 @@ function createKanbanCard(caseData) {
 
     return `
         <div class="kanban-card-wrapper" style="position: relative;">
-            <button onclick="console.log('Click triggered'); openEditCaseModal('${caseData.id}')" 
-                style="position: absolute; top: 1rem; right: 1rem; z-index: 50; background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem;" 
+            <button onclick="openEditCaseModal('${caseData.id}')" 
+                style="position: absolute; top: 1rem; right: 1rem; z-index: 20; background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem;" 
                 title="Edit Details">
                 <i class="fas fa-pencil-alt"></i>
             </button>
@@ -91,11 +91,8 @@ function createKanbanCard(caseData) {
                     </span>
                 </div>
                 
-                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; justify-content: space-between;">
-                    <span onclick="editKanbanDeadline('${caseData.id}', event)" title="Click to change deadline" style="cursor: pointer; display: flex; align-items: center; gap: 0.25rem;">
-                         <i class="fas fa-clock"></i> <span id="deadline-text-${caseData.id}">${dateDisplay}</span>
-                    </span>
-                    <span onclick="openEditCaseModal('${caseData.id}')" style="cursor: pointer; color: #3b82f6; font-weight: 500;">Edit</span>
+                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="editKanbanDeadline('${caseData.id}', event)" title="Click to change deadline">
+                    <i class="fas fa-clock"></i> <span id="deadline-text-${caseData.id}">${dateDisplay}</span>
                 </div>
             </div>
         </div>
