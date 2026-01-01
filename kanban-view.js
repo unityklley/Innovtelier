@@ -242,6 +242,19 @@ function updateCaseStatus(caseId, newStatus) {
     const caseIndex = cases.findIndex(c => c.id === caseId);
 
     if (caseIndex !== -1) {
+        // Analytics Updates
+        if (cases[caseIndex].status !== newStatus) {
+            cases[caseIndex].lastStageChange = new Date().toISOString();
+
+            // Set completion date if moving to closed/done
+            if (newStatus === 'closed' || newStatus === 'done') {
+                cases[caseIndex].completedDate = new Date().toISOString();
+            } else if (cases[caseIndex].status === 'closed' || cases[caseIndex].status === 'done') {
+                // Clear completion date if moving OUT of closed/done (re-opened)
+                cases[caseIndex].completedDate = null;
+            }
+        }
+
         cases[caseIndex].status = newStatus;
         cases[caseIndex].lastActivity = new Date().toISOString();
         localStorage.setItem('cases', JSON.stringify(cases));

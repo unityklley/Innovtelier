@@ -538,6 +538,13 @@ function createNewCase() {
         caseLeadName: caseLeadName,
         startDate: startDate ? new Date(startDate).toISOString() : null,
         nextDeadline: deadline ? new Date(deadline).toISOString() : null,
+
+        // Analytics Fields
+        createdDate: new Date().toISOString(),         // Inflow Rate
+        originalDeadline: deadline ? new Date(deadline).toISOString() : null, // Slippage baseline
+        lastStageChange: new Date().toISOString(),     // Stagnation
+        completedDate: (status === 'closed' || status === 'done') ? new Date().toISOString() : null, // Cycle Time
+
         lastActivity: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         description: description,
