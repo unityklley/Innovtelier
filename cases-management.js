@@ -709,6 +709,11 @@ function openEditCaseModal(caseId) {
 
         document.getElementById('editCaseDescription').value = caseItem.description || '';
 
+        // Analytics Fields Population
+        document.getElementById('editCaseCreatedDate').value = caseItem.createdDate ? caseItem.createdDate.split('T')[0] : '';
+        document.getElementById('editCaseOriginalDeadline').value = caseItem.originalDeadline ? caseItem.originalDeadline.split('T')[0] : '';
+        document.getElementById('editCaseCompletedDate').value = caseItem.completedDate ? caseItem.completedDate.split('T')[0] : '';
+
         // Open modal
         if (modal) modal.classList.add('active');
 
