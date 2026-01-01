@@ -450,12 +450,27 @@ function openNewCaseModal() {
     const clientSelect = document.getElementById('newCaseClient');
     if (clientSelect) {
         clientSelect.innerHTML = '<option value="">Select a client...</option>';
+        clientSelect.innerHTML += '<option value="__new__" style="color: #3b82f6; font-weight: 500;">+ Create New Client</option>';
+        clientSelect.innerHTML += '<option disabled>──────────</option>';
+
         clientOrgs.forEach(org => {
             const option = document.createElement('option');
             option.value = org.id;
             option.textContent = org.name;
             clientSelect.appendChild(option);
         });
+
+        // Add change handler for "Create New Client" option
+        clientSelect.onchange = function () {
+            if (this.value === '__new__') {
+                closeNewCaseModal();
+                if (typeof Dashboard !== 'undefined' && typeof Dashboard.openAddNewClientModal === 'function') {
+                    Dashboard.openAddNewClientModal();
+                } else if (typeof openAddNewClientModal === 'function') {
+                    openAddNewClientModal();
+                }
+            }
+        };
     }
 
     // Reset form
