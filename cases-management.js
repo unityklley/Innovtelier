@@ -644,157 +644,161 @@ function openEditCaseModal(caseId) {
         document.getElementById('editCaseDescription').value = caseItem.description || '';
 
         // Open modal
-        const modal = document.getElementById('editCaseModal');
         if (modal) modal.classList.add('active');
+
+    } catch (error) {
+        console.error('Error opening edit case modal:', error);
+        alert('An error occurred while trying to open the edit window: ' + error.message);
     }
+}
 
 // Close Edit Case Modal
 function closeEditCaseModal() {
-        const modal = document.getElementById('editCaseModal');
-        if (modal) modal.classList.remove('active');
+    const modal = document.getElementById('editCaseModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// Save Case Changes
+function saveCaseChanges() {
+    const caseId = document.getElementById('editCaseId').value;
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const index = cases.findIndex(c => c.id === caseId);
+
+    if (index === -1) {
+        alert('Error saving: Case not found.');
+        return;
     }
 
-    // Save Case Changes
-    function saveCaseChanges() {
-        const caseId = document.getElementById('editCaseId').value;
-        const cases = JSON.parse(localStorage.getItem('cases') || '[]');
-        const index = cases.findIndex(c => c.id === caseId);
+    // Get values
+    const name = document.getElementById('editCaseName').value.trim();
+    const clientId = document.getElementById('editCaseClient').value;
+    const clientType = document.getElementById('editCaseClientType').value;
+    const services = document.getElementById('editCaseServices').value;
+    const priority = document.getElementById('editCasePriority').value;
+    const status = document.getElementById('editCaseStatus').value;
+    const startDate = document.getElementById('editCaseStartDate').value;
+    const deadline = document.getElementById('editCaseDeadline').value;
+    const description = document.getElementById('editCaseDescription').value.trim();
 
-        if (index === -1) {
-            alert('Error saving: Case not found.');
-            return;
-        }
-
-        // Get values
-        const name = document.getElementById('editCaseName').value.trim();
-        const clientId = document.getElementById('editCaseClient').value;
-        const clientType = document.getElementById('editCaseClientType').value;
-        const services = document.getElementById('editCaseServices').value;
-        const priority = document.getElementById('editCasePriority').value;
-        const status = document.getElementById('editCaseStatus').value;
-        const startDate = document.getElementById('editCaseStartDate').value;
-        const deadline = document.getElementById('editCaseDeadline').value;
-        const description = document.getElementById('editCaseDescription').value.trim();
-
-        if (!name || !clientId) {
-            alert('Please fill in required fields.');
-            return;
-        }
-
-        // Get client name
-        const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
-        const clientOrg = organizations.find(org => org.id === clientId);
-
-        // Service display name
-        const serviceSelect = document.getElementById('editCaseServices');
-        const serviceDisplayName = serviceSelect.options[serviceSelect.selectedIndex].text;
-
-        // Update object
-        cases[index].name = name;
-        cases[index].clientOrganizationId = clientId;
-        cases[index].clientOrganizationName = clientOrg ? clientOrg.name : cases[index].clientOrganizationName;
-        cases[index].clientType = clientType;
-        cases[index].type = clientType; // Sync
-        cases[index].services = services;
-        cases[index].servicesDisplayName = serviceDisplayName;
-        cases[index].priority = priority;
-        cases[index].status = status;
-        cases[index].startDate = startDate ? new Date(startDate).toISOString() : null;
-        cases[index].nextDeadline = deadline ? new Date(deadline).toISOString() : null;
-        cases[index].description = description;
-        cases[index].lastActivity = new Date().toISOString();
-
-        // Save
-        localStorage.setItem('cases', JSON.stringify(cases));
-
-        // Close & Refresh
-        closeEditCaseModal();
-
-        if (typeof renderCasesTable === 'function') renderCasesTable();
-        if (typeof renderKanbanView === 'function') renderKanbanView();
-        if (typeof renderCalendarView === 'function') renderCalendarView();
-        if (typeof renderListView === 'function') renderListView();
-        if (typeof updateWorkKPIs === 'function') updateWorkKPIs();
-
-        // Show modest success indicator (optional) or just close
+    if (!name || !clientId) {
+        alert('Please fill in required fields.');
+        return;
     }
 
-    // Export functions already exposed in case-action-menu.js
+    // Get client name
+    const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+    const clientOrg = organizations.find(org => org.id === clientId);
 
-    // ========================================
-    // EVENT LISTENERS
-    // ========================================
+    // Service display name
+    const serviceSelect = document.getElementById('editCaseServices');
+    const serviceDisplayName = serviceSelect.options[serviceSelect.selectedIndex].text;
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // Search input
-        const searchInput = document.getElementById('caseSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', () => {
-                currentCasesPage = 1;
-                renderCasesTable();
-            });
-        }
+    // Update object
+    cases[index].name = name;
+    cases[index].clientOrganizationId = clientId;
+    cases[index].clientOrganizationName = clientOrg ? clientOrg.name : cases[index].clientOrganizationName;
+    cases[index].clientType = clientType;
+    cases[index].type = clientType; // Sync
+    cases[index].services = services;
+    cases[index].servicesDisplayName = serviceDisplayName;
+    cases[index].priority = priority;
+    cases[index].status = status;
+    cases[index].startDate = startDate ? new Date(startDate).toISOString() : null;
+    cases[index].nextDeadline = deadline ? new Date(deadline).toISOString() : null;
+    cases[index].description = description;
+    cases[index].lastActivity = new Date().toISOString();
 
-        // Filter dropdowns
-        ['caseClientFilter', 'caseTypeFilter', 'caseStatusFilter', 'casePriorityFilter'].forEach(id => {
-            const filter = document.getElementById(id);
-            if (filter) {
-                filter.addEventListener('change', () => {
-                    currentCasesPage = 1;
-                    renderCasesTable();
-                });
-            }
+    // Save
+    localStorage.setItem('cases', JSON.stringify(cases));
+
+    // Close & Refresh
+    closeEditCaseModal();
+
+    if (typeof renderCasesTable === 'function') renderCasesTable();
+    if (typeof renderKanbanView === 'function') renderKanbanView();
+    if (typeof renderCalendarView === 'function') renderCalendarView();
+    if (typeof renderListView === 'function') renderListView();
+    if (typeof updateWorkKPIs === 'function') updateWorkKPIs();
+
+    // Show modest success indicator (optional) or just close
+}
+
+// Export functions already exposed in case-action-menu.js
+
+// ========================================
+// EVENT LISTENERS
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Search input
+    const searchInput = document.getElementById('caseSearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            currentCasesPage = 1;
+            renderCasesTable();
         });
+    }
 
-        // Per page selector
-        const perPageSelect = document.getElementById('casesPerPage');
-        if (perPageSelect) {
-            perPageSelect.addEventListener('change', (e) => {
-                casesPerPage = parseInt(e.target.value);
+    // Filter dropdowns
+    ['caseClientFilter', 'caseTypeFilter', 'caseStatusFilter', 'casePriorityFilter'].forEach(id => {
+        const filter = document.getElementById(id);
+        if (filter) {
+            filter.addEventListener('change', () => {
                 currentCasesPage = 1;
                 renderCasesTable();
-            });
-        }
-
-        // Select all checkbox
-        const selectAllCheckbox = document.getElementById('selectAllCases');
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener('change', (e) => {
-                const checkboxes = document.querySelectorAll('.case-checkbox');
-                checkboxes.forEach(cb => {
-                    cb.checked = e.target.checked;
-                    const caseId = cb.getAttribute('data-case-id');
-                    if (e.target.checked) {
-                        selectedCaseIds.add(caseId);
-                    } else {
-                        selectedCaseIds.delete(caseId);
-                    }
-                });
-                updateBulkActionsToolbar();
             });
         }
     });
 
-    // ========================================
-    // EXPOSE FUNCTIONS
-    // ========================================
+    // Per page selector
+    const perPageSelect = document.getElementById('casesPerPage');
+    if (perPageSelect) {
+        perPageSelect.addEventListener('change', (e) => {
+            casesPerPage = parseInt(e.target.value);
+            currentCasesPage = 1;
+            renderCasesTable();
+        });
+    }
 
-    window.loadCases = loadCases;
-    window.sortCasesBy = sortCasesBy;
-    window.toggleCaseSelection = toggleCaseSelection;
-    window.clearBulkSelection = clearBulkSelection;
-    window.openCaseDetail = openCaseDetail;
-    window.previousCasesPage = previousCasesPage;
-    window.nextCasesPage = nextCasesPage;
-    window.openNewCaseModal = openNewCaseModal;
-    window.closeNewCaseModal = closeNewCaseModal;
-    window.createNewCase = createNewCase;
-    window.closeCaseSuccessModal = closeCaseSuccessModal;
-    window.exportCasesToExcel = exportCasesToExcel;
-    window.bulkAssignLead = bulkAssignLead;
-    window.bulkChangeStatus = bulkChangeStatus;
-    window.bulkArchive = bulkArchive;
-    window.toggleCaseMenu = toggleCaseMenu;
-    window.openEditCaseModal = openEditCaseModal;
-    window.closeEditCaseModal = closeEditCaseModal;
-    window.saveCaseChanges = saveCaseChanges;
+    // Select all checkbox
+    const selectAllCheckbox = document.getElementById('selectAllCases');
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const checkboxes = document.querySelectorAll('.case-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = e.target.checked;
+                const caseId = cb.getAttribute('data-case-id');
+                if (e.target.checked) {
+                    selectedCaseIds.add(caseId);
+                } else {
+                    selectedCaseIds.delete(caseId);
+                }
+            });
+            updateBulkActionsToolbar();
+        });
+    }
+});
+
+// ========================================
+// EXPOSE FUNCTIONS
+// ========================================
+
+window.loadCases = loadCases;
+window.sortCasesBy = sortCasesBy;
+window.toggleCaseSelection = toggleCaseSelection;
+window.clearBulkSelection = clearBulkSelection;
+window.openCaseDetail = openCaseDetail;
+window.previousCasesPage = previousCasesPage;
+window.nextCasesPage = nextCasesPage;
+window.openNewCaseModal = openNewCaseModal;
+window.closeNewCaseModal = closeNewCaseModal;
+window.createNewCase = createNewCase;
+window.closeCaseSuccessModal = closeCaseSuccessModal;
+window.exportCasesToExcel = exportCasesToExcel;
+window.bulkAssignLead = bulkAssignLead;
+window.bulkChangeStatus = bulkChangeStatus;
+window.bulkArchive = bulkArchive;
+window.toggleCaseMenu = toggleCaseMenu;
+window.openEditCaseModal = openEditCaseModal;
+window.closeEditCaseModal = closeEditCaseModal;
+window.saveCaseChanges = saveCaseChanges;
