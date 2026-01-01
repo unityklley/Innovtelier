@@ -95,13 +95,15 @@ function loadClientOrganizations() {
         return `
             <tr style="transition: all 0.2s;" onmouseenter="this.style.backgroundColor='#f9fafb'" onmouseleave="this.style.backgroundColor='white'">
                 <td style="font-family: 'Courier New', monospace; color: #6b7280; font-size: 0.875rem;">${org.clientId || 'N/A'}</td>
-                <td><div style="font-weight: 600; color: #111827;">${org.name}</div></td>
+                <td class="editable-cell" onclick="editClientOrgName('${org.id}', event)" title="Click to edit">
+                    <div style="font-weight: 600; color: #111827;">${org.name}</div>
+                </td>
                 <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #eff6ff; color: #3b82f6; border-radius: 4px; font-weight: 500;">${totalUsers}</span></td>
                 <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: ${adminCount > 0 ? '#f0fdf4' : '#fef2f2'}; color: ${adminCount > 0 ? '#16a34a' : '#dc2626'}; border-radius: 4px; font-weight: 500;">${adminCount}</span></td>
                 <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #f3f4f6; color: #374151; border-radius: 4px; font-weight: 500;">${activeUserCount}</span></td>
-                <td>${contactInfo}</td>
+                <td class="editable-cell" onclick="editClientContact('${org.id}', event)" title="Click to assign/change admin">${contactInfo}</td>
                 <td style="color: #6b7280; font-size: 0.875rem;">${dateJoined}</td>
-                <td>${statusBadge}</td>
+                <td class="editable-cell" onclick="editClientStatus('${org.id}', event)" title="Click to edit">${statusBadge}</td>
                 <td>
                     <button class="btn btn-sm btn-primary" onclick="viewClientDetails('${org.id}')" 
                         style="padding: 0.375rem 0.875rem; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
