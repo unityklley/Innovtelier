@@ -976,6 +976,86 @@
 
                     <!-- Tab: Cases -->
                     <div id="casesTab" class="tab-content active">
+
+                        <!-- Work KPIs -->
+                        <div style="margin-bottom: 2rem;">
+                            <!-- Status KPIs -->
+                            <div class="stats-grid" style="margin-bottom: 1rem; gap: 1rem;">
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="totalProjectsCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Total Projects</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(67, 233, 123, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-play-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="activeProjectsCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Active Projects</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(250, 112, 154, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="dueThisWeekCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Due This Week</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(255, 107, 107, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="overdueCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Overdue</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Type Breakdown KPIs -->
+                            <div class="stats-grid"
+                                style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">
+                                        <i class="fas fa-gavel"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="legalProjectsCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Legal</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #f0fdf4; color: #16a34a;">
+                                        <i class="fas fa-hands-helping"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="nonprofitProjectsCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Nonprofit</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+                                        <i class="fas fa-briefcase"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="otherProjectsCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Other</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Cases Management Section -->
                         <div
                             style="background: white; padding: 1.5rem; border-radius: 8px; margin-top: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
@@ -1978,6 +2058,7 @@
     <script src="cases-tabs.js?v=1"></script>
     <script src="quick-filters.js?v=1"></script>
     <script src="client-inline-edit.js?v=1"></script>
+    <script src="work-kpis.js?v=1"></script>
 
     <!-- Case Action Menu Styles -->
     <link rel="stylesheet" href="case-action-menu.css">

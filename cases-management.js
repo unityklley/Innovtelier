@@ -113,6 +113,11 @@ function loadCases() {
     initializeCases();
     renderCasesTable();
     updatePaginationInfo();
+
+    // Update work KPIs
+    if (typeof updateWorkKPIs === 'function') {
+        updateWorkKPIs();
+    }
 }
 
 // Render cases table
