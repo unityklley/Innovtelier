@@ -80,6 +80,73 @@ function saveInlineStatus(caseId, newStatus, cell, oldStatus) {
     currentEditingCell = null;
 }
 
+// Edit Type Inline
+function editType(caseId, event) {
+    event.stopPropagation();
+
+    const cell = event.currentTarget;
+    if (cell.classList.contains('editing')) return;
+
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const caseItem = cases.find(c => c.id === caseId);
+    if (!caseItem) return;
+
+    const currentValue = caseItem.type;
+
+    currentEditingCell = cell;
+    cell.classList.add('editing');
+
+    const select = document.createElement('select');
+    select.className = 'inline-edit-select';
+    select.innerHTML = `
+        <option value="legal" ${currentValue === 'legal' ? 'selected' : ''}>Legal</option>
+        <option value="nonprofit" ${currentValue === 'nonprofit' ? 'selected' : ''}>Nonprofit</option>
+        <option value="other" ${currentValue === 'other' ? 'selected' : ''}>Other</option>
+    `;
+
+    select.onchange = () => saveInlineType(caseId, select.value, cell, currentValue);
+    select.onblur = () => {
+        setTimeout(() => cancelInlineEdit(cell, getTypeBadge(currentValue)), 100);
+    };
+    select.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+            cancelInlineEdit(cell, getTypeBadge(currentValue));
+        }
+    };
+
+    cell.innerHTML = '';
+    cell.appendChild(select);
+    select.focus();
+}
+
+function saveInlineType(caseId, newType, cell, oldType) {
+    if (newType === oldType) {
+        cancelInlineEdit(cell, getTypeBadge(oldType));
+        return;
+    }
+
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const caseIndex = cases.findIndex(c => c.id === caseId);
+
+    if (caseIndex === -1) return;
+
+    cases[caseIndex].type = newType;
+    cases[caseIndex].clientType = newType; // Keep both for compatibility
+    cases[caseIndex].lastActivity = new Date().toISOString();
+    localStorage.setItem('cases', JSON.stringify(cases));
+
+    if (typeof logActivity === 'function') {
+        logActivity(caseId, 'type_changed', {
+            previousValue: oldType,
+            newValue: newType
+        });
+    }
+
+    cell.classList.remove('editing');
+    cell.innerHTML = getTypeBadge(newType);
+    currentEditingCell = null;
+}
+
 // Edit Priority Inline
 function editPriority(caseId, event) {
     event.stopPropagation();
@@ -329,6 +396,7 @@ function cancelInlineEdit(cell, originalContent) {
 
 // Expose functions
 window.editStatus = editStatus;
+window.editType = editType;
 window.editPriority = editPriority;
 window.editLead = editLead;
 window.editDeadline = editDeadline;

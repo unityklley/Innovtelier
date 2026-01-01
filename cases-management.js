@@ -156,7 +156,7 @@ function renderCasesTable() {
                     ${caseItem.name}
                 </td>
                 <td onclick="openCaseDetail('${caseItem.id}')">${caseItem.clientOrganizationName}</td>
-                <td onclick="openCaseDetail('${caseItem.id}')">
+                <td class="editable-cell" onclick="editType('${caseItem.id}', event)" title="Click to edit">
                     ${getTypeBadge(caseItem.type)}
                 </td>
                 <td class="editable-cell" onclick="editStatus('${caseItem.id}', event)" title="Click to edit">
