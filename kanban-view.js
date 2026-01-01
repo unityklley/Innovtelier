@@ -71,9 +71,15 @@ function createKanbanCard(caseData) {
 
     return `
         <div id="${caseData.id}" class="kanban-card" draggable="true" ondragstart="drag(event)">
-            <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title">
-                ${caseData.name}
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
+                <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title" style="flex: 1; margin-right: 0.5rem; margin-bottom: 0;">
+                    ${caseData.name}
+                </div>
+                <button onclick="openEditCaseModal('${caseData.id}')" style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 2px; font-size: 0.875rem;" title="Edit Details">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
             </div>
+            
             <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem;">${caseData.clientOrganizationName || 'Unknown Client'}</div>
             
             <div class="kanban-card-meta">

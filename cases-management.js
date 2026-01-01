@@ -582,6 +582,133 @@ function bulkArchive() {
     alert(`Archive ${selectedCaseIds.size} selected cases (coming soon)`);
 }
 
+// Open Edit Case Modal
+function openEditCaseModal(caseId) {
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const caseItem = cases.find(c => c.id === caseId);
+
+    if (!caseItem) {
+        alert('Case not found.');
+        return;
+    }
+
+    // Populate client dropdown
+    const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+    const clientOrgs = organizations.filter(org => org.type === 'client');
+    const clientSelect = document.getElementById('editCaseClient');
+
+    if (clientSelect) {
+        clientSelect.innerHTML = '<option value="">Select a client...</option>';
+        clientOrgs.forEach(org => {
+            const option = document.createElement('option');
+            option.value = org.id;
+            option.textContent = org.name;
+            if (org.id === caseItem.clientOrganizationId) {
+                option.selected = true;
+            }
+            clientSelect.appendChild(option);
+        });
+    }
+
+    // Populate fields
+    document.getElementById('editCaseId').value = caseItem.id;
+    document.getElementById('editCaseName').value = caseItem.name || '';
+    document.getElementById('editCaseClientType').value = caseItem.clientType || caseItem.type || 'legal';
+    document.getElementById('editCaseServices').value = caseItem.services || '';
+    document.getElementById('editCasePriority').value = caseItem.priority || 'medium';
+    document.getElementById('editCaseStatus').value = caseItem.status || 'active';
+
+    // Dates (convert ISO to YYYY-MM-DD for input[type=date])
+    if (caseItem.startDate) {
+        document.getElementById('editCaseStartDate').value = caseItem.startDate.split('T')[0];
+    } else {
+        document.getElementById('editCaseStartDate').value = '';
+    }
+
+    if (caseItem.nextDeadline) {
+        document.getElementById('editCaseDeadline').value = caseItem.nextDeadline.split('T')[0];
+    } else {
+        document.getElementById('editCaseDeadline').value = '';
+    }
+
+    document.getElementById('editCaseDescription').value = caseItem.description || '';
+
+    // Open modal
+    const modal = document.getElementById('editCaseModal');
+    if (modal) modal.classList.add('active');
+}
+
+// Close Edit Case Modal
+function closeEditCaseModal() {
+    const modal = document.getElementById('editCaseModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// Save Case Changes
+function saveCaseChanges() {
+    const caseId = document.getElementById('editCaseId').value;
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const index = cases.findIndex(c => c.id === caseId);
+
+    if (index === -1) {
+        alert('Error saving: Case not found.');
+        return;
+    }
+
+    // Get values
+    const name = document.getElementById('editCaseName').value.trim();
+    const clientId = document.getElementById('editCaseClient').value;
+    const clientType = document.getElementById('editCaseClientType').value;
+    const services = document.getElementById('editCaseServices').value;
+    const priority = document.getElementById('editCasePriority').value;
+    const status = document.getElementById('editCaseStatus').value;
+    const startDate = document.getElementById('editCaseStartDate').value;
+    const deadline = document.getElementById('editCaseDeadline').value;
+    const description = document.getElementById('editCaseDescription').value.trim();
+
+    if (!name || !clientId) {
+        alert('Please fill in required fields.');
+        return;
+    }
+
+    // Get client name
+    const organizations = JSON.parse(localStorage.getItem('organizations') || '[]');
+    const clientOrg = organizations.find(org => org.id === clientId);
+
+    // Service display name
+    const serviceSelect = document.getElementById('editCaseServices');
+    const serviceDisplayName = serviceSelect.options[serviceSelect.selectedIndex].text;
+
+    // Update object
+    cases[index].name = name;
+    cases[index].clientOrganizationId = clientId;
+    cases[index].clientOrganizationName = clientOrg ? clientOrg.name : cases[index].clientOrganizationName;
+    cases[index].clientType = clientType;
+    cases[index].type = clientType; // Sync
+    cases[index].services = services;
+    cases[index].servicesDisplayName = serviceDisplayName;
+    cases[index].priority = priority;
+    cases[index].status = status;
+    cases[index].startDate = startDate ? new Date(startDate).toISOString() : null;
+    cases[index].nextDeadline = deadline ? new Date(deadline).toISOString() : null;
+    cases[index].description = description;
+    cases[index].lastActivity = new Date().toISOString();
+
+    // Save
+    localStorage.setItem('cases', JSON.stringify(cases));
+
+    // Close & Refresh
+    closeEditCaseModal();
+
+    if (typeof renderCasesTable === 'function') renderCasesTable();
+    if (typeof renderKanbanView === 'function') renderKanbanView();
+    if (typeof renderCalendarView === 'function') renderCalendarView();
+    if (typeof renderListView === 'function') renderListView();
+    if (typeof updateWorkKPIs === 'function') updateWorkKPIs();
+
+    // Show modest success indicator (optional) or just close
+}
+
 // Export functions already exposed in case-action-menu.js
 
 // ========================================
@@ -658,3 +785,6 @@ window.bulkAssignLead = bulkAssignLead;
 window.bulkChangeStatus = bulkChangeStatus;
 window.bulkArchive = bulkArchive;
 window.toggleCaseMenu = toggleCaseMenu;
+window.openEditCaseModal = openEditCaseModal;
+window.closeEditCaseModal = closeEditCaseModal;
+window.saveCaseChanges = saveCaseChanges;
