@@ -856,180 +856,244 @@
                     </div>
                 </div>
 
-                <!-- CLIENT CASES VIEW (Combined Dashboard + Cases Table) -->
+                <!-- CLIENT CASES VIEW (Tabbed Interface) -->
                 <div id="masterAdminCasesView" style="display: none;">
-                    <!-- Client Statistics Cards -->
-                    <div class="stats-grid" style="margin-bottom: 2rem;">
-                        <div class="stat-card">
-                            <div class="stat-icon total">
-                                <i class="fas fa-building"></i>
+
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <button class="tab-button" onclick="switchCasesTab('clients')" data-tab="clients">
+                            <i class="fas fa-building"></i> Clients
+                        </button>
+                        <button class="tab-button active" onclick="switchCasesTab('cases')" data-tab="cases">
+                            <i class="fas fa-briefcase"></i> Cases
+                        </button>
+                        <button class="tab-button" onclick="switchCasesTab('calendar')" data-tab="calendar">
+                            <i class="fas fa-calendar-alt"></i> Calendar
+                        </button>
+                        <button class="tab-button" onclick="switchCasesTab('reports')" data-tab="reports">
+                            <i class="fas fa-chart-bar"></i> Reports
+                        </button>
+                    </div>
+
+                    <!-- Tab: Clients -->
+                    <div id="clientsTab" class="tab-content">
+                        <!-- Client Statistics Cards -->
+                        <div class="stats-grid" style="margin-bottom: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-icon total">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="totalClientsCount">0</h3>
+                                    <p>Total Clients</p>
+                                </div>
                             </div>
-                            <div class="stat-content">
-                                <h3 id="totalClientsCount">0</h3>
-                                <p>Total Clients</p>
+                            <div class="stat-card">
+                                <div class="stat-icon active">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="activeClientsCount">0</h3>
+                                    <p>Active Clients</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon pending">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="totalClientUsersCount">0</h3>
+                                    <p>Total Users</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon completed">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h3 id="recentSignupsCount">0</h3>
+                                    <p>Recent Signups (30d)</p>
+                                </div>
                             </div>
                         </div>
-                        <div class="stat-card">
-                            <div class="stat-icon active">
-                                <i class="fas fa-check-circle"></i>
+
+                        <!-- Client Organizations Section -->
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="fas fa-building"></i> Client Organizations</h2>
+                                <button class="btn btn-secondary" onclick="exportClientsToExcel()"
+                                    style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-file-excel"></i> Export to Excel
+                                </button>
                             </div>
-                            <div class="stat-content">
-                                <h3 id="activeClientsCount">0</h3>
-                                <p>Active Clients</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon pending">
-                                <i class="fas fa-users"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 id="totalClientUsersCount">0</h3>
-                                <p>Total Users</p>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon completed">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="stat-content">
-                                <h3 id="recentSignupsCount">0</h3>
-                                <p>Recent Signups (30d)</p>
+                            <div class="section-body">
+                                <!-- Search and Filter Controls -->
+                                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                                    <input type="text" id="clientSearchInput" placeholder="Search clients..."
+                                        style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 250px;">
+                                    <select id="clientStatusFilter"
+                                        style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                                        <option value="">All Statuses</option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+
+                                <!-- Client Organizations Table -->
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Client ID</th>
+                                                <th>Organization Name</th>
+                                                <th>Total Users</th>
+                                                <th>Admins</th>
+                                                <th>Active Users</th>
+                                                <th>Primary Contact</th>
+                                                <th>Date Joined</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientOrganizationsTableBody">
+                                            <tr>
+                                                <td colspan="9"
+                                                    style="text-align: center; padding: 2rem; color: #6b7280;">
+                                                    No client organizations found
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- End Tab: Clients -->
 
-                    <!-- Client Organizations Section -->
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fas fa-building"></i> Client Organizations</h2>
-                            <button class="btn btn-secondary" onclick="exportClientsToExcel()"
-                                style="display: flex; align-items: center; gap: 0.5rem;">
-                                <i class="fas fa-file-excel"></i> Export to Excel
-                            </button>
-                        </div>
-                        <div class="section-body">
-                            <!-- Search and Filter Controls -->
-                            <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                                <input type="text" id="clientSearchInput" placeholder="Search clients..."
-                                    style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 250px;">
-                                <select id="clientStatusFilter"
-                                    style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                    <!-- Tab: Cases -->
+                    <div id="casesTab" class="tab-content active">
+                        <!-- Cases Management Section -->
+                        <div
+                            style="background: white; padding: 1.5rem; border-radius: 8px; margin-top: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                                <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin: 0;"><i
+                                        class="fas fa-briefcase"></i> Case Management</h3>
+                                <button class="btn btn-primary" onclick="openNewCaseModal()"
+                                    style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                                    <i class="fas fa-plus"></i> New Case
+                                </button>
+                            </div>
+                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                                <input type="text" id="caseSearchInput" placeholder="Search cases..."
+                                    style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 200px; font-size: 0.875rem;">
+                                <select id="caseTypeFilter"
+                                    style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
+                                    <option value="">All Types</option>
+                                    <option value="legal">Legal</option>
+                                    <option value="nonprofit">Nonprofit</option>
+                                    <option value="strategy">Strategy</option>
+                                </select>
+                                <select id="caseStatusFilter"
+                                    style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
                                     <option value="">All Statuses</option>
                                     <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="paused">Paused</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                                <select id="casePriorityFilter"
+                                    style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
+                                    <option value="">All Priorities</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
                                 </select>
                             </div>
+                        </div>
 
-                            <!-- Client Organizations Table -->
-                            <div class="table-responsive">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Client ID</th>
-                                            <th>Organization Name</th>
-                                            <th>Total Users</th>
-                                            <th>Admins</th>
-                                            <th>Active Users</th>
-                                            <th>Primary Contact</th>
-                                            <th>Date Joined</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="clientOrganizationsTableBody">
-                                        <tr>
-                                            <td colspan="9" style="text-align: center; padding: 2rem; color: #6b7280;">
-                                                No client organizations found
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <!-- Cases Table -->
+                        <div class="section-card">
+                            <div class="section-body" style="padding: 0;">
+                                <div class="table-responsive">
+                                    <table class="data-table" style="margin: 0;">
+                                        <thead>
+                                            <tr>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('name')">Case Name <i
+                                                        class="fas fa-sort" style="opacity: 0.3;"></i></th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('client')">Client <i
+                                                        class="fas fa-sort" style="opacity: 0.3;"></i></th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('type')">Type <i
+                                                        class="fas fa-sort" style="opacity: 0.3;"></i></th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('status')">Status <i
+                                                        class="fas fa-sort" style="opacity: 0.3;"></i></th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('priority')">Priority
+                                                    <i class="fas fa-sort" style="opacity: 0.3;"></i>
+                                                </th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('lead')">Lead <i
+                                                        class="fas fa-sort" style="opacity: 0.3;"></i></th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('deadline')">Next
+                                                    Deadline
+                                                    <i class="fas fa-sort" style="opacity: 0.3;"></i>
+                                                </th>
+                                                <th style="cursor: pointer;" onclick="sortCasesBy('activity')">Last
+                                                    Activity
+                                                    <i class="fas fa-sort" style="opacity: 0.3;"></i>
+                                                </th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="casesTableBody">
+                                            <tr>
+                                                <td colspan="9"
+                                                    style="text-align: center; padding: 3rem; color: #6b7280;">
+                                                    <i class="fas fa-briefcase"
+                                                        style="font-size: 2rem; opacity: 0.3; margin-bottom: 1rem; display: block;"></i>
+                                                    Loading cases...
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Tab: Cases -->
+
+                    <!-- Tab: Calendar -->
+                    <div id="calendarTab" class="tab-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="fas fa-calendar-alt"></i> Calendar View</h2>
+                                <p class="section-subtitle">View all case deadlines in calendar format</p>
+                            </div>
+                            <div class="section-body" style="padding: 3rem; text-align: center; color: #6b7280;">
+                                <i class="fas fa-calendar-alt"
+                                    style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                                <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">Calendar View Coming Soon</p>
+                                <p>Visualize all case deadlines in an interactive calendar</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Cases Management Section -->
-                    <div
-                        style="background: white; padding: 1.5rem; border-radius: 8px; margin-top: 2rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-                        <div
-                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-                            <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin: 0;"><i
-                                    class="fas fa-briefcase"></i> Case Management</h3>
-                            <button class="btn btn-primary" onclick="openNewCaseModal()"
-                                style="padding: 0.5rem 1rem; font-size: 0.875rem;">
-                                <i class="fas fa-plus"></i> New Case
-                            </button>
-                        </div>
-                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                            <input type="text" id="caseSearchInput" placeholder="Search cases..."
-                                style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 200px; font-size: 0.875rem;">
-                            <select id="caseTypeFilter"
-                                style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
-                                <option value="">All Types</option>
-                                <option value="legal">Legal</option>
-                                <option value="nonprofit">Nonprofit</option>
-                                <option value="strategy">Strategy</option>
-                            </select>
-                            <select id="caseStatusFilter"
-                                style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
-                                <option value="">All Statuses</option>
-                                <option value="active">Active</option>
-                                <option value="paused">Paused</option>
-                                <option value="closed">Closed</option>
-                            </select>
-                            <select id="casePriorityFilter"
-                                style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
-                                <option value="">All Priorities</option>
-                                <option value="critical">Critical</option>
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Cases Table -->
-                    <div class="section-card">
-                        <div class="section-body" style="padding: 0;">
-                            <div class="table-responsive">
-                                <table class="data-table" style="margin: 0;">
-                                    <thead>
-                                        <tr>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('name')">Case Name <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('client')">Client <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('type')">Type <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('status')">Status <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('priority')">Priority <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('lead')">Lead <i
-                                                    class="fas fa-sort" style="opacity: 0.3;"></i></th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('deadline')">Next Deadline
-                                                <i class="fas fa-sort" style="opacity: 0.3;"></i>
-                                            </th>
-                                            <th style="cursor: pointer;" onclick="sortCasesBy('activity')">Last Activity
-                                                <i class="fas fa-sort" style="opacity: 0.3;"></i>
-                                            </th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="casesTableBody">
-                                        <tr>
-                                            <td colspan="9" style="text-align: center; padding: 3rem; color: #6b7280;">
-                                                <i class="fas fa-briefcase"
-                                                    style="font-size: 2rem; opacity: 0.3; margin-bottom: 1rem; display: block;"></i>
-                                                Loading cases...
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <!-- Tab: Reports -->
+                    <div id="reportsTab" class="tab-content">
+                        <div class="section-card">
+                            <div class="section-header">
+                                <h2><i class="fas fa-chart-bar"></i> Reports & Analytics</h2>
+                                <p class="section-subtitle">Case performance metrics and insights</p>
+                            </div>
+                            <div class="section-body" style="padding: 3rem; text-align: center; color: #6b7280;">
+                                <i class="fas fa-chart-bar"
+                                    style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
+                                <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">Reports Coming Soon</p>
+                                <p>Track case metrics, completion rates, and team performance</p>
                             </div>
                         </div>
                     </div>
+
                 </div>
+                <!-- End masterAdminCasesView -->
 
                 <!-- SYSTEM SETTINGS VIEW -->
                 <div id="masterAdminSettingsView" style="display: none;">
@@ -1070,7 +1134,8 @@
                         <div class="section-body">
                             <div id="googleDriveStatus"
                                 style="padding: 1rem; background: #f3f4f6; border-radius: 8px; text-align: center;">
-                                <p style="margin-bottom: 1rem; color: #6b7280;">Connect your Google Drive to upload and
+                                <p style="margin-bottom: 1rem; color: #6b7280;">Connect your Google Drive to upload
+                                    and
                                     share documents</p>
                                 <div id="googleSignInButton"></div>
                                 <div id="googleUserInfo" style="display: none; margin-top: 1rem;">
@@ -1263,7 +1328,8 @@
                             <h2><i class="fas fa-shield-alt"></i> Organization Settings</h2>
                         </div>
                         <div class="section-body">
-                            <p style="color: #6b7280;">Additional organization settings and access controls coming soon.
+                            <p style="color: #6b7280;">Additional organization settings and access controls coming
+                                soon.
                             </p>
                         </div>
                     </div>
@@ -1311,7 +1377,8 @@
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                         <div class="form-group">
                             <label for="newCaseClientType"
-                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Client Type *</label>
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Client Type
+                                *</label>
                             <select id="newCaseClientType" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
                                 <option value="">Select client type...</option>
@@ -1388,7 +1455,8 @@
 
                         <div class="form-group">
                             <label for="newCaseDeadline"
-                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Next Deadline</label>
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Next
+                                Deadline</label>
                             <input type="date" id="newCaseDeadline"
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
                         </div>
@@ -1651,8 +1719,8 @@
                         style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">User Role Requested <span
-                            style="color: #dc2626;">*</span></label>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">User Role Requested
+                        <span style="color: #dc2626;">*</span></label>
                     <select id="newClientRoleRequested" required
                         style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: white;">
                         <option value="">Select a role...</option>
@@ -1670,7 +1738,8 @@
                 <!-- Authorizing Contact Section -->
                 <h4
                     style="font-size: 1rem; font-weight: 600; color: #374151; margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
-                    Authorizing Contact <span style="font-size: 0.875rem; font-weight: 400; color: #6b7280;">(Person who
+                    Authorizing Contact <span style="font-size: 0.875rem; font-weight: 400; color: #6b7280;">(Person
+                        who
                         approved this access)</span>
                 </h4>
 
@@ -1681,7 +1750,8 @@
                         style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
                 </div>
                 <div class="form-group" style="margin-bottom: 1.5rem;">
-                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Authorizing Contact Email
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Authorizing Contact
+                        Email
                         <span style="color: #dc2626;">*</span></label>
                     <input type="email" id="newClientAuthEmail" placeholder="authorizer@example.com" required
                         style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box;">
@@ -1819,7 +1889,8 @@
                             style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: #f3f4f6; color: #6b7280; cursor: not-allowed;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Last Modified</label>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Last
+                            Modified</label>
                         <input type="text" id="editUserModifiedAt" disabled
                             style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; box-sizing: border-box; background: #f3f4f6; color: #6b7280; cursor: not-allowed;">
                     </div>
