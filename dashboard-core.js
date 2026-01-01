@@ -204,12 +204,16 @@ const Dashboard = {
                 setTitle('Master Admin Dashboard');
                 break;
             case 'cases':
-                // Show client dashboard instead of iframe
+                // Show combined client dashboard + cases view
                 safeStyle('masterAdminCasesView', 'block');
-                setTitle('Client Dashboard');
+                setTitle('Client Cases');
                 // Load client dashboard data
                 if (typeof loadClientDashboard === 'function') {
                     loadClientDashboard();
+                }
+                // Load cases data
+                if (typeof loadCases === 'function') {
+                    loadCases();
                 }
                 break;
             case 'reports':
