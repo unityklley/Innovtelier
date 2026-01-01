@@ -631,6 +631,15 @@ function openEditCaseModal(caseId) {
 
                 clientSelect.appendChild(option);
             });
+
+            // Dynamic Fallback: Create option if no match found
+            if (!matchFound && (caseItem.clientOrganizationId || caseItem.clientOrganizationName)) {
+                const fallbackOption = document.createElement('option');
+                fallbackOption.value = caseItem.clientOrganizationId || `temp-${Date.now()}`;
+                fallbackOption.textContent = caseItem.clientOrganizationName || 'Unknown Client';
+                fallbackOption.selected = true;
+                clientSelect.appendChild(fallbackOption);
+            }
         }
 
         // Populate fields
@@ -663,6 +672,15 @@ function openEditCaseModal(caseId) {
                         break;
                     }
                 }
+            }
+
+            // Dynamic Fallback: Create option if no match found
+            if (!serviceMatched && savedService) {
+                const fallbackOption = document.createElement('option');
+                fallbackOption.value = savedService;
+                fallbackOption.textContent = savedService;
+                fallbackOption.selected = true;
+                servicesSelect.appendChild(fallbackOption);
             }
         }
 
