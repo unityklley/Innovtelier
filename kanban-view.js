@@ -70,33 +70,30 @@ function createKanbanCard(caseData) {
     }
 
     return `
-        <div id="${caseData.id}" class="kanban-card" draggable="true" ondragstart="drag(event)">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.25rem;">
-                <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title" style="flex: 1; margin-right: 0.5rem; margin-bottom: 0;">
+        <div class="kanban-card-wrapper" style="position: relative;">
+            <button onclick="openEditCaseModal('${caseData.id}')" 
+                style="position: absolute; top: 1rem; right: 1rem; z-index: 20; background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem;" 
+                title="Edit Details">
+                <i class="fas fa-pencil-alt"></i>
+            </button>
+            
+            <div id="${caseData.id}" class="kanban-card" draggable="true" ondragstart="drag(event)" style="padding-top: 1rem;">
+                <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title" style="margin-right: 1.5rem; min-height: 1.25rem;">
                     ${caseData.name}
                 </div>
-                <button 
-                    onmouseenter="this.closest('.kanban-card').setAttribute('draggable', 'false')"
-                    onmouseleave="this.closest('.kanban-card').setAttribute('draggable', 'true')"
-                    onclick="event.stopPropagation(); openEditCaseModal('${caseData.id}')" 
-                    onmousedown="event.stopPropagation()"
-                    style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; font-size: 0.875rem; z-index: 100; position: relative;" 
-                    title="Edit Details">
-                    <i class="fas fa-pencil-alt" style="pointer-events: none;"></i>
-                </button>
-            </div>
-            
-            <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem;">${caseData.clientOrganizationName || 'Unknown Client'}</div>
-            
-            <div class="kanban-card-meta">
-                <span class="kanban-card-badge ${typeClass}">${caseData.type}</span>
-                <span class="kanban-card-badge ${priorityClass}" onclick="editKanbanPriority('${caseData.id}', event)" title="Click to change priority" style="cursor: pointer;">
-                    ${caseData.priority}
-                </span>
-            </div>
-            
-            <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="editKanbanDeadline('${caseData.id}', event)" title="Click to change deadline">
-                <i class="fas fa-clock"></i> <span id="deadline-text-${caseData.id}">${dateDisplay}</span>
+                
+                <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem;">${caseData.clientOrganizationName || 'Unknown Client'}</div>
+                
+                <div class="kanban-card-meta">
+                    <span class="kanban-card-badge ${typeClass}">${caseData.type}</span>
+                    <span class="kanban-card-badge ${priorityClass}" onclick="editKanbanPriority('${caseData.id}', event)" title="Click to change priority" style="cursor: pointer;">
+                        ${caseData.priority}
+                    </span>
+                </div>
+                
+                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="editKanbanDeadline('${caseData.id}', event)" title="Click to change deadline">
+                    <i class="fas fa-clock"></i> <span id="deadline-text-${caseData.id}">${dateDisplay}</span>
+                </div>
             </div>
         </div>
     `;
