@@ -63,23 +63,140 @@ function createKanbanCard(caseData) {
     const typeClass = caseData.type || 'other';
 
     // Format date
-    const date = caseData.nextDeadline ? new Date(caseData.nextDeadline).toLocaleDateString() : 'No deadline';
+    let dateDisplay = 'No deadline';
+    if (caseData.nextDeadline) {
+        const d = new Date(caseData.nextDeadline);
+        dateDisplay = d.toLocaleDateString();
+    }
 
     return `
         <div id="${caseData.id}" class="kanban-card" draggable="true" ondragstart="drag(event)">
-            <div class="kanban-card-title">${caseData.name}</div>
+            <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title">
+                ${caseData.name}
+            </div>
             <div style="font-size: 0.8rem; color: #6b7280; margin-bottom: 0.5rem;">${caseData.clientOrganizationName || 'Unknown Client'}</div>
             
             <div class="kanban-card-meta">
                 <span class="kanban-card-badge ${typeClass}">${caseData.type}</span>
-                <span class="kanban-card-badge ${priorityClass}">${caseData.priority}</span>
+                <span class="kanban-card-badge ${priorityClass}" onclick="editKanbanPriority('${caseData.id}', event)" title="Click to change priority" style="cursor: pointer;">
+                    ${caseData.priority}
+                </span>
             </div>
             
-            <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.25rem;">
-                <i class="fas fa-clock"></i> ${date}
+            <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.25rem; cursor: pointer;" onclick="editKanbanDeadline('${caseData.id}', event)" title="Click to change deadline">
+                <i class="fas fa-clock"></i> <span id="deadline-text-${caseData.id}">${dateDisplay}</span>
             </div>
         </div>
     `;
+}
+
+// Inline Edit: Title
+function editKanbanTitle(id, event) {
+    event.stopPropagation(); // Prevent drag interference if needed
+    const div = event.target;
+    const currentTitle = div.innerText;
+
+    div.innerHTML = `<input type="text" id="edit-title-${id}" value="${currentTitle}" style="width: 100%; border: 1px solid #3b82f6; padding: 2px; border-radius: 4px;">`;
+    const input = document.getElementById(`edit-title-${id}`);
+    input.focus();
+
+    input.onblur = () => saveKanbanEdit(id, 'name', input.value);
+    input.onkeydown = (e) => {
+        if (e.key === 'Enter') saveKanbanEdit(id, 'name', input.value);
+        if (e.key === 'Escape') renderKanbanView(); // Cancel
+    };
+}
+
+// Inline Edit: Priority
+function editKanbanPriority(id, event) {
+    event.stopPropagation();
+    const span = event.target;
+    // Don't replace if already editing
+    if (span.querySelector('select')) return;
+
+    const currentPriority = span.innerText.toLowerCase();
+
+    const select = document.createElement('select');
+    select.innerHTML = `
+        <option value="critical">Critical</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+    `;
+    select.value = currentPriority;
+    select.style.fontSize = '0.75rem';
+    select.style.padding = '0';
+    select.onclick = (e) => e.stopPropagation();
+
+    span.innerHTML = '';
+    span.appendChild(select);
+    select.focus();
+
+    let saved = false;
+    const save = () => {
+        if (saved) return;
+        saved = true;
+        saveKanbanEdit(id, 'priority', select.value);
+    };
+
+    select.onchange = save;
+    select.onblur = save;
+}
+
+// Inline Edit: Deadline
+function editKanbanDeadline(id, event) {
+    event.stopPropagation();
+    const container = event.currentTarget;
+    const span = document.getElementById(`deadline-text-${id}`);
+    if (!span) return;
+
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const c = cases.find(x => x.id === id);
+    const currentDateVal = c && c.nextDeadline ? c.nextDeadline.split('T')[0] : '';
+
+    const input = document.createElement('input');
+    input.type = 'date';
+    input.value = currentDateVal;
+    input.style.fontSize = '0.75rem';
+    input.onclick = (e) => e.stopPropagation();
+
+    span.style.display = 'none';
+    container.appendChild(input);
+    input.focus();
+
+    let saved = false;
+    const save = () => {
+        if (saved) return;
+        saved = true;
+        saveKanbanEdit(id, 'nextDeadline', input.value);
+    };
+
+    input.onchange = save;
+    input.onblur = save;
+}
+
+// Universal Save Function for Kanban
+function saveKanbanEdit(id, field, value) {
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const index = cases.findIndex(c => c.id === id);
+    if (index !== -1) {
+        if (field === 'nextDeadline') {
+            if (value) {
+                cases[index][field] = new Date(value).toISOString();
+            } else {
+                cases[index][field] = null;
+            }
+        } else {
+            cases[index][field] = value;
+        }
+
+        cases[index].lastActivity = new Date().toISOString();
+        localStorage.setItem('cases', JSON.stringify(cases));
+
+        // Refresh views
+        renderKanbanView();
+        if (typeof updateWorkKPIs === 'function') updateWorkKPIs();
+    }
 }
 
 // Drag & Drop Handlers
