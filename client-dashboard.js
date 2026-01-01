@@ -79,8 +79,11 @@ function loadClientOrganizations() {
         // Get primary contact (first client admin)
         const primaryContact = orgUsers.find(u => u.role === 'client_admin');
         const contactInfo = primaryContact
-            ? `${primaryContact.firstName} ${primaryContact.lastName}<br><small style="color: #6b7280;">${primaryContact.email}</small>`
-            : '<span style="color: #9ca3af;">No admin assigned</span>';
+            ? `<div style="line-height: 1.4;">
+                <div style="font-weight: 500; color: #111827;">${primaryContact.firstName} ${primaryContact.lastName}</div>
+                <div style="font-size: 0.75rem; color: #6b7280;">${primaryContact.email}</div>
+               </div>`
+            : '<span style="display: inline-flex; align-items: center; gap: 0.25rem; color: #f59e0b; font-size: 0.875rem;"><i class="fas fa-exclamation-circle"></i> Assign Admin</span>';
 
         // Format date
         const dateJoined = org.createdAt ? new Date(org.createdAt).toLocaleDateString() : 'N/A';
@@ -90,18 +93,18 @@ function loadClientOrganizations() {
         const statusBadge = `<span class="${statusClass}">${org.status || 'active'}</span>`;
 
         return `
-            <tr>
-                <td><strong>${org.clientId || 'N/A'}</strong></td>
-                <td><strong>${org.name}</strong></td>
-                <td>${totalUsers}</td>
-                <td>${adminCount}</td>
-                <td>${activeUserCount}</td>
+            <tr style="transition: all 0.2s;" onmouseenter="this.style.backgroundColor='#f9fafb'" onmouseleave="this.style.backgroundColor='white'">
+                <td style="font-family: 'Courier New', monospace; color: #6b7280; font-size: 0.875rem;">${org.clientId || 'N/A'}</td>
+                <td><div style="font-weight: 600; color: #111827;">${org.name}</div></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #eff6ff; color: #3b82f6; border-radius: 4px; font-weight: 500;">${totalUsers}</span></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: ${adminCount > 0 ? '#f0fdf4' : '#fef2f2'}; color: ${adminCount > 0 ? '#16a34a' : '#dc2626'}; border-radius: 4px; font-weight: 500;">${adminCount}</span></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #f3f4f6; color: #374151; border-radius: 4px; font-weight: 500;">${activeUserCount}</span></td>
                 <td>${contactInfo}</td>
-                <td>${dateJoined}</td>
+                <td style="color: #6b7280; font-size: 0.875rem;">${dateJoined}</td>
                 <td>${statusBadge}</td>
                 <td>
-                    <button class="btn btn-sm btn-secondary" onclick="viewClientDetails('${org.id}')" 
-                        style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                    <button class="btn btn-sm btn-primary" onclick="viewClientDetails('${org.id}')" 
+                        style="padding: 0.375rem 0.875rem; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                         <i class="fas fa-eye"></i> View
                     </button>
                 </td>
@@ -158,26 +161,29 @@ function filterClientOrganizations() {
 
         const primaryContact = orgUsers.find(u => u.role === 'client_admin');
         const contactInfo = primaryContact
-            ? `${primaryContact.firstName} ${primaryContact.lastName}<br><small style="color: #6b7280;">${primaryContact.email}</small>`
-            : '<span style="color: #9ca3af;">No admin assigned</span>';
+            ? `<div style="line-height: 1.4;">
+                <div style="font-weight: 500; color: #111827;">${primaryContact.firstName} ${primaryContact.lastName}</div>
+                <div style="font-size: 0.75rem; color: #6b7280;">${primaryContact.email}</div>
+               </div>`
+            : '<span style="display: inline-flex; align-items: center; gap: 0.25rem; color: #f59e0b; font-size: 0.875rem;"><i class="fas fa-exclamation-circle"></i> Assign Admin</span>';
 
         const dateJoined = org.createdAt ? new Date(org.createdAt).toLocaleDateString() : 'N/A';
         const statusClass = org.status === 'active' ? 'status-badge-active' : 'status-badge-inactive';
         const statusBadge = `<span class="${statusClass}">${org.status || 'active'}</span>`;
 
         return `
-            <tr>
-                <td><strong>${org.clientId || 'N/A'}</strong></td>
-                <td><strong>${org.name}</strong></td>
-                <td>${totalUsers}</td>
-                <td>${adminCount}</td>
-                <td>${activeUserCount}</td>
+            <tr style="transition: all 0.2s;" onmouseenter="this.style.backgroundColor='#f9fafb'" onmouseleave="this.style.backgroundColor='white'">
+                <td style="font-family: 'Courier New', monospace; color: #6b7280; font-size: 0.875rem;">${org.clientId || 'N/A'}</td>
+                <td><div style="font-weight: 600; color: #111827;">${org.name}</div></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #eff6ff; color: #3b82f6; border-radius: 4px; font-weight: 500;">${totalUsers}</span></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: ${adminCount > 0 ? '#f0fdf4' : '#fef2f2'}; color: ${adminCount > 0 ? '#16a34a' : '#dc2626'}; border-radius: 4px; font-weight: 500;">${adminCount}</span></td>
+                <td><span style="display: inline-flex; align-items: center; justify-content: center; min-width: 2rem; padding: 0.25rem 0.5rem; background: #f3f4f6; color: #374151; border-radius: 4px; font-weight: 500;">${activeUserCount}</span></td>
                 <td>${contactInfo}</td>
-                <td>${dateJoined}</td>
+                <td style="color: #6b7280; font-size: 0.875rem;">${dateJoined}</td>
                 <td>${statusBadge}</td>
                 <td>
-                    <button class="btn btn-sm btn-secondary" onclick="viewClientDetails('${org.id}')" 
-                        style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">
+                    <button class="btn btn-sm btn-primary" onclick="viewClientDetails('${org.id}')" 
+                        style="padding: 0.375rem 0.875rem; font-size: 0.875rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
                         <i class="fas fa-eye"></i> View
                     </button>
                 </td>
