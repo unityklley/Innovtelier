@@ -147,18 +147,11 @@ function renderCasesTable() {
 
     // Build table rows
     const rows = paginatedCases.map(caseItem => {
-        const isSelected = selectedCaseIds.has(caseItem.id);
         const deadlineUrgent = isDeadlineUrgent(caseItem.nextDeadline);
         const activityStale = isActivityStale(caseItem.lastActivity);
 
         return `
             <tr style="cursor: pointer;" onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='white'">
-                <td style="padding: 0.75rem;" onclick="event.stopPropagation()">
-                    <input type="checkbox" class="case-checkbox" data-case-id="${caseItem.id}" 
-                        ${isSelected ? 'checked' : ''} 
-                        onchange="toggleCaseSelection('${caseItem.id}')" 
-                        style="cursor: pointer;">
-                </td>
                 <td onclick="openCaseDetail('${caseItem.id}')" style="font-weight: 500; color: #1f2937;">
                     ${caseItem.name}
                 </td>
