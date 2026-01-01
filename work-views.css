@@ -158,9 +158,14 @@
 /* Kanban Board Styles */
 .kanban-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(4, 1fr);
+    /* Force 4 columns */
+    gap: 1rem;
     padding: 1rem 0;
+    overflow-x: auto;
+    /* Allow scroll on very small screens */
+    min-width: 800px;
+    /* Ensure decent minimum width */
 }
 
 .kanban-column {
