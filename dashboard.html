@@ -878,41 +878,83 @@
                     <!-- Tab: Clients -->
                     <div id="clientsTab" class="tab-content">
                         <!-- Client Statistics Cards -->
-                        <div class="stats-grid" style="margin-bottom: 2rem;">
-                            <div class="stat-card">
-                                <div class="stat-icon total">
-                                    <i class="fas fa-building"></i>
+                        <div style="margin-bottom: 2.5rem;">
+                            <!-- Main Client KPIs -->
+                            <div class="stats-grid" style="margin-bottom: 1rem; gap: 1rem;">
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="totalClientsCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Total Clients</p>
+                                    </div>
                                 </div>
-                                <div class="stat-content">
-                                    <h3 id="totalClientsCount">0</h3>
-                                    <p>Total Clients</p>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(67, 233, 123, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="activeClientsCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Active Clients</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(79, 172, 254, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="totalClientUsersCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Total Users</p>
+                                    </div>
+                                </div>
+                                <div class="stat-card"
+                                    style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; border: none; box-shadow: 0 4px 6px rgba(250, 112, 154, 0.3);">
+                                    <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                                        <i class="fas fa-user-plus"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="recentSignupsCount" style="color: white; font-size: 2rem;">0</h3>
+                                        <p style="color: rgba(255,255,255,0.9); font-weight: 500;">Recent Signups</p>
+                                        <p
+                                            style="color: rgba(255,255,255,0.7); font-size: 0.75rem; margin-top: 0.25rem;">
+                                            Last 30 days</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="stat-card">
-                                <div class="stat-icon active">
-                                    <i class="fas fa-check-circle"></i>
+
+                            <!-- Additional Client Metrics -->
+                            <div class="stats-grid"
+                                style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #fef2f2; color: #dc2626;">
+                                        <i class="fas fa-pause-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="inactiveClientsCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Inactive Clients</p>
+                                    </div>
                                 </div>
-                                <div class="stat-content">
-                                    <h3 id="activeClientsCount">0</h3>
-                                    <p>Active Clients</p>
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="clientsNeedingAdminCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Need Admin</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon pending">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h3 id="totalClientUsersCount">0</h3>
-                                    <p>Total Users</p>
-                                </div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-icon completed">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h3 id="recentSignupsCount">0</h3>
-                                    <p>Recent Signups (30d)</p>
+                                <div class="stat-card" style="background: white; border: 2px solid #e5e7eb;">
+                                    <div class="stat-icon" style="background: #f3f4f6; color: #6b7280;">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div class="stat-content">
+                                        <h3 id="avgUsersPerClientCount" style="font-size: 1.5rem;">0</h3>
+                                        <p style="color: #6b7280;">Avg Users/Client</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

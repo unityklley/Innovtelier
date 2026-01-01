@@ -11,6 +11,15 @@ function loadClientDashboard() {
     document.getElementById('totalClientUsersCount').textContent = stats.totalUsers;
     document.getElementById('recentSignupsCount').textContent = stats.recentSignups;
 
+    // New metrics
+    const inactiveEl = document.getElementById('inactiveClientsCount');
+    const needAdminEl = document.getElementById('clientsNeedingAdminCount');
+    const avgUsersEl = document.getElementById('avgUsersPerClientCount');
+
+    if (inactiveEl) inactiveEl.textContent = stats.inactiveClients;
+    if (needAdminEl) needAdminEl.textContent = stats.clientsNeedingAdmin;
+    if (avgUsersEl) avgUsersEl.textContent = stats.avgUsersPerClient;
+
     // Load client organizations table
     loadClientOrganizations();
 }
@@ -26,6 +35,9 @@ function getClientStatistics() {
     // Count active clients
     const activeClients = clientOrgs.filter(org => org.status === 'active').length;
 
+    // Count inactive clients
+    const inactiveClients = clientOrgs.filter(org => org.status === 'inactive').length;
+
     // Count total users in client organizations
     const clientOrgIds = clientOrgs.map(org => org.id);
     const clientUsers = users.filter(user => clientOrgIds.includes(user.organizationId));
@@ -38,11 +50,26 @@ function getClientStatistics() {
         return createdDate >= thirtyDaysAgo;
     }).length;
 
+    // Count clients needing admin assignment
+    const clientsNeedingAdmin = clientOrgs.filter(org => {
+        const orgUsers = users.filter(u => u.organizationId === org.id);
+        const hasAdmin = orgUsers.some(u => u.role === 'client_admin');
+        return !hasAdmin;
+    }).length;
+
+    // Calculate average users per client
+    const avgUsersPerClient = clientOrgs.length > 0
+        ? (clientUsers.length / clientOrgs.length).toFixed(1)
+        : 0;
+
     return {
         totalClients: clientOrgs.length,
         activeClients: activeClients,
+        inactiveClients: inactiveClients,
         totalUsers: clientUsers.length,
-        recentSignups: recentSignups
+        recentSignups: recentSignups,
+        clientsNeedingAdmin: clientsNeedingAdmin,
+        avgUsersPerClient: avgUsersPerClient
     };
 }
 
