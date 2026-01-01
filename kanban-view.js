@@ -75,7 +75,7 @@ function createKanbanCard(caseData) {
                 <div class="kanban-card-title" ondblclick="editKanbanTitle('${caseData.id}', event)" title="Double-click to edit title" style="flex: 1; margin-right: 0.5rem; margin-bottom: 0;">
                     ${caseData.name}
                 </div>
-                <button onclick="openEditCaseModal('${caseData.id}')" style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 2px; font-size: 0.875rem;" title="Edit Details">
+                <button onclick="event.stopPropagation(); openEditCaseModal('${caseData.id}')" onmousedown="event.stopPropagation()" style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 2px; font-size: 0.875rem; z-index: 10; position: relative;" title="Edit Details">
                     <i class="fas fa-pencil-alt"></i>
                 </button>
             </div>
