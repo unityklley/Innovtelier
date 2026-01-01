@@ -1,0 +1,31 @@
+/* Quick Filter Buttons */
+.quick-filter-btn {
+    padding: 0.5rem 1rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quick-filter-btn:hover {
+    border-color: #3b82f6;
+    color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+.quick-filter-btn.active {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+.quick-filter-btn i {
+    font-size: 0.875rem;
+}
