@@ -222,6 +222,104 @@ function saveInlineDeadline(caseId, newDeadline, cell, oldDeadline) {
     currentEditingCell = null;
 }
 
+// Edit Lead Inline
+function editLead(caseId, event) {
+    event.stopPropagation();
+
+    const cell = event.currentTarget;
+    if (cell.classList.contains('editing')) return;
+
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const caseItem = cases.find(c => c.id === caseId);
+    if (!caseItem) return;
+
+    const currentValue = caseItem.caseLeadName;
+    const currentLeadId = caseItem.caseLeadId;
+
+    currentEditingCell = cell;
+    cell.classList.add('editing');
+
+    // Get all users for dropdown
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    const select = document.createElement('select');
+    select.className = 'inline-edit-select';
+
+    // Add current user if not in users list
+    let userOptions = [...users];
+    if (currentUser.id && !users.find(u => u.id === currentUser.id)) {
+        userOptions.unshift(currentUser);
+    }
+
+    select.innerHTML = userOptions.map(user => {
+        const userName = user.firstName && user.lastName
+            ? `${user.firstName} ${user.lastName}`
+            : user.email || 'Unknown User';
+        const isSelected = user.id === currentLeadId || userName === currentValue;
+        return `<option value="${user.id}" ${isSelected ? 'selected' : ''}>${userName}</option>`;
+    }).join('');
+
+    select.onchange = () => saveInlineLead(caseId, select.value, cell, currentLeadId, currentValue);
+    select.onblur = () => {
+        setTimeout(() => cancelInlineEdit(cell, currentValue), 100);
+    };
+    select.onkeydown = (e) => {
+        if (e.key === 'Escape') {
+            cancelInlineEdit(cell, currentValue);
+        }
+    };
+
+    cell.innerHTML = '';
+    cell.appendChild(select);
+    select.focus();
+}
+
+function saveInlineLead(caseId, newLeadId, cell, oldLeadId, oldLeadName) {
+    if (newLeadId === oldLeadId) {
+        cancelInlineEdit(cell, oldLeadName);
+        return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    let newLead = users.find(u => u.id === newLeadId);
+    if (!newLead && currentUser.id === newLeadId) {
+        newLead = currentUser;
+    }
+
+    if (!newLead) {
+        cancelInlineEdit(cell, oldLeadName);
+        return;
+    }
+
+    const newLeadName = newLead.firstName && newLead.lastName
+        ? `${newLead.firstName} ${newLead.lastName}`
+        : newLead.email || 'Unknown User';
+
+    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+    const caseIndex = cases.findIndex(c => c.id === caseId);
+
+    if (caseIndex === -1) return;
+
+    cases[caseIndex].caseLeadId = newLeadId;
+    cases[caseIndex].caseLeadName = newLeadName;
+    cases[caseIndex].lastActivity = new Date().toISOString();
+    localStorage.setItem('cases', JSON.stringify(cases));
+
+    if (typeof logActivity === 'function') {
+        logActivity(caseId, 'lead_changed', {
+            previousValue: oldLeadName,
+            newValue: newLeadName
+        });
+    }
+
+    cell.classList.remove('editing');
+    cell.innerHTML = newLeadName;
+    currentEditingCell = null;
+}
+
 function cancelInlineEdit(cell, originalContent) {
     if (!cell) return;
     cell.classList.remove('editing');
@@ -232,4 +330,5 @@ function cancelInlineEdit(cell, originalContent) {
 // Expose functions
 window.editStatus = editStatus;
 window.editPriority = editPriority;
+window.editLead = editLead;
 window.editDeadline = editDeadline;

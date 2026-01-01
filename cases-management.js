@@ -165,7 +165,7 @@ function renderCasesTable() {
                 <td class="editable-cell" onclick="editPriority('${caseItem.id}', event)" title="Click to edit">
                     ${getPriorityIcon(caseItem.priority)}
                 </td>
-                <td onclick="openCaseDetail('${caseItem.id}')">${caseItem.caseLeadName}</td>
+                <td class="editable-cell" onclick="editLead('${caseItem.id}', event)" title="Click to edit">${caseItem.caseLeadName}</td>
                 <td class="editable-cell" onclick="editDeadline('${caseItem.id}', event)" title="Click to edit" style="${deadlineUrgent ? 'color: #dc2626; font-weight: 500;' : ''}">
                     ${formatDeadline(caseItem.nextDeadline)}
                 </td>
