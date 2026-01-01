@@ -751,6 +751,11 @@ function saveCaseChanges() {
     const deadline = document.getElementById('editCaseDeadline').value;
     const description = document.getElementById('editCaseDescription').value.trim();
 
+    // Analytics Fields
+    const createdDate = document.getElementById('editCaseCreatedDate').value;
+    const originalDeadline = document.getElementById('editCaseOriginalDeadline').value;
+    const completedDate = document.getElementById('editCaseCompletedDate').value;
+
     if (!name || !clientId) {
         alert('Please fill in required fields.');
         return;
@@ -772,10 +777,31 @@ function saveCaseChanges() {
     cases[index].type = clientType; // Sync
     cases[index].services = services;
     cases[index].servicesDisplayName = serviceDisplayName;
+    cases[index].servicesDisplayName = serviceDisplayName;
     cases[index].priority = priority;
     cases[index].status = status;
     cases[index].startDate = startDate ? new Date(startDate).toISOString() : null;
     cases[index].nextDeadline = deadline ? new Date(deadline).toISOString() : null;
+
+    // Save Analytics Fields
+    cases[index].createdDate = createdDate ? new Date(createdDate).toISOString() : cases[index].createdDate;
+
+    // Only update original deadline if it's explicitly edited, otherwise keep existing
+    if (originalDeadline) {
+        cases[index].originalDeadline = new Date(originalDeadline).toISOString();
+    }
+
+    // Handle Completed Date Logic
+    if (completedDate) {
+        cases[index].completedDate = new Date(completedDate).toISOString();
+    } else if ((status === 'closed' || status === 'done') && !cases[index].completedDate) {
+        // Auto-set if status is closed but no date provided
+        cases[index].completedDate = new Date().toISOString();
+    } else if (status !== 'closed' && status !== 'done') {
+        // Clear if re-opened and field is empty
+        cases[index].completedDate = null;
+    }
+
     cases[index].description = description;
     cases[index].lastActivity = new Date().toISOString();
 
