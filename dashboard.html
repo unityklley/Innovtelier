@@ -1310,14 +1310,14 @@
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                         <div class="form-group">
-                            <label for="newCaseType"
-                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Type *</label>
-                            <select id="newCaseType" required
+                            <label for="newCaseClientType"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Client Type *</label>
+                            <select id="newCaseClientType" required
                                 style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
-                                <option value="">Select type...</option>
+                                <option value="">Select client type...</option>
                                 <option value="legal">Legal</option>
                                 <option value="nonprofit">Nonprofit</option>
-                                <option value="strategy">Strategy</option>
+                                <option value="other">Other</option>
                             </select>
                         </div>
 
@@ -1332,6 +1332,46 @@
                                 <option value="critical">Critical</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <label for="newCaseServices"
+                            style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Services *</label>
+                        <select id="newCaseServices" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box;">
+                            <option value="">Select service...</option>
+
+                            <optgroup label="Legal Services Subscription">
+                                <option value="legal-tier1">Tier I | Essential Support</option>
+                                <option value="legal-tier2">Tier II | Advanced Support</option>
+                                <option value="legal-tier3">Tier III | Comprehensive Support</option>
+                            </optgroup>
+
+                            <optgroup label="Nonprofit - Legal Services">
+                                <option value="nonprofit-legal-tier1">Tier I | Essential Support</option>
+                                <option value="nonprofit-legal-tier2">Tier II | Advanced Support</option>
+                                <option value="nonprofit-legal-tier3">Tier III | Comprehensive Support</option>
+                            </optgroup>
+
+                            <optgroup label="Nonprofit - Organization, Strategy & Productivity">
+                                <option value="nonprofit-osp-tier1">Tier I | Foundational</option>
+                                <option value="nonprofit-osp-tier2">Tier II | Strategic</option>
+                                <option value="nonprofit-osp-tier3">Tier III | Transformational</option>
+                            </optgroup>
+
+                            <optgroup label="Other Services">
+                                <option value="other-brand-guidelines">Brand Guidelines</option>
+                                <option value="other-brochures">Brochures</option>
+                                <option value="other-consultation">Consultation</option>
+                                <option value="other-email-marketing">Email Marketing Template</option>
+                                <option value="other-presentation">Presentation</option>
+                                <option value="other-social-media">Social Media Template</option>
+                                <option value="other-marketing-automation">Marketing Automation</option>
+                                <option value="other-tools-assessment">Tools Assessment & Implementation</option>
+                                <option value="other-resource-management">Resource & Task Management</option>
+                                <option value="other-website-design">Website Design</option>
+                            </optgroup>
+                        </select>
                     </div>
 
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">

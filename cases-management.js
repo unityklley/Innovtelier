@@ -491,14 +491,15 @@ function closeNewCaseModal() {
 function createNewCase() {
     const caseName = document.getElementById('newCaseName').value.trim();
     const clientId = document.getElementById('newCaseClient').value;
-    const type = document.getElementById('newCaseType').value;
+    const clientType = document.getElementById('newCaseClientType').value;
+    const services = document.getElementById('newCaseServices').value;
     const priority = document.getElementById('newCasePriority').value;
     const status = document.getElementById('newCaseStatus').value;
     const deadline = document.getElementById('newCaseDeadline').value;
     const description = document.getElementById('newCaseDescription').value.trim();
 
     // Validation
-    if (!caseName || !clientId || !type || !priority || !status) {
+    if (!caseName || !clientId || !clientType || !services || !priority || !status) {
         alert('Please fill in all required fields.');
         return;
     }
@@ -518,13 +519,20 @@ function createNewCase() {
         ? `${currentUser.firstName} ${currentUser.lastName}`
         : 'Master Admin';
 
+    // Get service display name
+    const serviceSelect = document.getElementById('newCaseServices');
+    const serviceDisplayName = serviceSelect.options[serviceSelect.selectedIndex].text;
+
     // Create new case object
     const newCase = {
         id: 'case_' + Date.now(),
         name: caseName,
         clientOrganizationId: clientId,
         clientOrganizationName: clientOrg.name,
-        type: type,
+        clientType: clientType,
+        services: services,
+        servicesDisplayName: serviceDisplayName,
+        type: clientType, // Keep for backward compatibility with table
         status: status,
         priority: priority,
         caseLeadId: currentUser.id || null,
