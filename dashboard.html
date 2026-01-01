@@ -928,11 +928,15 @@
                             </div>
                             <div class="section-body">
                                 <!-- Search and Filter Controls -->
-                                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
-                                    <input type="text" id="clientSearchInput" placeholder="Search clients..."
-                                        style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 250px;">
+                                <div
+                                    style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;">
+                                    <div class="search-box"
+                                        style="flex: 1; min-width: 250px; max-width: 400px; margin: 0;">
+                                        <i class="fas fa-search"></i>
+                                        <input type="text" id="clientSearchInput" placeholder="Search clients...">
+                                    </div>
                                     <select id="clientStatusFilter"
-                                        style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px;">
+                                        style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 6px; min-width: 150px;">
                                         <option value="">All Statuses</option>
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
