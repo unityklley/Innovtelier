@@ -1206,16 +1206,46 @@
 
                     <!-- Tab: Calendar -->
                     <div id="calendarTab" class="tab-content">
-                        <div class="section-card">
-                            <div class="section-header">
-                                <h2><i class="fas fa-calendar-alt"></i> Calendar View</h2>
-                                <p class="section-subtitle">View all case deadlines in calendar format</p>
-                            </div>
-                            <div class="section-body" style="padding: 3rem; text-align: center; color: #6b7280;">
+                        <!-- View Switcher -->
+                        <div class="view-switcher">
+                            <button class="view-btn active" onclick="switchWorkView('calendar')" data-view="calendar">
+                                <i class="fas fa-calendar-alt"></i> Calendar
+                            </button>
+                            <button class="view-btn" onclick="switchWorkView('kanban')" data-view="kanban">
+                                <i class="fas fa-columns"></i> Kanban
+                            </button>
+                            <button class="view-btn" onclick="switchWorkView('list')" data-view="list">
+                                <i class="fas fa-list"></i> List
+                            </button>
+                        </div>
+
+                        <!-- Calendar View -->
+                        <div id="calendarView" class="work-view active">
+                            <div style="text-align: center; padding: 3rem; color: #6b7280;">
                                 <i class="fas fa-calendar-alt"
-                                    style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i>
-                                <p style="font-size: 1.125rem; margin-bottom: 0.5rem;">Calendar View Coming Soon</p>
-                                <p>Visualize all case deadlines in an interactive calendar</p>
+                                    style="font-size: 3rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                                <h3 style="margin-bottom: 0.5rem;">Calendar View</h3>
+                                <p>Building calendar grid...</p>
+                            </div>
+                        </div>
+
+                        <!-- Kanban View -->
+                        <div id="kanbanView" class="work-view" style="display: none;">
+                            <div style="text-align: center; padding: 3rem; color: #6b7280;">
+                                <i class="fas fa-columns"
+                                    style="font-size: 3rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                                <h3 style="margin-bottom: 0.5rem;">Kanban Board</h3>
+                                <p>Building kanban board...</p>
+                            </div>
+                        </div>
+
+                        <!-- List View -->
+                        <div id="listView" class="work-view" style="display: none;">
+                            <div style="text-align: center; padding: 3rem; color: #6b7280;">
+                                <i class="fas fa-list"
+                                    style="font-size: 3rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                                <h3 style="margin-bottom: 0.5rem;">List View</h3>
+                                <p>Building list view...</p>
                             </div>
                         </div>
                     </div>
