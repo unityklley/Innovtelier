@@ -493,6 +493,7 @@ function createNewCase() {
     const services = document.getElementById('newCaseServices').value;
     const priority = document.getElementById('newCasePriority').value;
     const status = document.getElementById('newCaseStatus').value;
+    const startDate = document.getElementById('newCaseStartDate').value;
     const deadline = document.getElementById('newCaseDeadline').value;
     const description = document.getElementById('newCaseDescription').value.trim();
 
@@ -535,6 +536,7 @@ function createNewCase() {
         priority: priority,
         caseLeadId: currentUser.id || null,
         caseLeadName: caseLeadName,
+        startDate: startDate ? new Date(startDate).toISOString() : null,
         nextDeadline: deadline ? new Date(deadline).toISOString() : null,
         lastActivity: new Date().toISOString(),
         createdAt: new Date().toISOString(),
