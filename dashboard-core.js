@@ -168,6 +168,12 @@ const Dashboard = {
         navItems.forEach(item => item.classList.remove('active'));
         if (activeItem) activeItem.classList.add('active');
 
+        // Helper function to safely set display
+        const safeStyle = (id, display) => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = display;
+        };
+
         // Hide all views
         const views = ['masterAdminHomeView', 'masterAdminCasesView', 'masterAdminReportsView',
             'masterAdminDocumentsView', 'masterAdminUsersView', 'masterAdminOrganizationsView',
