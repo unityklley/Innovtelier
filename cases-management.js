@@ -718,8 +718,26 @@ function openEditCaseModal(caseId) {
 
         // Populate Documents Section
         const folderNameEl = document.getElementById('docFolderName');
+        const folderSubtextEl = document.getElementById('docFolderSubtext');
+        const btnOpen = document.getElementById('btnOpenDriveFolder');
+        const btnConnect = document.getElementById('btnConnectDrive');
+
+        const isDriveConnected = localStorage.getItem('googleDriveConnected') === 'true';
+
         if (folderNameEl) {
             folderNameEl.textContent = caseItem.name ? `${caseItem.name} Files` : 'Project Assets';
+        }
+
+        if (btnOpen && btnConnect) {
+            if (isDriveConnected) {
+                btnOpen.style.display = 'inline-flex';
+                btnConnect.style.display = 'none';
+                if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive Folder • Connected';
+            } else {
+                btnOpen.style.display = 'none';
+                btnConnect.style.display = 'inline-flex';
+                if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Not Connected';
+            }
         }
 
         // Populate Contacts Section
