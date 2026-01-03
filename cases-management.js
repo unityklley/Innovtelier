@@ -721,21 +721,57 @@ function openEditCaseModal(caseId) {
         const folderSubtextEl = document.getElementById('docFolderSubtext');
         const btnOpen = document.getElementById('btnOpenDriveFolder');
         const btnConnect = document.getElementById('btnConnectDrive');
+        const fileListContainer = document.getElementById('docFileList');
+        const fileListContent = document.getElementById('docFileListContent');
 
-        const isDriveConnected = localStorage.getItem('googleDriveConnected') === 'true';
+        // Use Global GoogleDrive object state
+        const isDriveConnected = (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn) || localStorage.getItem('googleDriveConnected') === 'true';
 
         if (folderNameEl) {
             folderNameEl.textContent = caseItem.name ? `${caseItem.name} Files` : 'Project Assets';
         }
 
-        if (btnOpen && btnConnect) {
+        if (btnOpen && btnConnect && fileListContainer) {
             if (isDriveConnected) {
-                btnOpen.style.display = 'inline-flex';
+                // Connected: Show File List, Hide Connect Button, Hide "Open" Button (optional, or keep small)
+                btnOpen.style.display = 'none'; // User wants embedded view, no need for button
                 btnConnect.style.display = 'none';
-                if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive Folder • Connected';
+                fileListContainer.style.display = 'block';
+
+                if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Connected';
+
+                // Render Simulated File List
+                const fileIcon = '<i class="far fa-file-alt" style="color: #6b7280; margin-right: 0.5rem;"></i>';
+                const folderIcon = '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.5rem;"></i>';
+
+                // Mock files for distinctiveness
+                const mockFiles = [
+                    { name: '1. Intake Form.pdf', type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>' },
+                    { name: '2. Client Contract_Signed.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>' },
+                    { name: 'Court_Filings_2024', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' },
+                    { name: 'Evidence_Photos', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' }
+                ];
+
+                fileListContent.innerHTML = mockFiles.map(file => `
+                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6; cursor: pointer;" onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='white'">
+                        <div style="display: flex; align-items: center; color: #374151; font-size: 0.875rem;">
+                            ${file.icon} ${file.name}
+                        </div>
+                        <div style="color: #9ca3af; font-size: 0.75rem;">
+                            ${file.type === 'folder' ? 'Folder' : new Date().toLocaleDateString()}
+                        </div>
+                    </div>
+                `).join('') + `
+                    <div style="padding: 0.5rem 1rem; background: #f9fafb; text-align: center;">
+                        <a href="#" onclick="alert('Opening full folder view...');" style="color: #6b7280; font-size: 0.75rem; text-decoration: none;">View all files in Drive <i class="fas fa-external-link-alt" style="margin-left: 0.25rem;"></i></a>
+                    </div>
+                `;
+
             } else {
+                // Not Connected
                 btnOpen.style.display = 'none';
                 btnConnect.style.display = 'inline-flex';
+                fileListContainer.style.display = 'none';
                 if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Not Connected';
             }
         }
@@ -763,28 +799,29 @@ function closeEditCaseModal() {
 
 // Google Drive Integration Helpers
 function connectGoogleDrive() {
-    // Simulate OAuth flow or API connection
-    const width = 500;
-    const height = 600;
-    const left = (window.screen.width / 2) - (width / 2);
-    const top = (window.screen.height / 2) - (height / 2);
+    // Check if GoogleDrive library is loaded
+    if (typeof GoogleDrive !== 'undefined') {
+        GoogleDrive.enableDemoMode(); // Use the standardized demo login
 
-    // In a real app, this would open Google's OAuth URL
-    // For prototype, we verify via confirm
-    if (confirm('Connect to Google Drive?\n\nThis will allow the app to access project folders.')) {
-        localStorage.setItem('googleDriveConnected', 'true');
-        alert('Successfully connected to Google Drive!');
-
-        // Refresh the modal UI if open
-        const caseId = document.getElementById('editCaseId').value;
-        if (caseId) openEditCaseModal(caseId);
+        // Refresh UI after short delay to allow state update
+        setTimeout(() => {
+            const caseId = document.getElementById('editCaseId').value;
+            if (caseId) openEditCaseModal(caseId);
+        }, 500);
+    } else {
+        // Fallback if script missing
+        if (confirm('Connect to Google Drive (Simulated)?')) {
+            localStorage.setItem('googleDriveConnected', 'true');
+            const caseId = document.getElementById('editCaseId').value;
+            if (caseId) openEditCaseModal(caseId);
+        }
     }
 }
 
 function openGoogleDriveFolder() {
+    // Deprecated in favor of embedded view, but kept as helper
     const caseName = document.getElementById('editCaseName').value;
-    alert(`Opening Google Drive folder for: ${caseName || 'Project'}\n\n(Redirecting to drive.google.com...)`);
-    // window.open('https://drive.google.com/drive/u/0/my-drive', '_blank');
+    alert(`Opening Google Drive folder for: ${caseName || 'Project'}`);
 }
 
 // Save Case Changes
