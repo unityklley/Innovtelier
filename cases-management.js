@@ -578,37 +578,42 @@ function createNewCase() {
 // Helper: Auto-create Drive Folder Structure (Async)
 async function createAutomatedCaseFolder(caseItem) {
     const clientId = caseItem.clientOrganizationId || 'unknown_client';
-    const clientName = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
-    const folderId = 'folder_' + clientId;
+    const clientName = caseItem.clientOrganizationName || 'Client';
 
-    // 1. Check if we can use REAL Google Drive API
+    // Default to Local ID
+    let finalFolderId = 'folder_' + clientId;
+
+    // 1. Try to create REAL Folder if connected
     if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn && !GoogleDrive.demoMode) {
         try {
             console.log('Accessing Real Google Drive API...');
-            // Create main folder
-            const mainFolder = await GoogleDrive.createFolder(`${caseItem.clientOrganizationName || caseItem.name} Repository`);
-            console.log('Created real Drive folder:', mainFolder.id);
+            const realFolderId = await GoogleDrive.createFolder(`${clientName} Repository`);
+            console.log('Created real Drive folder:', realFolderId);
 
-            // Note: In a full impl, we would also upload the starter files here.
-            // For now, we return the Real ID, and the UI will list "Remote Folder" 
-            return mainFolder.id;
+            // Use the Real ID if successful
+            if (realFolderId) {
+                finalFolderId = realFolderId;
+            }
         } catch (err) {
             console.error('Failed to create real Drive folder, falling back to local simulation', err);
         }
     }
 
-    // 2. Fallback: Local Simulation (Idempotent)
+    // 2. ALWAYS Generate Local Structure (for UI display)
+    // We map this structure to whatever ID we decided on (Real or Local)
+    // This ensures the user sees the "Template Files" immediately in the portal
     const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
-    if (driveFolders[folderId]) {
-        console.log('Folder already exists for client:', caseItem.clientOrganizationName);
-        return folderId;
+
+    // If it already exists, return it
+    if (driveFolders[finalFolderId]) {
+        console.log('Folder structure already exists:', finalFolderId);
+        return finalFolderId;
     }
 
     // Generate intelligent default files based on Service Type
     let defaultFiles = [];
     const dateStr = new Date().toLocaleDateString();
-
-    const safeClientName = clientName.replace(/[^a-zA-Z0-9]/g, '');
+    const safeClientName = clientName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
 
     // 1. Common Base Files 
     defaultFiles.push(
@@ -636,13 +641,13 @@ async function createAutomatedCaseFolder(caseItem) {
     }
 
     // Save structure
-    driveFolders[folderId] = {
-        name: `${caseItem.clientOrganizationName || caseItem.name} Repository`,
+    driveFolders[finalFolderId] = {
+        name: `${clientName} Repository`,
         files: defaultFiles
     };
 
     localStorage.setItem('demoDriveFolders', JSON.stringify(driveFolders));
-    return folderId; // Return synchronous mock ID
+    return finalFolderId;
 }
 
 // Close Success Modal
