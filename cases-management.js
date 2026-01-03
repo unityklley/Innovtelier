@@ -392,15 +392,17 @@ function clearBulkSelection() {
 }
 
 function openCaseDetail(caseId) {
-    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
-    const caseItem = cases.find(c => c.id === caseId);
-
-    if (!caseItem) {
-        alert('Case not found.');
-        return;
+    // Redirect to the full edit/view detail modal
+    if (typeof openEditCaseModal === 'function') {
+        openEditCaseModal(caseId);
+    } else {
+        console.error('openEditCaseModal function is missing!');
+        const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+        const caseItem = cases.find(c => c.id === caseId);
+        if (caseItem) {
+            alert(`Case Detail:\n\nName: ${caseItem.name}\nClient: ${caseItem.clientOrganizationName}\nType: ${caseItem.type}\nStatus: ${caseItem.status}`);
+        }
     }
-
-    alert(`Case Detail:\n\nName: ${caseItem.name}\nClient: ${caseItem.clientOrganizationName}\nType: ${caseItem.type}\nStatus: ${caseItem.status}\nPriority: ${caseItem.priority}\n\n(Full case dashboard coming soon)`);
 }
 
 // Pagination
