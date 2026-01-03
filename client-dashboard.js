@@ -235,7 +235,8 @@ function viewClientDetails(orgId) {
         return;
     }
 
-    alert(`Client Details:\n\nOrganization: ${org.name}\nClient ID: ${org.clientId}\nStatus: ${org.status}\n\n(Detailed view coming soon)`);
+    const driveStatus = org.googleDriveFolderId ? 'Linked ✅' : 'Not Linked ❌';
+    alert(`Client Details:\n\nOrganization: ${org.name}\nClient ID: ${org.clientId}\nStatus: ${org.status}\nDrive Folder: ${driveStatus}\n\n(Full dashboard view coming soon)`);
 }
 
 // Export Clients to Excel
