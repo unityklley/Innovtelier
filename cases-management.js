@@ -554,6 +554,7 @@ function createNewCase() {
     };
 
     // AUTOMATION: Create Linked Google Drive Folder
+    // now uses Client ID for robust tracking
     const driveFolderId = createAutomatedCaseFolder(newCase);
     newCase.googleDriveFolderId = driveFolderId;
 
@@ -573,18 +574,26 @@ function createNewCase() {
     renderCasesTable();
 }
 
-// Helper: Auto-create Drive Folder Structure
+// Helper: Auto-create Drive Folder Structure (Idempotent / Get-or-Create)
 function createAutomatedCaseFolder(caseItem) {
-    const folderId = 'folder_' + Date.now();
+    // USE CLIENT ID for the Folder ID to ensure strict linking
+    const clientId = caseItem.clientOrganizationId || 'unknown_client';
+    const folderId = 'folder_' + clientId;
+
+    // Check if exists
     const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
+    if (driveFolders[folderId]) {
+        console.log('Folder already exists for client:', caseItem.clientOrganizationName);
+        return folderId;
+    }
 
     // Generate intelligent default files based on Service Type
     let defaultFiles = [];
     const dateStr = new Date().toLocaleDateString();
     const clientName = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
-    const safeClientName = clientName.replace(/[^a-zA-Z0-9]/g, ''); // Remove special chars
+    const safeClientName = clientName.replace(/[^a-zA-Z0-9]/g, '');
 
-    // 1. Common Base Files (Always included and prefixed)
+    // 1. Common Base Files 
     defaultFiles.push(
         { name: `${safeClientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr }
     );
@@ -603,7 +612,6 @@ function createAutomatedCaseFolder(caseItem) {
         defaultFiles.push({ name: `${safeClientName}_Bylaws_Draft.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
 
     } else {
-        // Generic / General Legal Support
         defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
         defaultFiles.push({ name: 'Legal_Research', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
         defaultFiles.push({ name: `${safeClientName}_Engagement_Letter.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
@@ -612,7 +620,7 @@ function createAutomatedCaseFolder(caseItem) {
 
     // Save structure
     driveFolders[folderId] = {
-        name: `${caseItem.name} Files`,
+        name: `${caseItem.clientOrganizationName || caseItem.name} Repository`,
         files: defaultFiles
     };
 
@@ -649,8 +657,7 @@ function openEditCaseModal(caseId) {
 
         const modal = document.getElementById('editCaseModal');
         if (!modal) {
-            console.error('FATAL: editCaseModal element not found in DOM');
-            alert('Error: Edit Modal HTML is missing from the page. Please refresh.');
+            console.error('Edit modal not found in DOM');
             return;
         }
 
@@ -658,8 +665,21 @@ function openEditCaseModal(caseId) {
         const caseItem = cases.find(c => c.id === caseId);
 
         if (!caseItem) {
-            alert('Case not found.');
+            console.error('Case not found:', caseId);
             return;
+        }
+
+        // SELF-HEALING: If case has no specific folder linked, try to link it via Client ID now
+        if (!caseItem.googleDriveFolderId && caseItem.clientOrganizationId) {
+            console.log('Fixing missing folder link for case:', caseItem.name);
+            const fixedFolderId = createAutomatedCaseFolder(caseItem); // This will get-or-create based on Client ID
+            caseItem.googleDriveFolderId = fixedFolderId;
+            // Update storage
+            const caseIndex = cases.findIndex(c => c.id === caseId);
+            if (caseIndex !== -1) {
+                cases[caseIndex] = caseItem;
+                localStorage.setItem('cases', JSON.stringify(cases));
+            }
         }
 
         // Populate client dropdown
