@@ -761,6 +761,32 @@ function closeEditCaseModal() {
     if (modal) modal.classList.remove('active');
 }
 
+// Google Drive Integration Helpers
+function connectGoogleDrive() {
+    // Simulate OAuth flow or API connection
+    const width = 500;
+    const height = 600;
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+
+    // In a real app, this would open Google's OAuth URL
+    // For prototype, we verify via confirm
+    if (confirm('Connect to Google Drive?\n\nThis will allow the app to access project folders.')) {
+        localStorage.setItem('googleDriveConnected', 'true');
+        alert('Successfully connected to Google Drive!');
+
+        // Refresh the modal UI if open
+        const caseId = document.getElementById('editCaseId').value;
+        if (caseId) openEditCaseModal(caseId);
+    }
+}
+
+function openGoogleDriveFolder() {
+    const caseName = document.getElementById('editCaseName').value;
+    alert(`Opening Google Drive folder for: ${caseName || 'Project'}\n\n(Redirecting to drive.google.com...)`);
+    // window.open('https://drive.google.com/drive/u/0/my-drive', '_blank');
+}
+
 // Save Case Changes
 function saveCaseChanges() {
     const caseId = document.getElementById('editCaseId').value;
