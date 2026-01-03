@@ -738,7 +738,13 @@ function openEditCaseModal(caseId) {
                 btnConnect.style.display = 'none';
                 fileListContainer.style.display = 'block';
 
-                if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Connected';
+                // Get User Info
+                const googleUser = JSON.parse(localStorage.getItem('googleUser') || '{}');
+                const userEmail = googleUser.email || 'demo@innovtelier.com'; // Fallback for prototype
+
+                if (folderSubtextEl) {
+                    folderSubtextEl.innerHTML = `Google Drive • <span style="color: #059669;">Connected</span> • <span style="font-weight: 500;">${userEmail}</span>`;
+                }
 
                 // VALIDATION LOGIC:
                 // We use the Case Name and Client Name to generate a unique view.
@@ -764,8 +770,14 @@ function openEditCaseModal(caseId) {
                         </div>
                     </div>
                 `).join('') + `
-                    <div style="padding: 0.5rem 1rem; background: #f9fafb; text-align: center;">
-                        <a href="#" onclick="alert('Opening full folder view...');" style="color: #6b7280; font-size: 0.75rem; text-decoration: none;">View all files in Drive <i class="fas fa-external-link-alt" style="margin-left: 0.25rem;"></i></a>
+                    <div style="padding: 0.75rem 1rem; background: #f9fafb; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e5e7eb;">
+                         <div style="font-size: 0.75rem; color: #6b7280; display: flex; align-items: center; gap: 0.5rem;">
+                            <img src="${googleUser.picture || 'https://lh3.googleusercontent.com/a/default-user=s40-c'}" style="width: 20px; height: 20px; border-radius: 50%;">
+                            <span>Using account: <strong>${userEmail}</strong></span>
+                        </div>
+                        <a href="#" onclick="alert('Opening full folder view...');" style="color: #2563eb; font-size: 0.75rem; text-decoration: none; font-weight: 500;">
+                            View in Drive <i class="fas fa-external-link-alt" style="margin-left: 0.25rem;"></i>
+                        </a>
                     </div>
                 `;
 
