@@ -815,20 +815,24 @@ function openEditCaseModal(caseId) {
         // Use Global GoogleDrive object state
         const isDriveConnected = (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn) || localStorage.getItem('googleDriveConnected') === 'true';
 
+        // UI References
+        const signInContainer = document.getElementById('googleSignInModalContainer');
+
         if (folderNameEl) {
             folderNameEl.textContent = caseItem.name ? `${caseItem.name} Files` : 'Project Assets';
         }
 
-        if (btnOpen && btnConnect && fileListContainer) {
+        if (fileListContainer) {
             if (isDriveConnected) {
-                // Connected: Show File List, Hide Connect Button, Hide "Open" Button (optional, or keep small)
-                btnOpen.style.display = 'none'; // User wants embedded view, no need for button
-                btnConnect.style.display = 'none';
+                // Connected State: Show Files
+                if (btnConnect) btnConnect.style.display = 'none';
+                if (signInContainer) signInContainer.style.display = 'none';
+
                 fileListContainer.style.display = 'block';
 
                 // Get User Info
                 const googleUser = JSON.parse(localStorage.getItem('googleUser') || '{}');
-                const userEmail = googleUser.email || 'demo@innovtelier.com'; // Fallback for prototype
+                const userEmail = googleUser.email || 'demo@innovtelier.com';
 
                 if (folderSubtextEl) {
                     folderSubtextEl.innerHTML = `Google Drive • <span style="color: #059669;">Connected</span> • <span style="font-weight: 500;">${userEmail}</span>`;
@@ -881,11 +885,40 @@ function openEditCaseModal(caseId) {
                 `;
 
             } else {
-                // Not Connected
-                btnOpen.style.display = 'none';
-                btnConnect.style.display = 'inline-flex';
+                // Not Connected State: Show Google Sign-In Button
+                if (btnConnect) btnConnect.style.display = 'none'; // Hide custom button
                 fileListContainer.style.display = 'none';
                 if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Not Connected';
+
+                if (signInContainer) {
+                    signInContainer.style.display = 'flex';
+                    // Render official button if SDK is ready
+                    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                        google.accounts.id.renderButton(
+                            signInContainer,
+                            {
+                                theme: 'outline',
+                                size: 'large',
+                                type: 'standard', // or 'icon'
+                                text: 'signin_with',
+                                shape: 'pill',
+                                width: '250'
+                            }
+                        );
+                    } else {
+                        // Fallback if SDK not loaded (e.g. offline dev) - Show Demo Button logic
+                        signInContainer.innerHTML = `
+                            <button class="btn-secondary" onclick="document.getElementById('btnConnectDrive').click()">
+                                <i class="fab fa-google"></i> Connect Drive (Demo)
+                            </button>
+                        `;
+                        // Re-enable custom button handler to trigger demo
+                        if (btnConnect) {
+                            btnConnect.style.display = 'none'; // Keep hidden, use content in container
+                            // Ensure the global handler is attached if needed, or inline above
+                        }
+                    }
+                }
             }
         }
 

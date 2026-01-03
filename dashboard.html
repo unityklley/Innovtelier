@@ -1418,27 +1418,33 @@
                                 <i class="fas fa-plus"></i> New Project
                             </button>
                         </div>
-                        <div class="section-body">
-                            <div id="clientProjects" class="projects-grid"></div>
+                        <div class="folder-header">
+                            <div>
+                                <h4 id="docFolderName">Project Assets</h4>
+                                <p id="docFolderSubtext">Google Drive • Not Connected</p>
+                            </div>
+                            <div class="folder-actions">
+                                <!-- Custom Button (Hidden by default now) -->
+                                <button type="button" class="btn-secondary" id="btnConnectDrive" style="display: none;">
+                                    <i class="fab fa-google-drive"></i> Connect Drive
+                                </button>
+                                <a href="#" class="btn-text" id="btnOpenDriveFolder" style="display: none;">Open Folder
+                                    <i class="fas fa-external-link-alt"></i></a>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Invoices -->
-                    <div class="section-card">
-                        <div class="section-header">
-                            <h2><i class="fas fa-file-invoice-dollar"></i> Recent Invoices</h2>
-                        </div>
-                        <div class="section-body table-responsive">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Invoice #</th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="clientInvoicesTable"></tbody>
+                        <!-- Google Sign-In Container (Official Button) -->
+                        <div id="googleSignInModalContainer"
+                            style="display: none; justify-content: flex-end; padding: 10px 0;"></div>
+
+                        <div id="docFileList" class="file-list" style="display: none;">
+                            <th>Invoice #</th>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody id="clientInvoicesTable"></tbody>
                             </table>
                         </div>
                     </div>
