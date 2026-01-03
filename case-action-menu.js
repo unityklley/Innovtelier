@@ -383,6 +383,15 @@ function viewCaseDashboard(caseId) {
 function viewActivityLog(caseId) {
     const modal = document.getElementById('activityLogModal');
     if (!modal) return;
+    const menuHtml = `
+            <div class="dropdown-menu show" style="position: absolute; right: 0; top: 100%; z-index: 50; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); py: 0.25rem; min-width: 10rem;">
+                <button onclick="openCaseDetail('${caseId}'); toggleCaseMenu('${caseId}', event)" style="display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.875rem; color: #374151; background: none; border: none; cursor: pointer; hover:bg-gray-50;">
+                    <i class="fas fa-edit" style="margin-right: 0.5rem; width: 16px;"></i> Edit / View Details
+                </button>
+                <button onclick="alert('Coming soon: Time Tracking for case ${caseId}'); toggleCaseMenu('${caseId}', event)" style="display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.875rem; color: #374151; background: none; border: none; cursor: pointer; hover:bg-gray-50;">
+                    <i class="fas fa-clock" style="margin-right: 0.5rem; width: 16px;"></i> Log Time
+                </button>
+`;
 
     const activities = getCaseActivities(caseId);
     const tbody = document.getElementById('activityLogBody');
