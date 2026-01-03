@@ -716,6 +716,18 @@ function openEditCaseModal(caseId) {
         document.getElementById('editCaseOriginalDeadline').value = caseItem.originalDeadline ? caseItem.originalDeadline.split('T')[0] : '';
         document.getElementById('editCaseCompletedDate').value = caseItem.completedDate ? caseItem.completedDate.split('T')[0] : '';
 
+        // Populate Documents Section
+        const folderNameEl = document.getElementById('docFolderName');
+        if (folderNameEl) {
+            folderNameEl.textContent = caseItem.name ? `${caseItem.name} Files` : 'Project Assets';
+        }
+
+        // Populate Contacts Section
+        const caseLeadEl = document.getElementById('contactCaseLead');
+        if (caseLeadEl) {
+            caseLeadEl.textContent = caseItem.caseLeadName || 'Unassigned';
+        }
+
         // Open modal
         if (modal) modal.classList.add('active');
 
