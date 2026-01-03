@@ -554,33 +554,50 @@ function createNewCase() {
     };
 
     // AUTOMATION: Create Linked Google Drive Folder
-    // now uses Client ID for robust tracking
-    const driveFolderId = createAutomatedCaseFolder(newCase);
-    newCase.googleDriveFolderId = driveFolderId;
+    // Make async now to support real API calls
+    createAutomatedCaseFolder(newCase).then(driveFolderId => {
+        newCase.googleDriveFolderId = driveFolderId;
 
-    // Save to localStorage
-    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
-    cases.push(newCase);
-    localStorage.setItem('cases', JSON.stringify(cases));
+        // Save to localStorage
+        const cases = JSON.parse(localStorage.getItem('cases') || '[]');
+        cases.push(newCase);
+        localStorage.setItem('cases', JSON.stringify(cases));
 
-    // Close modal
-    closeNewCaseModal();
+        // Close modal
+        closeNewCaseModal();
 
-    // Show success modal
-    const successModal = document.getElementById('caseSuccessModal');
-    if (successModal) successModal.classList.add('active');
+        // Show success modal
+        const successModal = document.getElementById('caseSuccessModal');
+        if (successModal) successModal.classList.add('active');
 
-    // Refresh cases table
-    renderCasesTable();
+        // Refresh cases table
+        renderCasesTable();
+    });
 }
 
-// Helper: Auto-create Drive Folder Structure (Idempotent / Get-or-Create)
-function createAutomatedCaseFolder(caseItem) {
-    // USE CLIENT ID for the Folder ID to ensure strict linking
+// Helper: Auto-create Drive Folder Structure (Async)
+async function createAutomatedCaseFolder(caseItem) {
     const clientId = caseItem.clientOrganizationId || 'unknown_client';
+    const clientName = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
     const folderId = 'folder_' + clientId;
 
-    // Check if exists
+    // 1. Check if we can use REAL Google Drive API
+    if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn && !GoogleDrive.demoMode) {
+        try {
+            console.log('Accessing Real Google Drive API...');
+            // Create main folder
+            const mainFolder = await GoogleDrive.createFolder(`${caseItem.clientOrganizationName || caseItem.name} Repository`);
+            console.log('Created real Drive folder:', mainFolder.id);
+
+            // Note: In a full impl, we would also upload the starter files here.
+            // For now, we return the Real ID, and the UI will list "Remote Folder" 
+            return mainFolder.id;
+        } catch (err) {
+            console.error('Failed to create real Drive folder, falling back to local simulation', err);
+        }
+    }
+
+    // 2. Fallback: Local Simulation (Idempotent)
     const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
     if (driveFolders[folderId]) {
         console.log('Folder already exists for client:', caseItem.clientOrganizationName);
@@ -590,7 +607,7 @@ function createAutomatedCaseFolder(caseItem) {
     // Generate intelligent default files based on Service Type
     let defaultFiles = [];
     const dateStr = new Date().toLocaleDateString();
-    const clientName = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
+
     const safeClientName = clientName.replace(/[^a-zA-Z0-9]/g, '');
 
     // 1. Common Base Files 
@@ -625,7 +642,7 @@ function createAutomatedCaseFolder(caseItem) {
     };
 
     localStorage.setItem('demoDriveFolders', JSON.stringify(driveFolders));
-    return folderId;
+    return folderId; // Return synchronous mock ID
 }
 
 // Close Success Modal
