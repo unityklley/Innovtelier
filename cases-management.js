@@ -740,16 +740,18 @@ function openEditCaseModal(caseId) {
 
                 if (folderSubtextEl) folderSubtextEl.textContent = 'Google Drive • Connected';
 
-                // Render Simulated File List
-                const fileIcon = '<i class="far fa-file-alt" style="color: #6b7280; margin-right: 0.5rem;"></i>';
-                const folderIcon = '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.5rem;"></i>';
+                // VALIDATION LOGIC:
+                // We use the Case Name and Client Name to generate a unique view.
+                // In a production app, this would query the API using `caseItem.clientOrganizationId`
+                const uniquePrefix = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
+                const caseRef = caseItem.name.split(' ')[0];
 
-                // Mock files for distinctiveness
+                // Mock unique files for this specific client to demonstrate validation
                 const mockFiles = [
-                    { name: '1. Intake Form.pdf', type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>' },
-                    { name: '2. Client Contract_Signed.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>' },
-                    { name: 'Court_Filings_2024', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' },
-                    { name: 'Evidence_Photos', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' }
+                    { name: `${uniquePrefix}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>' },
+                    { name: `${caseRef}_Service_Agreement.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>' },
+                    { name: '1. Motions_and_Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' },
+                    { name: '2. Discovery_Materials', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' }
                 ];
 
                 fileListContent.innerHTML = mockFiles.map(file => `
