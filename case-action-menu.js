@@ -118,7 +118,7 @@ function createCaseMenuElement(caseId) {
         <!-- Section 1: Case Access -->
         <div class="menu-section">
             <div class="menu-section-header">Case Access</div>
-            ${createMenuItem('view_dashboard', caseId, 'fas fa-th-large', 'View Case Dashboard', userRole)}
+            ${createMenuItem('view_dashboard', caseId, 'fas fa-edit', 'Edit / View Details', userRole)}
             ${createMenuItem('view_activity_log', caseId, 'fas fa-history', 'Open Activity Log', userRole)}
             ${createMenuItem('view_documents', caseId, 'fas fa-folder-open', 'View Documents', userRole)}
         </div>
@@ -365,17 +365,14 @@ function getCaseActivities(caseId) {
 // ========================================
 
 function viewCaseDashboard(caseId) {
-    const cases = JSON.parse(localStorage.getItem('cases') || '[]');
-    const caseItem = cases.find(c => c.id === caseId);
-
-    if (!caseItem) {
-        alert('Case not found.');
-        return;
+    // Redirect to the unified Project Center modal
+    if (typeof openCaseDetail === 'function') {
+        openCaseDetail(caseId);
+    } else if (typeof openEditCaseModal === 'function') {
+        openEditCaseModal(caseId);
+    } else {
+        console.error('Case detail functions missing');
     }
-
-    // For now, show alert with case details
-    // TODO: Implement full case dashboard modal/page
-    alert(`Case Dashboard\n\nCase: ${caseItem.name}\nClient: ${caseItem.clientOrganizationName}\nStatus: ${caseItem.status}\nPriority: ${caseItem.priority}\n\n(Full dashboard coming soon)`);
 
     logActivity(caseId, 'viewed_dashboard');
 }
@@ -383,15 +380,6 @@ function viewCaseDashboard(caseId) {
 function viewActivityLog(caseId) {
     const modal = document.getElementById('activityLogModal');
     if (!modal) return;
-    const menuHtml = `
-            <div class="dropdown-menu show" style="position: absolute; right: 0; top: 100%; z-index: 50; background: white; border: 1px solid #e5e7eb; border-radius: 0.375rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); py: 0.25rem; min-width: 10rem;">
-                <button onclick="openCaseDetail('${caseId}'); toggleCaseMenu('${caseId}', event)" style="display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.875rem; color: #374151; background: none; border: none; cursor: pointer; hover:bg-gray-50;">
-                    <i class="fas fa-edit" style="margin-right: 0.5rem; width: 16px;"></i> Edit / View Details
-                </button>
-                <button onclick="alert('Coming soon: Time Tracking for case ${caseId}'); toggleCaseMenu('${caseId}', event)" style="display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; font-size: 0.875rem; color: #374151; background: none; border: none; cursor: pointer; hover:bg-gray-50;">
-                    <i class="fas fa-clock" style="margin-right: 0.5rem; width: 16px;"></i> Log Time
-                </button>
-`;
 
     const activities = getCaseActivities(caseId);
     const tbody = document.getElementById('activityLogBody');
