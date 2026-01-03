@@ -553,6 +553,10 @@ function createNewCase() {
         tags: []
     };
 
+    // AUTOMATION: Create Linked Google Drive Folder
+    const driveFolderId = createAutomatedCaseFolder(newCase);
+    newCase.googleDriveFolderId = driveFolderId;
+
     // Save to localStorage
     const cases = JSON.parse(localStorage.getItem('cases') || '[]');
     cases.push(newCase);
@@ -567,6 +571,44 @@ function createNewCase() {
 
     // Refresh cases table
     renderCasesTable();
+}
+
+// Helper: Auto-create Drive Folder Structure
+function createAutomatedCaseFolder(caseItem) {
+    const folderId = 'folder_' + Date.now();
+    const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
+
+    // Generate intelligent default files based on Service Type
+    let defaultFiles = [];
+    const dateStr = new Date().toLocaleDateString();
+    const clientName = caseItem.clientOrganizationName.split(' ')[0]; // e.g. "Smith"
+
+    // Common Base Files
+    defaultFiles.push(
+        { name: `${clientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr }
+    );
+
+    if (caseItem.services.includes('litigation') || caseItem.services.includes('discovery')) {
+        defaultFiles.push({ name: '1. Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: '2. Discovery', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: '3. Evidence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+    } else if (caseItem.services.includes('formation')) {
+        defaultFiles.push({ name: 'Articles_of_Incorporation.pdf', type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
+        defaultFiles.push({ name: 'Bylaws_Draft.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+    } else {
+        // Generic defaults
+        defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: 'Notes.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+    }
+
+    // Save structure
+    driveFolders[folderId] = {
+        name: `${caseItem.name} Files`,
+        files: defaultFiles
+    };
+
+    localStorage.setItem('demoDriveFolders', JSON.stringify(driveFolders));
+    return folderId;
 }
 
 // Close Success Modal
@@ -746,27 +788,38 @@ function openEditCaseModal(caseId) {
                     folderSubtextEl.innerHTML = `Google Drive • <span style="color: #059669;">Connected</span> • <span style="font-weight: 500;">${userEmail}</span>`;
                 }
 
-                // VALIDATION LOGIC:
-                // We use the Case Name and Client Name to generate a unique view.
-                // In a production app, this would query the API using `caseItem.clientOrganizationId`
-                const uniquePrefix = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
-                const caseRef = caseItem.name.split(' ')[0];
+                // DYNAMIC RENDERING LOGIC:
+                let displayFiles = [];
 
-                // Mock unique files for this specific client to demonstrate validation
-                const mockFiles = [
-                    { name: `${uniquePrefix}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>' },
-                    { name: `${caseRef}_Service_Agreement.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>' },
-                    { name: '1. Motions_and_Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' },
-                    { name: '2. Discovery_Materials', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' }
-                ];
+                // 1. Check for specific linked folder (New System)
+                if (caseItem.googleDriveFolderId) {
+                    const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
+                    const linkedFolder = driveFolders[caseItem.googleDriveFolderId];
+                    if (linkedFolder && linkedFolder.files) {
+                        displayFiles = linkedFolder.files;
+                        console.log('Loaded linked folder:', linkedFolder.name);
+                    }
+                }
 
-                fileListContent.innerHTML = mockFiles.map(file => `
+                // 2. Fallback to name-based matching (Legacy System)
+                if (displayFiles.length === 0) {
+                    const uniquePrefix = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
+                    const caseRef = caseItem.name.split(' ')[0];
+                    displayFiles = [
+                        { name: `${uniquePrefix}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: new Date().toLocaleDateString() },
+                        { name: `${caseRef}_Service_Agreement.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: new Date().toLocaleDateString() },
+                        { name: '1. Motions_and_Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' },
+                        { name: '2. Discovery_Materials', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' }
+                    ];
+                }
+
+                fileListContent.innerHTML = displayFiles.map(file => `
                     <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; border-bottom: 1px solid #f3f4f6; cursor: pointer;" onmouseenter="this.style.background='#f9fafb'" onmouseleave="this.style.background='white'">
                         <div style="display: flex; align-items: center; color: #374151; font-size: 0.875rem;">
                             ${file.icon} ${file.name}
                         </div>
                         <div style="color: #9ca3af; font-size: 0.75rem;">
-                            ${file.type === 'folder' ? 'Folder' : new Date().toLocaleDateString()}
+                            ${file.type === 'folder' ? 'Folder' : (file.date || new Date().toLocaleDateString())}
                         </div>
                     </div>
                 `).join('') + `
