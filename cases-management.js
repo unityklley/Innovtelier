@@ -581,24 +581,33 @@ function createAutomatedCaseFolder(caseItem) {
     // Generate intelligent default files based on Service Type
     let defaultFiles = [];
     const dateStr = new Date().toLocaleDateString();
-    const clientName = caseItem.clientOrganizationName.split(' ')[0]; // e.g. "Smith"
+    const clientName = caseItem.clientOrganizationName ? caseItem.clientOrganizationName.split(' ')[0] : 'Client';
+    const safeClientName = clientName.replace(/[^a-zA-Z0-9]/g, ''); // Remove special chars
 
-    // Common Base Files
+    // 1. Common Base Files (Always included and prefixed)
     defaultFiles.push(
-        { name: `${clientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr }
+        { name: `${safeClientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr }
     );
 
-    if (caseItem.services.includes('litigation') || caseItem.services.includes('discovery')) {
+    // 2. Service-Specific Files
+    const serviceLower = (caseItem.services || '').toLowerCase();
+
+    if (serviceLower.includes('litigation') || serviceLower.includes('discovery') || serviceLower.includes('trial')) {
         defaultFiles.push({ name: '1. Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
         defaultFiles.push({ name: '2. Discovery', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
         defaultFiles.push({ name: '3. Evidence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-    } else if (caseItem.services.includes('formation')) {
-        defaultFiles.push({ name: 'Articles_of_Incorporation.pdf', type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
-        defaultFiles.push({ name: 'Bylaws_Draft.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+        defaultFiles.push({ name: `${safeClientName}_Case_Strategy.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+
+    } else if (serviceLower.includes('formation') || serviceLower.includes('incorporation')) {
+        defaultFiles.push({ name: `${safeClientName}_Articles_of_Incorporation.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
+        defaultFiles.push({ name: `${safeClientName}_Bylaws_Draft.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+
     } else {
-        // Generic defaults
+        // Generic / General Legal Support
         defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: 'Notes.docx', type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
+        defaultFiles.push({ name: 'Legal_Research', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: `${safeClientName}_Engagement_Letter.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
+        defaultFiles.push({ name: `${safeClientName}_Case_Notes.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
     }
 
     // Save structure
