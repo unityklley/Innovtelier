@@ -555,9 +555,16 @@ function createNewCase() {
 
     // AUTOMATION: Create Linked Google Drive Folder
     // Make async now to support real API calls
-    createAutomatedCaseFolder(newCase).then(driveFolderId => {
-        newCase.googleDriveFolderId = driveFolderId;
+    if (typeof AutoDriveAutomation !== 'undefined') {
+        AutoDriveAutomation.createCaseStructure(newCase).then(driveFolderId => {
+            newCase.googleDriveFolderId = driveFolderId;
+            saveAndFinish();
+        });
+    } else {
+        saveAndFinish();
+    }
 
+    function saveAndFinish() {
         // Save to localStorage
         const cases = JSON.parse(localStorage.getItem('cases') || '[]');
         cases.push(newCase);
@@ -572,7 +579,7 @@ function createNewCase() {
 
         // Refresh cases table
         renderCasesTable();
-    });
+    }
 }
 
 // Helper: Auto-create Drive Folder Structure (Async)

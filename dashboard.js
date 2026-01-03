@@ -371,24 +371,9 @@ const Dashboard = {
             // This ensures the client has a root folder for all their future cases
             let driveFolderId = null;
             try {
-                if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn && !GoogleDrive.demoMode) {
-                    console.log('Creating Root Drive Folder for New Client...');
-                    driveFolderId = await GoogleDrive.createFolder(`${newOrgName} Root`);
-                } else {
-                    // Fallback/Simulation
-                    driveFolderId = 'folder_' + newOrg.id;
-                    const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
-                    if (!driveFolders[driveFolderId]) {
-                        driveFolders[driveFolderId] = {
-                            name: `${newOrgName} Root`,
-                            files: [
-                                { name: 'General_Contracts', type: 'folder' },
-                                { name: 'Invoices', type: 'folder' },
-                                { name: 'Company_Docs', type: 'folder' }
-                            ]
-                        };
-                        localStorage.setItem('demoDriveFolders', JSON.stringify(driveFolders));
-                    }
+                if (typeof AutoDriveAutomation !== 'undefined') {
+                    // Use new simplified Service
+                    driveFolderId = await AutoDriveAutomation.createClientStructure(newOrg);
                 }
             } catch (e) {
                 console.error('Error creating client folder:', e);

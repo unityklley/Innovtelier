@@ -309,11 +309,13 @@ async function handleFormSubmit(e) {
     }
 
     // AUTOMATION: Create Linked Google Drive Folder
-    // using the centralized helper logic
+    // using the centralized Auto Drive Service
     try {
-        const driveFolderId = await createAutomatedCaseFolder(caseData);
-        if (driveFolderId) {
-            caseData.googleDriveFolderId = driveFolderId;
+        if (typeof AutoDriveAutomation !== 'undefined') {
+            const driveFolderId = await AutoDriveAutomation.createCaseStructure(caseData);
+            if (driveFolderId) {
+                caseData.googleDriveFolderId = driveFolderId;
+            }
         }
     } catch (err) {
         console.error('Error creating automated folder:', err);
@@ -333,90 +335,6 @@ async function handleFormSubmit(e) {
     form.reset();
     selectedFiles = [];
     updateFileList();
-}
-
-// Helper: Auto-create Drive Folder Structure (Async)
-// Duplicated/Shared logic from cases-management.js to ensure independence
-async function createAutomatedCaseFolder(caseItem) {
-    // Determine Client Name (Personal Info for Intake)
-    const clientName = `${caseItem.personalInfo.firstName} ${caseItem.personalInfo.lastName}`;
-    const clientId = caseItem.id; // Use Case ID as unique identifier since Organization might be null for new intakes
-
-    // Default to Local ID
-    let finalFolderId = 'folder_' + clientId;
-
-    // Generate intelligent default files based on Service Type
-    let defaultFiles = [];
-    const dateStr = new Date().toLocaleDateString();
-    const safeClientName = clientName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
-
-    // 1. Common Base Files 
-    defaultFiles.push(
-        { name: `${safeClientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/pdf', content: 'Intake Form Placeholder' }
-    );
-
-    // 2. Service-Specific Files
-    const serviceLower = (caseItem.caseInfo.type || '').toLowerCase();
-
-    if (serviceLower.includes('family') || serviceLower.includes('divorce')) {
-        defaultFiles.push({ name: 'Court_Documents', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: 'Financial_Disclosures', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: `${safeClientName}_Petition.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Petition Placeholder' });
-
-    } else if (serviceLower.includes('estate') || serviceLower.includes('probate')) {
-        defaultFiles.push({ name: `${safeClientName}_Last_Will.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Will Placeholder' });
-        defaultFiles.push({ name: `${safeClientName}_Trust_Deed.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/pdf', content: 'Trust Placeholder' });
-
-    } else {
-        defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: 'Evidence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: `${safeClientName}_Case_Notes.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Notes Placeholder' });
-    }
-
-    // 1. Try to create REAL Folder if connected
-    if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn && !GoogleDrive.demoMode) {
-        try {
-            console.log('Accessing Real Google Drive API...');
-            const realFolderId = await GoogleDrive.createFolder(`${clientName} Repository`);
-            console.log('Created real Drive folder:', realFolderId);
-
-            // Use the Real ID if successful
-            if (realFolderId) {
-                finalFolderId = realFolderId;
-
-                // UPLOAD FILES TO REAL API
-                console.log('Uploading default files to Drive...');
-                for (const file of defaultFiles) {
-                    if (file.type === 'folder') {
-                        await GoogleDrive.createFolder(file.name, realFolderId);
-                    } else {
-                        // Create placeholder file
-                        await GoogleDrive.createFile(file.name, file.mime || 'application/octet-stream', file.content || 'Placeholder', realFolderId);
-                    }
-                }
-            }
-        } catch (err) {
-            console.error('Failed to create real Drive folder, falling back to local simulation', err);
-        }
-    }
-
-    // 2. ALWAYS Generate Local Structure (for UI display)
-    const driveFolders = JSON.parse(localStorage.getItem('demoDriveFolders') || '{}');
-
-    // If it already exists, return it
-    if (driveFolders[finalFolderId]) {
-        console.log('Folder structure already exists:', finalFolderId);
-        return finalFolderId;
-    }
-
-    // Save structure
-    driveFolders[finalFolderId] = {
-        name: `${clientName} Repository`,
-        files: defaultFiles
-    };
-
-    localStorage.setItem('demoDriveFolders', JSON.stringify(driveFolders));
-    return finalFolderId;
 }
 
 // Convert file to base64
