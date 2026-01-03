@@ -164,6 +164,38 @@ const GoogleDrive = {
         }
     },
 
+    async createFile(fileName, mimeType, content, parentId) {
+        if (!this.isSignedIn || !this.accessToken) return null;
+
+        try {
+            const metadata = {
+                name: fileName,
+                mimeType: mimeType,
+                parents: [parentId]
+            };
+
+            const form = new FormData();
+            form.append('metadata', new Blob([JSON.stringify(metadata)], { type: 'application/json' }));
+            form.append('file', new Blob([content], { type: 'text/plain' }));
+
+            const response = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.accessToken}`
+                },
+                body: form
+            });
+
+            if (!response.ok) throw new Error('Failed to create file');
+            const result = await response.json();
+            return result.id;
+        } catch (error) {
+            console.error('Error creating file in Drive:', error);
+            // Don't throw, just return null so we can continue
+            return null;
+        }
+    },
+
     async createClientFolderStructure(clientName, clientId) {
         console.log(`Creating folder structure for ${clientName}...`);
 

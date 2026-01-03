@@ -583,6 +583,36 @@ async function createAutomatedCaseFolder(caseItem) {
     // Default to Local ID
     let finalFolderId = 'folder_' + clientId;
 
+    // Generate intelligent default files based on Service Type
+    let defaultFiles = [];
+    const dateStr = new Date().toLocaleDateString();
+    const safeClientName = clientName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
+
+    // 1. Common Base Files
+    defaultFiles.push(
+        { name: `${safeClientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/pdf', content: 'Placeholder PDF Content' }
+    );
+
+    // 2. Service-Specific Files
+    const serviceLower = (caseItem.services || '').toLowerCase();
+
+    if (serviceLower.includes('litigation') || serviceLower.includes('discovery') || serviceLower.includes('trial')) {
+        defaultFiles.push({ name: '1. Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: '2. Discovery', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: '3. Evidence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: `${safeClientName}_Case_Strategy.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Strategy Doc Placeholder' });
+
+    } else if (serviceLower.includes('formation') || serviceLower.includes('incorporation')) {
+        defaultFiles.push({ name: `${safeClientName}_Articles_of_Incorporation.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/pdf', content: 'Articles Placeholder' });
+        defaultFiles.push({ name: `${safeClientName}_Bylaws_Draft.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Bylaws Placeholder' });
+
+    } else {
+        defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: 'Legal_Research', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
+        defaultFiles.push({ name: `${safeClientName}_Engagement_Letter.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/pdf', content: 'Engagement Letter Placeholder' });
+        defaultFiles.push({ name: `${safeClientName}_Case_Notes.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr, mime: 'application/vnd.google-apps.document', content: 'Notes Placeholder' });
+    }
+
     // 1. Try to create REAL Folder if connected
     if (typeof GoogleDrive !== 'undefined' && GoogleDrive.isSignedIn && !GoogleDrive.demoMode) {
         try {
@@ -593,6 +623,17 @@ async function createAutomatedCaseFolder(caseItem) {
             // Use the Real ID if successful
             if (realFolderId) {
                 finalFolderId = realFolderId;
+
+                // UPLOAD FILES TO REAL API
+                console.log('Uploading default files to Drive...');
+                for (const file of defaultFiles) {
+                    if (file.type === 'folder') {
+                        await GoogleDrive.createFolder(file.name, realFolderId);
+                    } else {
+                        // Create placeholder file
+                        await GoogleDrive.createFile(file.name, file.mime || 'application/octet-stream', file.content || 'Placeholder', realFolderId);
+                    }
+                }
             }
         } catch (err) {
             console.error('Failed to create real Drive folder, falling back to local simulation', err);
@@ -608,36 +649,6 @@ async function createAutomatedCaseFolder(caseItem) {
     if (driveFolders[finalFolderId]) {
         console.log('Folder structure already exists:', finalFolderId);
         return finalFolderId;
-    }
-
-    // Generate intelligent default files based on Service Type
-    let defaultFiles = [];
-    const dateStr = new Date().toLocaleDateString();
-    const safeClientName = clientName.split(' ')[0].replace(/[^a-zA-Z0-9]/g, '');
-
-    // 1. Common Base Files 
-    defaultFiles.push(
-        { name: `${safeClientName}_Intake_Form.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr }
-    );
-
-    // 2. Service-Specific Files
-    const serviceLower = (caseItem.services || '').toLowerCase();
-
-    if (serviceLower.includes('litigation') || serviceLower.includes('discovery') || serviceLower.includes('trial')) {
-        defaultFiles.push({ name: '1. Pleadings', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: '2. Discovery', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: '3. Evidence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: `${safeClientName}_Case_Strategy.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
-
-    } else if (serviceLower.includes('formation') || serviceLower.includes('incorporation')) {
-        defaultFiles.push({ name: `${safeClientName}_Articles_of_Incorporation.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
-        defaultFiles.push({ name: `${safeClientName}_Bylaws_Draft.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
-
-    } else {
-        defaultFiles.push({ name: 'Correspondence', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: 'Legal_Research', type: 'folder', icon: '<i class="fas fa-folder" style="color: #60a5fa; margin-right: 0.75rem;"></i>' });
-        defaultFiles.push({ name: `${safeClientName}_Engagement_Letter.pdf`, type: 'pdf', icon: '<i class="far fa-file-pdf" style="color: #ef4444; margin-right: 0.75rem;"></i>', date: dateStr });
-        defaultFiles.push({ name: `${safeClientName}_Case_Notes.docx`, type: 'doc', icon: '<i class="far fa-file-word" style="color: #2563eb; margin-right: 0.75rem;"></i>', date: dateStr });
     }
 
     // Save structure
